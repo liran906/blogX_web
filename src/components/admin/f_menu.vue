@@ -1,55 +1,68 @@
 <script setup lang="ts">
-
 import type {Component} from "vue";
-import {IconHome, IconUser, IconSettings, IconDashboard} from "@arco-design/web-vue/es/icon";
+import {IconHome, IconUser, IconSettings} from "@arco-design/web-vue/es/icon";
 import F_component from "@/components/common/f_component.vue";
+import {ref} from "vue";
 import {collapsed} from "@/components/admin/f_menu";
+import router from "@/router";
+import {useRoute} from "vue-router";
+
+
+const route = useRoute()
 
 interface MenuType {
   title: string
   name: string
   icon?: string | Component
   children?: MenuType[]
-  role?: number
 }
 
+
 const menuList: MenuType[] = [
-  // {title: "数据统计", name: "home", icon: IconDashboard},
-  {title: "数据统计", name: "home", icon: "iconfont icon-shuju"},
+  {title: "首页", name: "home", icon: IconHome},
   {
-    title: "用户管理", role: 1, name: "userManage", icon: "iconfont icon-yonghuguanli", children: [
-      {title: "用户列表", name: "userList", icon: "iconfont icon-list",}
+    title: "个人中心", name: "userCenter", icon: IconUser, children: [
+      {title: "用户信息", name: "userInfo",}
     ]
   },
   {
-    title: "文章管理", role: 1, name: "articleManage", icon: "iconfont icon-wenzhangguanli", children: [
-      {title: "文章列表", name: "articleList", icon: "iconfont icon-navicon-wzgl",}
+    title: "用户管理", name: "userManage", icon: IconUser, children: [
+      {title: "用户列表", name: "userList",}
     ]
   },
   {
-    title: "系统管理", role: 1, name: "settingsManage", icon: "iconfont icon-setting", children: [
-      {
-        title: "站点配置", name: "siteManage", icon: "iconfont icon-zhandianpeizhi", children: [
-          {title: "网站设置", name: "siteManageSite", icon: "iconfont icon-wangzhan"},
-          {title: "邮箱设置", name: "siteManageEmail", icon: "iconfont icon-youxiang"},
-          {title: "QQ设置", name: "siteManageQQ", icon: "iconfont icon-qq"},
-          {title: "AI设置", name: "siteManageAi", icon: "iconfont icon-wuguan"},
-          {title: "对象存储设置", name: "siteManageQiNiu", icon: "iconfont icon-yuntupian"},
-        ]
-      },
-      {title: "Banner管理", name: "bannerList", icon: "iconfont icon-banner"},
-      {title: "日志列表", name: "logList", icon: "iconfont icon-xitongrizhi"},
+    title: "系统设置", name: "settingsManage", icon: IconSettings, children: [
+      {title: "系统信息", name: "settings",}
     ]
   },
 ]
 
+function menuItemClick(key: string) {
+  router.push({
+    name: key
+  })
+}
+
+const openKeys = ref<string[]>([])
+
+function initRoute() {
+  if (route.matched.length === 3) {
+    openKeys.value = [route.matched[1].name as string]
+  }
+}
+
+initRoute()
+
 </script>
 
 <template>
-  <div class="f_menu" :class="{collapsed:collapsed}">
+  <div class="f_menu" :class="{collapsed: collapsed}">
     <div class="f_menu_inner scrollbar">
       <a-menu
+          @menu-item-click="menuItemClick"
           v-model:collapsed="collapsed"
+          v-model:open-keys="openKeys"
+          :default-selected-keys="[route.name]"
           show-collapse-button>
         <template v-for="menu in menuList">
           <a-menu-item :key="menu.name" v-if="!menu.children">
@@ -72,6 +85,7 @@ const menuList: MenuType[] = [
         </template>
       </a-menu>
     </div>
+
   </div>
 </template>
 
@@ -81,12 +95,12 @@ const menuList: MenuType[] = [
   position: relative;
 
   &.collapsed {
-    .arco-menu-collapse-button{
+    .arco-menu-collapse-button {
       left: 48px !important;
     }
   }
 
-  &:hover{
+  &:hover {
     .arco-menu-collapse-button {
       opacity: 1 !important;
     }
@@ -106,10 +120,6 @@ const menuList: MenuType[] = [
         left: 240px;
         transition: all .3s;
         opacity: 0;
-
-        &.collapsed {
-
-        }
       }
     }
   }
