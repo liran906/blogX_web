@@ -29,8 +29,8 @@ const options: OptionType[] = [
   <a-dropdown @select="handleSelect" :popup-max-height="false">
     <div class="f_user_dropdown_com">
       <a-avatar :size="35"
-                image-url="https://img2.baidu.com/it/u=4194115798,4169726391&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1715878800&t=82357305157980f56d5dc312d7255f02"></a-avatar>
-      <span class="user_name">枫枫知道</span>
+                image-url="/src/assets/logo.png"></a-avatar>
+      <span class="user_name">用户001</span>
       <icon-down/>
     </div>
 

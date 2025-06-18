@@ -14,4 +14,7 @@
   background: transparent;
   /* 滚动条背景色 */
 }
+#nprogress .bar {
+  background: #0098ea;
+}
 /*# sourceMappingURL=public.css.map */
