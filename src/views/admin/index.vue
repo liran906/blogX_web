@@ -4,11 +4,12 @@
 import F_theme from "@/components/common/f_theme.vue";
 import F_screen from "@/components/common/f_screen.vue";
 import F_menu from "@/components/admin/f_menu.vue";
+import {collapsed} from "@/components/admin/f_menu";
 </script>
 
 <template>
   <div class="f_admin">
-    <div class="f_aside">
+    <div class="f_aside" :class="{collapsed: collapsed}">
       <div class="f_logo">
 
       </div>
@@ -43,8 +44,16 @@ import F_menu from "@/components/admin/f_menu.vue";
   .f_aside{
     width: 240px;
     height: 100vh;
-    overflow: hidden;
     border-right: @f_border;
+    transition: width 0.3s;
+
+    &.collapsed{
+      width: 48px;
+
+      &~.f_main{
+        width: calc(100% - 48px);
+      }
+    }
 
     .f_logo{
       width: 100%;
@@ -54,6 +63,7 @@ import F_menu from "@/components/admin/f_menu.vue";
   }
   .f_main{
     width: calc(100% - 240px);
+    transition: width 0.3s;
 
     .f_head{
       display: flex;
