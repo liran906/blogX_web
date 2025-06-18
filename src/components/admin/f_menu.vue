@@ -6,7 +6,7 @@ import {ref} from "vue";
 import {collapsed} from "@/components/admin/f_menu";
 import router from "@/router";
 import {useRoute} from "vue-router";
-
+import {watch} from "vue";
 
 const route = useRoute()
 
@@ -22,17 +22,17 @@ const menuList: MenuType[] = [
   {title: "首页", name: "home", icon: IconHome},
   {
     title: "个人中心", name: "userCenter", icon: IconUser, children: [
-      {title: "用户信息", name: "userInfo",}
+      {title: "个人信息", name: "userInfo", icon: "iconfont icon-yonghuxinxi-"}
     ]
   },
   {
-    title: "用户管理", name: "userManage", icon: IconUser, children: [
-      {title: "用户列表", name: "userList",}
+    title: "用户管理", name: "userManage", icon: "iconfont icon-yonghuguanli", children: [
+      {title: "用户列表", name: "userList", icon: "iconfont icon-yonghuguanli_huaban"}
     ]
   },
   {
-    title: "系统设置", name: "settingsManage", icon: IconSettings, children: [
-      {title: "系统信息", name: "settings",}
+    title: "系统设置", name: "settingsManage", icon: "iconfont icon-xitongpeizhi", children: [
+      {title: "系统信息", name: "settings", icon: IconSettings}
     ]
   },
 ]
@@ -44,14 +44,20 @@ function menuItemClick(key: string) {
 }
 
 const openKeys = ref<string[]>([])
+const selectedKeys = ref<string[]>([])
 
 function initRoute() {
   if (route.matched.length === 3) {
     openKeys.value = [route.matched[1].name as string]
   }
+
+  selectedKeys.value = [route.name as string]
 }
 
-initRoute()
+watch(() => route.name, () => {
+  initRoute()
+}, {immediate: true})
+
 
 </script>
 
@@ -62,7 +68,7 @@ initRoute()
           @menu-item-click="menuItemClick"
           v-model:collapsed="collapsed"
           v-model:open-keys="openKeys"
-          :default-selected-keys="[route.name]"
+          v-model:selected-keys="selectedKeys"
           show-collapse-button>
         <template v-for="menu in menuList">
           <a-menu-item :key="menu.name" v-if="!menu.children">
@@ -78,7 +84,7 @@ initRoute()
             <a-menu-item :key="sub.name" v-for="sub in menu.children">
               {{ sub.title }}
               <template #icon>
-                <f_component :is="menu.icon"></f_component>
+                <f_component :is="sub.icon"></f_component>
               </template>
             </a-menu-item>
           </a-sub-menu>

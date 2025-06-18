@@ -2,28 +2,27 @@
 
 import {ref} from "vue";
 
-
-// 是否是全屏
-const isFullScreen = ref<boolean>(false);
+const isFullScreen = ref(false)
 
 // 全屏
 function fullScreen() {
-  // 加?（可选链）防止报错 相当于 if...exists...
-  document.documentElement?.requestFullscreen();
-  isFullScreen.value = true;
+  document.documentElement?.requestFullscreen()
+  isFullScreen.value = true
 }
 
 // 退出全屏
 function exitFullScreen() {
-  document?.exitFullscreen();
-  isFullScreen.value = false;
+  document?.exitFullscreen()
+  isFullScreen.value = false
 }
+
+// 是否是全屏
 
 </script>
 
 <template>
-  <icon-fullscreen v-if="!isFullScreen" @click="fullScreen"/>
-  <icon-fullscreen-exit v-else @click="exitFullScreen"/>
+  <span title="全屏" v-if="!isFullScreen"><icon-fullscreen @click="fullScreen"/></span>
+  <span title="退出全屏" v-else> <icon-fullscreen-exit @click="exitFullScreen"/></span>
 </template>
 
 <style scoped>
