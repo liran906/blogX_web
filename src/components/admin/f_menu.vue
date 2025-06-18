@@ -13,8 +13,8 @@ interface MenuType {
 }
 
 const menuList: MenuType[] = [
-  {title: "数据统计", name: "home", icon: IconDashboard},
-  // {title: "数据统计", name: "home", icon: "iconfont icon-shuju"},
+  // {title: "数据统计", name: "home", icon: IconDashboard},
+  {title: "数据统计", name: "home", icon: "iconfont icon-shuju"},
   {
     title: "用户管理", role: 1, name: "userManage", icon: "iconfont icon-yonghuguanli", children: [
       {title: "用户列表", name: "userList", icon: "iconfont icon-list",}
@@ -45,7 +45,7 @@ const menuList: MenuType[] = [
 </script>
 
 <template>
-  <div class="f_menu">
+  <div class="f_menu scrollbar">
     <a-menu
         show-collapse-button>
       <template v-for="menu in menuList">
@@ -72,5 +72,9 @@ const menuList: MenuType[] = [
 </template>
 
 <style scoped>
-
+.f_menu {
+  height: calc(100% - 90px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 </style>
