@@ -26,18 +26,39 @@ export interface columnType extends TableColumnData {
 
 // 接收父组件传入的 props 参数类型定义
 interface Props {
+  // *必要字段 路由+列名
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>> // 列表请求函数
   columns: columnType[] // 表格列配置
-  rowKey?: string // 就是 id，怕重名所以叫 rowKey。要取默认值，所以解构（见下）
+
+  // *primaryKey 的名字
+  rowKey?: string // 默认值是“id”
+
+  // *定制化列表功能 默认都是开启的
+  noDefaultDelete?: boolean // 是否启用默认删除 如果为 ture 那么要上抛问题到父组件
+  noAdd?: boolean // 是否启用新建对象
+  noEdit?: boolean // 是否启用编辑对象
+  noDelete?: boolean // 是否启用删除对象
+  noActionGroup?: boolean // 是否启用操作下拉菜单
+
+  // *定制化列表视图
+  searchPlaceholder?: string // 搜索栏 placeholder
+  addLabel?: string // 新建对象的图标上的显示内容，默认是“添加”
+  editLabel?: string // 编辑对象的图标上的显示内容，默认是“编辑”
+  deleteLabel?: string // 删除对象的图标上的显示内容，默认是“删除”
 }
 
 // 接收 props（使用 defineProps 声明）
 const props = defineProps<Props>()
 
-// 这是对 props 中传进来的 rowKey 做了解构赋值，
-// 如果父组件没有传入 rowKey，就默认用 "id"。
+// 这是对 props 中传进来的 参数 做了解构赋值，
+// 如果父组件没有传入 相应的值，就用默认的。
 const {
-  rowKey = "id"
+  rowKey = "id",
+  noDefaultDelete = false,
+  searchPlaceholder = "搜索",
+  addLabel = "添加",
+  editLabel = "编辑",
+  deleteLabel = "删除",
 } = props
 
 // 加载状态（控制 a-spin 加载效果）
@@ -69,6 +90,13 @@ async function getList() {
 
 // 首次挂载时加载列表
 getList()
+
+// 如果执行失败，上抛父组件的消息
+const emits = defineEmits<{
+  (e: 'delete', keyList: number[] | string[]): void
+  (e: 'add'): void
+  (e: 'edit', record: any): void
+}>()
 
 /*
     * 默认删除函数
@@ -102,13 +130,19 @@ getList()
       所以用字符串匹配 URL，再交给统一的删除接口 defaultDeleteApi() 去处理，达到复用目的。
 */
 async function remove(record: any) {
+  const key = record[rowKey] // 提取当前行的主键值，例如 id
+  if (noDefaultDelete) {
+    // 不启用默认删除 上抛问题给父组件
+    emits("delete", [key])
+    return
+  }
+
   const array = /\"(.*?)\"/.exec(props.url.toString()) // 正则匹配字符串里的 URL
   if (array?.length !== 2) {
     return
   }
 
   const url = array[1] // 提取 url，例如 "/api/user/list"
-  const key = record[rowKey] // 提取当前行的主键值，例如 id
 
   const res = await defaultDeleteApi(url, [key]) // 调用默认删除接口
   if (res.code) {
@@ -120,8 +154,13 @@ async function remove(record: any) {
   Message.success(res.msg)
 }
 
-// 编辑按钮点击事件（内部未实现，可由插槽扩展）
-function update(record: any) {}
+function update(record: any) {
+  emits("edit", record)
+}
+
+function add() {
+  emits("add")
+}
 
 // 分页切换时重新请求数据
 function pageChange() {
@@ -132,25 +171,43 @@ function pageChange() {
 function search() {
   getList()
 }
+
+// 刷新
+function refresh() {
+  getList()
+  Message.success("刷新成功")
+}
 </script>
 
 <template>
   <div class="f_list_com">
-    <!-- 🔹 顶部操作区域（创建、批量操作、搜索） -->
+    <!-- 🔹 顶部操作区域（创建、批量操作、搜索等） -->
     <div class="f_list_head">
-      <div class="action_create">
-        <a-button type="primary">创建</a-button>
-      </div>
-      <div class="action_group">
+
+      <!-- 新建 -->
+      <slot name="action_add">
+        <div class="action_create" v-if="!noAdd">
+          <a-button type="primary" @click="add">{{ addLabel }}</a-button>
+        </div>
+      </slot>
+
+      <!-- 批量操作 -->
+      <div class="action_group" v-if="!noActionGroup">
         <a-select placeholder="操作"></a-select>
       </div>
+
+      <!-- 搜索 -->
       <div class="action_search" @keydown.enter="search">
-        <a-input-search placeholder="搜索" v-model="params.key" @search="search" />
+        <a-input-search :placeholder="searchPlaceholder" v-model="params.key" @search="search"></a-input-search>
       </div>
+
+      <!-- 其他搜索 -->
       <div class="action_search_slot">
-        <!-- 🔸 可拓展 slot 内容 -->
+        <slot name="search_other"></slot>
       </div>
-      <div class="action_flush">
+
+      <!-- 刷新 -->
+      <div class="action_flush" @click="refresh">
         <icon-refresh @click="getList" />
       </div>
     </div>
@@ -173,9 +230,9 @@ function search() {
                     <!-- 操作列 -->
                     <div class="col_actions" v-if="col.slotName === 'action'">
                       <slot v-bind="data" name="action_left"></slot>
-                      <a-button type="primary" @click="update(data.record)">编辑</a-button>
-                      <a-popconfirm @ok="remove(data.record)" content="确定要删除该记录吗？">
-                        <a-button type="primary" status="danger">删除</a-button>
+                      <a-button v-if="!noEdit" type="primary" @click="update(data.record)">{{ editLabel }}</a-button>
+                      <a-popconfirm v-if="!noDelete" @ok="remove(data.record)" content="确定要删除该记录吗？">
+                        <a-button type="primary" status="danger">{{ deleteLabel }}</a-button>
                       </a-popconfirm>
                       <slot v-bind="data" name="action_right"></slot>
                     </div>

@@ -13,12 +13,15 @@ const columns = [
   {title: "注册时间", slotName: 'createdAt', dateFormat: "current"}, //dateFormat: date 只显示日期 time 只显示时间 current 显示过去了多久 默认：日期+时间
   {title: "操作", slotName: 'action'},
 ]
+function remove(keyList: number[]){
+  console.log(keyList)
+}
 
 </script>
 
 <template>
   <div>
-    <f_list :url="userListApi" :columns="columns">
+    <f_list :url="userListApi" :columns="columns" no-default-delete @delete="remove">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatarURL"></a-avatar>
       </template>
