@@ -1,4 +1,4 @@
-import {type baseResponse, useAxios} from "@/api/index";
+import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index";
 
 export interface pwdLoginRequest {
     username: string;
@@ -60,4 +60,26 @@ export function userInfoApi():Promise<baseResponse<userInfoType>>{
 // 注销登录
 export function userLogoutApi():Promise<baseResponse<string>>{
     return useAxios.delete("/api/user/logout")
+}
+
+export interface userListType{
+    "id": number,
+    "username": string,
+    "createdAt": string,
+    "email": string,
+    "status": number,
+    "nickname": string,
+    "avatarURL": string,
+    "role": number,
+    "articleCount": number,
+    "siteAge": number,
+    "lastLoginIP": string,
+    "lastLoginIPAddr": string,
+    "lastLoginTime": string,
+    "registerSource": number
+}
+
+// 用户列表
+export function userListApi(params?: paramsType):Promise<baseResponse<listResponse<userListType>>> {
+    return useAxios.get("/api/user/list", {params})
 }

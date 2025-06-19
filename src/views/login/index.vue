@@ -73,6 +73,7 @@ async function handleLogin() {
         <a-form-item
             label="用户名"
             field="username"
+            @keydown.enter="handleLogin"
             :rules="[{ required: true, message: '请输入用户名' }]"
         >
           <a-input placeholder="请输入用户名" v-model="loginFormData.username">
@@ -86,6 +87,7 @@ async function handleLogin() {
         <a-form-item
             label="密码"
             field="password"
+            @keydown.enter="handleLogin"
             :rules="[{ required: true, message: '请输入密码' }]"
         >
           <a-input
