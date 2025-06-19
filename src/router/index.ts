@@ -1,5 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import NProgress from "nprogress"; // 导入 nprogress模块
+import NProgress from "nprogress";
+import {Message} from "@arco-design/web-vue";
+import {userStorei} from "@/stores/user_store"; // 导入 nprogress模块
 
 
 const router = createRouter({
@@ -21,7 +23,8 @@ const router = createRouter({
       path: "/admin",
       component: () => import("@/views/admin/index.vue"),
       meta: {
-        title: "首页"
+        title: "首页",
+        role: [1,2,3]
       },
       children: [
         {
@@ -53,7 +56,8 @@ const router = createRouter({
           name: "userManage",
           path: "user_manage",
           meta: {
-            title: "用户管理"
+            title: "用户管理",
+            role: [1]
           },
           children: [
             {
@@ -70,7 +74,8 @@ const router = createRouter({
           name: "settingsManage",
           path: "settings_manage",
           meta: {
-            title: "系统配置"
+            title: "系统配置",
+            role: [1]
           },
           children: [
             {
@@ -88,10 +93,48 @@ const router = createRouter({
   ]
 })
 
+// 全局前置守卫：每次路由跳转前都会触发
 router.beforeEach((to, from, next) => {
-  NProgress.start();//开启进度条
+
+  // ✅ 如果目标路由有设置 meta.role（需要权限控制）
+  if (to.meta.role) {
+
+    // 获取用户状态（如登录状态、角色信息）
+    const userStore = userStorei() // 假设这是 Pinia 的 userStore
+
+    // 🔒 用户未登录，不能访问需要权限的页面
+    if (!userStore.isLogin) {
+      Message.warning("需要登录")
+
+      // 重定向到登录页，同时附带原本想访问的路径（用于登录后跳转回来）
+      router.push({
+        name: "login",
+        query: {
+          redirect: to.path
+        }
+      })
+      return
+    }
+
+    // ❌ 用户已登录，但角色不在允许访问的角色列表中
+    if (!to.meta.role.includes(userStore.userInfo.role)) {
+      Message.warning("鉴权失败")
+      // 如果不是从 login 页面跳转来的，则返回原路径
+      if (from.path !== "/login") {
+        router.push(from.path)
+      } else {
+        // 否则退回默认页面
+        router.push({ path: "/web" })
+      }
+      return
+    }
+  }
+
+  // ✅ 一切正常，继续导航，并开启页面顶部加载进度条
+  NProgress.start()
   next()
 })
+
 //当路由进入后：关闭进度条
 router.afterEach(() => {
   // 在即将进入新的页面组件前，关闭掉进度条

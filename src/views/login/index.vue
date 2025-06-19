@@ -4,6 +4,9 @@ import { reactive, ref } from "vue"
 import { Message } from "@arco-design/web-vue"
 import {userStorei} from "@/stores/user_store";
 import router from "@/router";
+import { useRoute } from "vue-router";
+
+const route = useRoute()
 
 // ✅ 创建登录表单数据对象，使用 reactive 使其响应式（适配 v-model）
 // 字段名与后端接口 pwdLoginRequest 类型保持一致
@@ -40,10 +43,17 @@ async function handleLogin() {
 
   // ✅ 登录成功后的常见操作建议（此处视项目需求决定是否添加）：
   // 1. 保存 token（如 localStorage.setItem("token", response.data)）
-  // 2. 调用用户信息接口，获取用户权限/角色等
+  // 2. 调用用户信息接口，获取用户权限/角色等       *** 我们采用这个方法 ***
   // 3. 页面跳转（如 router.push("/dashboard")）
   userStore.saveUserInfo(response.data)
 
+  // 看是否有重定向请求，如果有就访问重定向页面
+  const redirect = route.query.redirect
+  if (redirect) {
+    router.push(redirect as string)
+    return
+  }
+  // 没有重定向请求就去 web
   router.push({ path: "/web" })
 }
 </script>
