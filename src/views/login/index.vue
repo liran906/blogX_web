@@ -2,6 +2,8 @@
 import { pwdLoginApi, type pwdLoginRequest } from "@/api/user_api"
 import { reactive, ref } from "vue"
 import { Message } from "@arco-design/web-vue"
+import {userStorei} from "@/stores/user_store";
+import router from "@/router";
 
 // ✅ 创建登录表单数据对象，使用 reactive 使其响应式（适配 v-model）
 // 字段名与后端接口 pwdLoginRequest 类型保持一致
@@ -9,6 +11,8 @@ const loginFormData = reactive<pwdLoginRequest>({
   username: "",
   password: ""
 })
+
+const userStore = userStorei()
 
 // ✅ 引用 a-form 组件实例，用于调用 validate 方法进行前端表单校验
 // 初始值为 undefined，绑定在 <a-form ref="loginFormRef"> 后自动赋值
@@ -38,6 +42,9 @@ async function handleLogin() {
   // 1. 保存 token（如 localStorage.setItem("token", response.data)）
   // 2. 调用用户信息接口，获取用户权限/角色等
   // 3. 页面跳转（如 router.push("/dashboard")）
+  userStore.saveUserInfo(response.data)
+
+  router.push({ path: "/web" })
 }
 </script>
 

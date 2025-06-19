@@ -62,6 +62,9 @@ export default defineConfig((config) => {
         "/api": {
           target: env.VITE_SERVER_URL, // 把以 /api 开头的请求代理到该地址
           // 可选配置：rewrite: path => path.replace(/^\/api/, '')
+        },
+        "/uploads": {
+          target: env.VITE_SERVER_URL
         }
       }
     },
