@@ -44,3 +44,7 @@ useAxios.interceptors.response.use((respond) => {
 }, (respond)=>{
     Message.error(respond.message)
 })
+
+export function defaultDeleteApi(url: string, idList: number[]):Promise<baseResponse<string>>{
+    return  useAxios.delete(url, {data: {idList}})
+}

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 /*
 组件说明（整体功能与设计思路）
 
@@ -18,6 +17,7 @@ import type { baseResponse, listResponse, paramsType } from "@/api"
 import { reactive, ref } from "vue"
 import { Message, type TableColumnData } from "@arco-design/web-vue"
 import { dateTemFormat, type dateTemType } from "@/utils/date"
+import {defaultDeleteApi} from "@/api";
 
 // 列定义扩展：继承自 arco 的 TableColumnData，并可选地添加日期格式化字段
 export interface columnType extends TableColumnData {
@@ -28,10 +28,17 @@ export interface columnType extends TableColumnData {
 interface Props {
   url: (params?: paramsType) => Promise<baseResponse<listResponse<any>>> // 列表请求函数
   columns: columnType[] // 表格列配置
+  rowKey?: string // 就是 id，怕重名所以叫 rowKey。要取默认值，所以解构（见下）
 }
 
 // 接收 props（使用 defineProps 声明）
 const props = defineProps<Props>()
+
+// 这是对 props 中传进来的 rowKey 做了解构赋值，
+// 如果父组件没有传入 rowKey，就默认用 "id"。
+const {
+  rowKey = "id"
+} = props
 
 // 加载状态（控制 a-spin 加载效果）
 const loading = ref(false)
@@ -50,7 +57,7 @@ const params = reactive<paramsType>({
 // 获取列表数据函数（初始化和分页变化时都会调用）
 async function getList() {
   loading.value = true
-  const res = await props.url(params) // 调用父组件传入的请求函数
+  const res = await props.url(params) // 调用父组件传入的请求函数(一般会传入后端API调用函数)
   loading.value = false
   if (res.code) {
     Message.error(res.msg) // 请求失败提示
@@ -63,8 +70,55 @@ async function getList() {
 // 首次挂载时加载列表
 getList()
 
-// 删除按钮点击事件（内部未实现，可由插槽扩展）
-function remove() {}
+/*
+    * 默认删除函数
+
+    * 逻辑：
+    结合父组件传进来的 url 字符串提取出接口路径，作为参数调用 defaultDeleteApi() 来执行删除操作
+
+    * 入参：
+    @param record - 当前行的数据对象，来自表格渲染时的作用域插槽传参（data.record）
+
+    * 说明：
+    在 <a-table-column> 中使用插槽渲染操作列时，会传入一个作用域对象 `data`，其结构类似：
+    {
+      record: { id: 1, name: "Alice", ... }, // 当前行完整的数据对象
+      rowIndex: 0,                           // 当前行索引
+      column: { ... },                       // 当前列的配置信息
+      ... 其他信息
+    }
+
+    所以：
+    - 在模板中你看到的 `data.record` 就是传给这个函数的 `record`；
+    - record[rowKey] 就是这行数据的唯一主键值，通常是 id；
+    - 我们通过它调用通用删除 API：defaultDeleteApi(url, [主键数组])
+
+    * QA
+    Q “为什么不直接写死 URL？为什么要用正则提出来？”
+    A 这是为了保持 f_list 组件的“通用性”，因为 props.url 是你父组件传进来的列表查询接口：
+      `<f_list :url="userListApi" />`
+      它可能是 /api/user、/api/article、/api/xxx 等等。
+      而删除接口我才用的是类似 /api/user，你这里的做法是假设接口命名规律类似，只是 get 请求换为 delete 请求，
+      所以用字符串匹配 URL，再交给统一的删除接口 defaultDeleteApi() 去处理，达到复用目的。
+*/
+async function remove(record: any) {
+  const array = /\"(.*?)\"/.exec(props.url.toString()) // 正则匹配字符串里的 URL
+  if (array?.length !== 2) {
+    return
+  }
+
+  const url = array[1] // 提取 url，例如 "/api/user/list"
+  const key = record[rowKey] // 提取当前行的主键值，例如 id
+
+  const res = await defaultDeleteApi(url, [key]) // 调用默认删除接口
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+
+  getList() // 删除成功后重新刷新列表
+  Message.success(res.msg)
+}
 
 // 编辑按钮点击事件（内部未实现，可由插槽扩展）
 function update(record: any) {}
@@ -120,7 +174,7 @@ function search() {
                     <div class="col_actions" v-if="col.slotName === 'action'">
                       <slot v-bind="data" name="action_left"></slot>
                       <a-button type="primary" @click="update(data.record)">编辑</a-button>
-                      <a-popconfirm @ok="remove" content="确定要删除该记录吗？">
+                      <a-popconfirm @ok="remove(data.record)" content="确定要删除该记录吗？">
                         <a-button type="primary" status="danger">删除</a-button>
                       </a-popconfirm>
                       <slot v-bind="data" name="action_right"></slot>
