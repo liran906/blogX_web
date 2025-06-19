@@ -1,5 +1,11 @@
-import {useAxios} from "@/api/index";
+import {type baseResponse, useAxios} from "@/api/index";
 
-export function userListApi(){
-    return useAxios.get("/api/ping")
+export interface pwdLoginRequest {
+    username: string;
+    password: string;
+}
+
+
+export function pwdLoginApi(data: pwdLoginRequest): Promise<baseResponse<string>> {
+    return useAxios.post("/api/user/login", data)
 }
