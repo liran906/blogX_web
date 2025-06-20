@@ -1,0 +1,87 @@
+
+// M
+
+import {type baseResponse, useAxios} from "@/api/index";
+
+export interface siteResponse {
+    "siteInfo": {
+        "title": string
+        "logoURL": string
+        "archive": string
+        "mode": 1 | 2
+    },
+    "project": {
+        "title": string
+        "icon": string
+        "webPath": string
+    },
+    "seo": {
+        "keywords": string
+        "description": string
+    },
+    "about": {
+        "siteDate": string
+        "qqURL": string
+        "version": string
+        "wechatURL": string
+        "gitee": string
+        "bilibili": string
+        "github": string
+    },
+    "login": {
+        "qqLogin": boolean
+        "usernamePwdLogin": boolean
+        "emailRegister": boolean
+        "captcha": boolean
+    },
+    "rightSidebar": {
+        "list": component[]
+    },
+    "article": {
+        "autoApprove": boolean
+        "commentDepth": number
+    }
+}
+
+export interface component {
+    title: string
+    enable: boolean
+}
+
+//
+
+export interface emailResponse {
+
+}
+
+export interface qqResponse {
+
+}
+
+export interface qiNiuResponse {
+
+}
+
+export interface aiResponse {
+
+}
+
+interface siteBaseResponse {
+    site: siteResponse
+    email: emailResponse
+    qq: qqResponse
+    qiNiu: qiNiuResponse
+    ai: aiResponse
+}
+
+
+export type siteName = "site" | "email" | "qq" | "qiNiu" | "ai"
+
+
+export function siteApi<T extends siteName>(name: T): Promise<baseResponse<siteBaseResponse[T]>> {
+    return useAxios.get("/api/site/" + name)
+}
+
+export function siteUpdateApi<T extends siteName>(name: T, data: siteBaseResponse[T]):Promise<baseResponse<string>>{
+    return useAxios.put("/api/site/" + name, data)
+}
