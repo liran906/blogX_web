@@ -15,7 +15,7 @@
 
 import type {baseResponse, listResponse, optionsFunc, optionsType, paramsType} from "@/api"
 import { reactive, ref } from "vue"
-import { Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue"
+import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import { dateTemFormat, type dateTemType } from "@/utils/date"
 import {defaultDeleteApi} from "@/api";
 
@@ -54,6 +54,7 @@ interface Props {
   // 自定义组件
   actionGroup?: actionGroupType[] // 自定义批量操作列表
   filterGroup?: filterGroupType[] // 自定义搜索过滤列表
+  limit?: number
 
   // *定制化列表功能 默认都是开启的
   noDefaultDelete?: boolean // 是否启用默认删除 如果为 ture 那么要上抛问题到父组件
@@ -63,6 +64,7 @@ interface Props {
   noDelete?: boolean // 是否启用删除对象
   noActionGroup?: boolean // 是否启用操作下拉菜单
   noCheck?: boolean // 是否启用全选
+  noPage?: boolean // 是否启用分页
 
   // *定制化列表视图
   searchPlaceholder?: string // 搜索栏 placeholder
@@ -83,6 +85,7 @@ const {
   addLabel = "添加",
   editLabel = "编辑",
   deleteLabel = "删除",
+  limit = 10,
 } = props
 
 const actionGroupOptions = ref<actionGroupType[]>([])
@@ -159,7 +162,7 @@ const data = reactive<listResponse<any>>({
 
 // 请求参数（如分页、关键词等）
 const params = reactive<paramsType>({
-  limit: 10, // 每页数量
+  limit: props.noPage ? -1 : limit, // 每页数量
 })
 
 // 获取列表数据函数（初始化和分页变化时都会调用）
@@ -189,6 +192,7 @@ const emits = defineEmits<{
   (e: 'delete', keyList: number[] | string[]): void
   (e: 'add'): void
   (e: 'edit', record: any): void
+  (e: "row-click", record: any): void
 }>()
 
 /*
@@ -291,6 +295,17 @@ function actionGroupAction() {
     action.callback(selectedKeys.value)
   }
 }
+
+function rowClick(record: TableData, ev: Event) {
+  emits("row-click", record)
+}
+
+// 对外抛出
+defineExpose({
+  getList,
+  data,
+})
+
 </script>
 
 <template>
@@ -340,7 +355,8 @@ function actionGroupAction() {
       <a-spin :loading="loading" tip="加载中...">
         <div class="f_list_table">
           <!-- 全选按钮 -->
-          <a-table :data="data.list"
+          <a-table @row-click="rowClick"
+                   :data="data.list"
                    :row-key="rowKey"
                    v-model:selectedKeys="selectedKeys"
                    :row-selection="props.noCheck ? undefined : rowSelection "
@@ -379,7 +395,7 @@ function actionGroupAction() {
         </div>
 
         <!-- 🔹 分页控件 -->
-        <div class="f_list_page">
+        <div class="f_list_page" v-if="!props.noPage">
           <a-pagination
               show-total
               @change="pageChange"

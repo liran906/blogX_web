@@ -3,6 +3,8 @@
 import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import {userListApi, type userListType} from "@/api/user_api";
 import type {columnType} from "@/components/admin/f_list.vue";
+import {reactive, ref} from "vue";
+import F_modal_form, {type formListType} from "@/components/admin/f_modal_form.vue";
 
 const columns = [
   {title: "ID", dataIndex: 'id'},
@@ -12,15 +14,6 @@ const columns = [
   {title: "角色", dataIndex: 'role'},
   {title: "注册时间", slotName: 'createdAt', dateFormat: "current"}, //dateFormat: date 只显示日期 time 只显示时间 current 显示过去了多久 默认：日期+时间
   {title: "操作", slotName: 'action'},
-]
-
-const actionGroup = [
-  {
-    label: "批量升级",
-    callback: function (keyList: number[]) {
-      console.log(keyList)
-    }
-  }
 ]
 
 const filters: filterGroupType[] = [
@@ -33,28 +26,38 @@ const filters: filterGroupType[] = [
     ],
     column: "role",
     width: 140,
-    // callback: (value: number)=>{
-    //   console.log("父", value)
-    // }
-  },
-  // todo 这里接口不对
-  // {
-  //   label: "文章分类",
-  //   source: articleCategoryOptionsApi,
-  //   column: "category",
-  //   width: 140,
-  // }
+  }
 ]
+
+
+
+
+const formList: formListType[] = [
+  {
+    label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur"
+  }
+]
+const form = reactive({})
+const visible = ref(false)
+
+
+
+
 
 function remove(keyList: number[]){
   console.log(keyList)
 }
 
+function ok(form: object, fn: (val: boolean) => void) {
+  // console.log(form)
+  // fn(false)
+}
 </script>
 
 <template>
   <div>
-    <f_list :actionGroup="actionGroup" :filter-group="filters" :url="userListApi" :columns="columns">
+    <f_modal_form @ok="ok" v-model:visible="visible" title="创建用户" :form-list="formList"></f_modal_form>
+    <f_list @add="visible=true" :filter-group="filters" :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatarURL"></a-avatar>
       </template>
