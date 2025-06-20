@@ -34,10 +34,22 @@ const filters: filterGroupType[] = [
 
 const formList: formListType[] = [
   {
-    label: "昵称", field: "nick_name", type: "input", rules: {required: true}, validateTrigger: "blur"
+    label: "用户名", field: "username", type: "input", rules: {required: true}, validateTrigger: "blur"
+  },
+  {
+    label: "邮箱", field: "email", type: "input", rules: {required: true}, validateTrigger: "blur"
+  },
+  {
+    label: "昵称", field: "nickname", type: "input", rules: {required: true}, validateTrigger: "blur"
+  },
+  {
+    label: "角色", field: "role", type:"select", rules: {required: true}, validateTrigger: "blur", source: [
+      {label: "管理员", value: 1},
+      {label: "用户", value: 2},
+      {label: "游客", value: 3},
+    ],
   }
 ]
-const form = reactive({})
 const visible = ref(false)
 
 
@@ -48,16 +60,30 @@ function remove(keyList: number[]){
   console.log(keyList)
 }
 
-function ok(form: object, fn: (val: boolean) => void) {
-  // console.log(form)
+function create(form: object, fn?: (val: boolean) => void) {
+  // todo
+  console.log("create", form)
   // fn(false)
 }
+function update(form: object, fn?: (val: boolean) => void) {
+  // todo
+  console.log("update", form)
+  // fn(false)
+}
+
+const modalFormRef = ref()
+
+function edit(record: userListType) {
+  modalFormRef.value.setForm(record)
+  visible.value = true
+}
+
 </script>
 
 <template>
   <div>
-    <f_modal_form @ok="ok" v-model:visible="visible" title="创建用户" :form-list="formList"></f_modal_form>
-    <f_list @add="visible=true" :filter-group="filters" :url="userListApi" :columns="columns">
+    <f_modal_form ref="modalFormRef" @create="create" @update="update" v-model:visible="visible" add-label="创建用户" edit-label="编辑用户" :form-list="formList"></f_modal_form>
+    <f_list @edit="edit" @add="visible=true" :filter-group="filters" :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatarURL"></a-avatar>
       </template>
