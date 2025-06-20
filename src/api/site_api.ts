@@ -51,7 +51,13 @@ export interface component {
 //
 
 export interface emailResponse {
-
+    "domain": string
+    "port": number
+    "sendEmail": string
+    "authCode": string
+    "alias": string
+    "ssl": boolean
+    "tls": boolean
 }
 
 export interface qqResponse {
