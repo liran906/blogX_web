@@ -30,4 +30,25 @@ export function dataMock() {
         })
     })
 
+
+    mock(/.*?\/api\/data\/weather/, function (){
+        return mock({
+            "code": 0,
+            "data": {
+                "province": "江苏",
+                "city": "南京市",
+                "adcode": "210000",
+                "weather": "晴",
+                "temperature": "32",
+                "winddirection": "西南",
+                "windpower": "≤3",
+                "humidity": "55",
+                "reporttime": "2024-05-26 14:01:47",
+                "temperature_float": "34.0",
+                "humidity_float": "55.0"
+            },
+            "msg": "成功"
+        })
+    })
+
 }
