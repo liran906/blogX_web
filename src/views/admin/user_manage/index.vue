@@ -13,6 +13,16 @@ const columns = [
   {title: "注册时间", slotName: 'createdAt', dateFormat: "current"}, //dateFormat: date 只显示日期 time 只显示时间 current 显示过去了多久 默认：日期+时间
   {title: "操作", slotName: 'action'},
 ]
+
+const actionGroup = [
+  {
+    label: "批量升级",
+    callback: function (keyList: number[]) {
+      console.log(keyList)
+    }
+  }
+]
+
 function remove(keyList: number[]){
   console.log(keyList)
 }
@@ -21,12 +31,9 @@ function remove(keyList: number[]){
 
 <template>
   <div>
-    <f_list :url="userListApi" :columns="columns" no-default-delete @delete="remove">
+    <f_list :actionGroup="actionGroup" :url="userListApi" :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatarURL"></a-avatar>
-      </template>
-      <template #action_left>
-        <a-button>预览</a-button>
       </template>
     </f_list>
   </div>

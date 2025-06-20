@@ -15,13 +15,20 @@
 
 import type { baseResponse, listResponse, paramsType } from "@/api"
 import { reactive, ref } from "vue"
-import { Message, type TableColumnData } from "@arco-design/web-vue"
+import { Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue"
 import { dateTemFormat, type dateTemType } from "@/utils/date"
 import {defaultDeleteApi} from "@/api";
 
 // 列定义扩展：继承自 arco 的 TableColumnData，并可选地添加日期格式化字段
 export interface columnType extends TableColumnData {
   dateFormat?: dateTemType
+}
+
+// 自定义的批量操作对象
+export interface actionGroupType {
+  label: string
+  value?: number
+  callback: (keyList: number[]) => void
 }
 
 // 接收父组件传入的 props 参数类型定义
@@ -33,12 +40,17 @@ interface Props {
   // *primaryKey 的名字
   rowKey?: string // 默认值是“id”
 
+  // 自定义批量操作列表
+  actionGroup?: actionGroupType[]
+
   // *定制化列表功能 默认都是开启的
   noDefaultDelete?: boolean // 是否启用默认删除 如果为 ture 那么要上抛问题到父组件
+  noBatchDelete?: boolean // 是否启用批量删除
   noAdd?: boolean // 是否启用新建对象
   noEdit?: boolean // 是否启用编辑对象
   noDelete?: boolean // 是否启用删除对象
   noActionGroup?: boolean // 是否启用操作下拉菜单
+  noCheck?: boolean // 是否启用全选
 
   // *定制化列表视图
   searchPlaceholder?: string // 搜索栏 placeholder
@@ -60,6 +72,37 @@ const {
   editLabel = "编辑",
   deleteLabel = "删除",
 } = props
+
+const actionGroupOptions = ref<actionGroupType[]>([])
+
+// 初始化批量操作
+function initActionGroup() {
+  let index = 0
+  // 一般都有删除操作，但先判断一下
+  if (!props.noBatchDelete) {
+    actionGroupOptions.value.push({
+      label: "批量删除",
+      value: 1,
+      callback: (keyList: number[]) => {
+        baseDelete(keyList)
+        selectedKeys.value = []
+      }
+    })
+    index = 1
+  }
+  index++
+  // 循环其他自定义的批量操作（如有）
+  const actionGroup = props.actionGroup || []
+  for (const action of actionGroup) {
+    actionGroupOptions.value.push({
+      label: action.label,
+      value: index,
+      callback: action.callback,
+    })
+  }
+}
+
+initActionGroup()
 
 // 加载状态（控制 a-spin 加载效果）
 const loading = ref(false)
@@ -131,9 +174,13 @@ const emits = defineEmits<{
 */
 async function remove(record: any) {
   const key = record[rowKey] // 提取当前行的主键值，例如 id
+  baseDelete([key])
+}
+
+async function baseDelete(keyList: number[]) {
   if (noDefaultDelete) {
     // 不启用默认删除 上抛问题给父组件
-    emits("delete", [key])
+    emits("delete", keyList)
     return
   }
 
@@ -144,7 +191,7 @@ async function remove(record: any) {
 
   const url = array[1] // 提取 url，例如 "/api/user/list"
 
-  const res = await defaultDeleteApi(url, [key]) // 调用默认删除接口
+  const res = await defaultDeleteApi(url, keyList) // 调用默认删除接口
   if (res.code) {
     Message.error(res.msg)
     return
@@ -177,6 +224,23 @@ function refresh() {
   getList()
   Message.success("刷新成功")
 }
+
+const selectedKeys = ref([]);
+
+// 批量选择
+const rowSelection = reactive<TableRowSelection>({
+  type: 'checkbox',
+  showCheckedAll: true,
+  onlyCurrent: false,
+});
+const actionValue = ref()
+
+function actionGroupAction() {
+  const action = actionGroupOptions.value.find((value) => value.value === actionValue.value)
+  if (action) {
+    action.callback(selectedKeys.value)
+  }
+}
 </script>
 
 <template>
@@ -193,7 +257,8 @@ function refresh() {
 
       <!-- 批量操作 -->
       <div class="action_group" v-if="!noActionGroup">
-        <a-select placeholder="操作"></a-select>
+        <a-select style="width: 140px;" placeholder="操作" v-model="actionValue" :options="actionGroupOptions"></a-select>
+        <a-button type="primary" status="danger" @click="actionGroupAction" v-if="actionValue">执行</a-button>
       </div>
 
       <!-- 搜索 -->
@@ -217,7 +282,12 @@ function refresh() {
       <!-- 表格加载状态包裹 -->
       <a-spin :loading="loading" tip="加载中...">
         <div class="f_list_table">
-          <a-table :data="data.list" :pagination="false">
+          <!-- 全选按钮 -->
+          <a-table :data="data.list"
+                   :row-key="rowKey"
+                   v-model:selectedKeys="selectedKeys"
+                   :row-selection="props.noCheck ? undefined : rowSelection "
+                   :pagination="false">
             <!-- 表格列定义 -->
             <template #columns>
               <template v-for="col in props.columns">
@@ -280,6 +350,16 @@ function refresh() {
     .action_search,
     .action_search_slot {
       margin-right: 10px;
+    }
+
+    .action_group {
+      display: flex;
+      align-items: center;
+
+      button {
+        margin-left: 10px;
+      }
+
     }
 
     .action_flush {
