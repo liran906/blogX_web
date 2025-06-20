@@ -54,7 +54,7 @@ async function handleLogin() {
     return
   }
   // 没有重定向请求就去 web
-  router.push({ path: "/web_home" })
+  router.push({ path: "/" })
 }
 </script>
 

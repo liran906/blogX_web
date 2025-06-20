@@ -21,13 +21,21 @@ interface userStoreType {
 export const userStorei = defineStore('userStore', {
     state: (): userStoreType => {
         return {
+            // userInfo: {
+            //     userID: 0,
+            //     nickName: "",
+            //     userName: "",
+            //     avatar: "",
+            //     role: 0,
+            //     token: ""
+            // },
             userInfo: {
-                userID: 0,
-                nickName: "",
-                userName: "",
-                avatar: "",
-                role: 0,
-                token: ""
+                userID: 1,
+                nickName: "LIR",
+                userName: "lir",
+                avatar: "https://tu.tuhenmei.com/uploads/allimg/2022012218/0d5psui4k1n.jpg",
+                role: 1,
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjEsInVzZXJuYW1lIjoibGlyIiwicm9sZSI6MSwiaWF0IjoxNzUwNDMxNTgxLCJpc3MiOiJMSVIifQ.VPRJTyJOdeqcdJzHzqTEsJRG9_Mp8WcNVf3yoA7jgMs"
             },
         }
     },
@@ -93,7 +101,7 @@ export const userStorei = defineStore('userStore', {
                 token: "",
             }
             Message.success("用户注销成功")
-            router.push({name: "web"})
+            router.push({name: "web_home"})
         }
     },
     getters: {

@@ -9,7 +9,7 @@ const router = createRouter({
   routes: [
     {
       name: "web",
-      path: "/web",
+      path: "/",
       component: () => import("@/views/web/index.vue"),
       // redirect: "/admin",
       children: [
