@@ -1,4 +1,4 @@
-import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index";
+import {type baseResponse, type listResponse, type optionsType, type paramsType, useAxios} from "@/api/index";
 
 export interface pwdLoginRequest {
     username: string;
@@ -83,3 +83,8 @@ export interface userListType{
 export function userListApi(params?: paramsType):Promise<baseResponse<listResponse<userListType>>> {
     return useAxios.get("/api/user/list", {params})
 }
+
+// todo 这里接口不对
+// export function articleCategoryOptionsApi(params?: paramsType): Promise<baseResponse<optionsType[]>> {
+//     return useAxios.get("/api/article/category")
+// }

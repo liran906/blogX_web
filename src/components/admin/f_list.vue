@@ -13,7 +13,7 @@
 这种思路可以显著提升开发效率，避免重复代码，是实际项目中常见的企业级组件封装模式。
  */
 
-import type { baseResponse, listResponse, paramsType } from "@/api"
+import type {baseResponse, listResponse, optionsFunc, optionsType, paramsType} from "@/api"
 import { reactive, ref } from "vue"
 import { Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue"
 import { dateTemFormat, type dateTemType } from "@/utils/date"
@@ -31,6 +31,17 @@ export interface actionGroupType {
   callback: (keyList: number[]) => void
 }
 
+// 自定义的过滤标签
+export interface filterGroupType {
+  label: string
+  source: optionsType[] | optionsFunc
+  options?: optionsType[]
+  column?: string
+  params?: paramsType
+  callback?: (value: number | string) => void
+  width?: number
+}
+
 // 接收父组件传入的 props 参数类型定义
 interface Props {
   // *必要字段 路由+列名
@@ -40,8 +51,9 @@ interface Props {
   // *primaryKey 的名字
   rowKey?: string // 默认值是“id”
 
-  // 自定义批量操作列表
-  actionGroup?: actionGroupType[]
+  // 自定义组件
+  actionGroup?: actionGroupType[] // 自定义批量操作列表
+  filterGroup?: filterGroupType[] // 自定义搜索过滤列表
 
   // *定制化列表功能 默认都是开启的
   noDefaultDelete?: boolean // 是否启用默认删除 如果为 ture 那么要上抛问题到父组件
@@ -104,6 +116,38 @@ function initActionGroup() {
 
 initActionGroup()
 
+// 初始化搜索过滤
+const filterGroups = ref<filterGroupType[]>([])
+
+async function initFilterGroup() {
+  filterGroups.value = []
+  for (const f of props.filterGroup || []) {
+    if (typeof f.source === 'function') {
+      const res = await f.source(f.params)
+      if (res.code) {
+        Message.error(res.msg)
+        continue
+      }
+      f.options = res.data
+    } else {
+      f.options = f.source
+    }
+    if (!f.callback) {
+      // 如果没有callback，那就走默认行为
+      f.callback = (value) => {
+        if (f.column) {
+          const p: { [key: string]: any } = {}
+          p[f.column] = value
+          getList(p)
+        }
+      }
+    }
+    filterGroups.value.push(f)
+  }
+}
+
+initFilterGroup()
+
 // 加载状态（控制 a-spin 加载效果）
 const loading = ref(false)
 
@@ -119,9 +163,15 @@ const params = reactive<paramsType>({
 })
 
 // 获取列表数据函数（初始化和分页变化时都会调用）
-async function getList() {
+async function getList(newParams?: paramsType) {
   loading.value = true
-  const res = await props.url(params) // 调用父组件传入的请求函数(一般会传入后端API调用函数)
+
+  // 调用父组件传入的请求函数(一般会传入后端API调用函数)
+  if (newParams) {
+    Object.assign(params, newParams)  // 外部传入的新参数（如：搜索、筛选）加上 内部默认参数（如：分页、关键词）
+  }
+  const res = await props.url(params) // 由父组件传入的 API 方法
+
   loading.value = false
   if (res.code) {
     Message.error(res.msg) // 请求失败提示
@@ -266,6 +316,13 @@ function actionGroupAction() {
         <a-input-search :placeholder="searchPlaceholder" v-model="params.key" @search="search"></a-input-search>
       </div>
 
+      <!-- 过滤 -->
+      <div class="action_filter">
+        <a-select v-for="item in filterGroups" :style="{width: item.width + 'px'}" allow-clear
+                  @change="item.callback as any" :placeholder="item.label"
+                  :options="item.options as optionsType[]"></a-select>
+      </div>
+
       <!-- 其他搜索 -->
       <div class="action_search_slot">
         <slot name="search_other"></slot>
@@ -360,6 +417,16 @@ function actionGroupAction() {
         margin-left: 10px;
       }
 
+    }
+
+    .action_filter {
+      .arco-select {
+        margin-right: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
     }
 
     .action_flush {
