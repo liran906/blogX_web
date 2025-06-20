@@ -1,10 +1,8 @@
 <script setup lang="ts">
-
 import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import {userListApi, type userListType} from "@/api/user_api";
 import type {columnType} from "@/components/admin/f_list.vue";
-import {reactive, ref} from "vue";
-import F_modal_form, {type formListType} from "@/components/admin/f_modal_form.vue";
+import {type formListType} from "@/components/admin/f_modal_form.vue";
 
 const columns = [
   {title: "ID", dataIndex: 'id'},
@@ -29,15 +27,15 @@ const filters: filterGroupType[] = [
   }
 ]
 
-
-
-
 const formList: formListType[] = [
   {
-    label: "用户名", field: "username", type: "input", rules: {required: true}, validateTrigger: "blur"
+    label: "用户名", field: "username", type: "input", editDisable: true, rules: {required: true}, validateTrigger: "blur",
   },
   {
-    label: "邮箱", field: "email", type: "input", rules: {required: true}, validateTrigger: "blur"
+   label: "密码", field: "password", type: "password", editDisable: true, rules: {required: true}, validateTrigger: "blur",
+  },
+  {
+    label: "邮箱", field: "email", type: "input", editDisable: true, rules: {required: true}, validateTrigger: "blur"
   },
   {
     label: "昵称", field: "nickname", type: "input", rules: {required: true}, validateTrigger: "blur"
@@ -50,40 +48,19 @@ const formList: formListType[] = [
     ],
   }
 ]
-const visible = ref(false)
-
-
-
-
-
-function remove(keyList: number[]){
-  console.log(keyList)
-}
-
-function create(form: object, fn?: (val: boolean) => void) {
-  // todo
-  console.log("create", form)
-  // fn(false)
-}
-function update(form: object, fn?: (val: boolean) => void) {
-  // todo
-  console.log("update", form)
-  // fn(false)
-}
-
-const modalFormRef = ref()
-
-function edit(record: userListType) {
-  modalFormRef.value.setForm(record)
-  visible.value = true
-}
 
 </script>
 
 <template>
   <div>
-    <f_modal_form ref="modalFormRef" @create="create" @update="update" v-model:visible="visible" add-label="创建用户" edit-label="编辑用户" :form-list="formList"></f_modal_form>
-    <f_list @edit="edit" @add="visible=true" :filter-group="filters" :url="userListApi" :columns="columns">
+    <f_list
+        ref="fListRef"
+        :url="userListApi"
+        :filter-group="filters"
+        add-form-label="创建用户"
+        edit-form-label="编辑用户"
+        :form-list="formList"
+        :columns="columns">
       <template #avatar="{record}:{record: userListType}">
         <a-avatar :image-url="record.avatarURL"></a-avatar>
       </template>

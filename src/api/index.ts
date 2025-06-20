@@ -50,6 +50,14 @@ export function defaultDeleteApi(url: string, idList: number[]):Promise<baseResp
     return  useAxios.delete(url, {data: {idList}})
 }
 
+export function defaultPostApi(url: string, data: any): Promise<baseResponse<string>> {
+    return useAxios.post(url, data)
+}
+
+export function defaultPutApi(url: string, data: any): Promise<baseResponse<string>> {
+    return useAxios.put(url, data)
+}
+
 export interface optionsType {
     label: string
     value: number | string

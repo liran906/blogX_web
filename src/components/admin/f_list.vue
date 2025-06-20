@@ -17,7 +17,9 @@ import type {baseResponse, listResponse, optionsFunc, optionsType, paramsType} f
 import { reactive, ref } from "vue"
 import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import { dateTemFormat, type dateTemType } from "@/utils/date"
-import {defaultDeleteApi} from "@/api";
+import {defaultDeleteApi, defaultPostApi, defaultPutApi} from "@/api";
+import type {emitFnType, formListType} from "@/components/admin/f_modal_form.vue";
+import F_modal_form from "@/components/admin/f_modal_form.vue";
 
 // 列定义扩展：继承自 arco 的 TableColumnData，并可选地添加日期格式化字段
 export interface columnType extends TableColumnData {
@@ -71,6 +73,11 @@ interface Props {
   addLabel?: string // 新建对象的图标上的显示内容，默认是“添加”
   editLabel?: string // 编辑对象的图标上的显示内容，默认是“编辑”
   deleteLabel?: string // 删除对象的图标上的显示内容，默认是“删除”
+
+  // 表单
+  formList?: formListType[]
+  addFormLabel?: string
+  editFormLabel?: string
 }
 
 // 接收 props（使用 defineProps 声明）
@@ -255,11 +262,23 @@ async function baseDelete(keyList: number[]) {
   Message.success(res.msg)
 }
 
-function update(record: any) {
+const modalFormRef = ref()
+
+function edit(record: any) {
+  if (props.formList?.length) {
+    modalFormRef.value.setForm(record)
+    visible.value = true
+    return
+  }
   emits("edit", record)
 }
 
 function add() {
+  if (props.formList?.length) {
+    visible.value = true
+    return
+  }
+
   emits("add")
 }
 
@@ -300,6 +319,40 @@ function rowClick(record: TableData, ev: Event) {
   emits("row-click", record)
 }
 
+const visible = ref(false)
+
+async function create(form: any, fn?: emitFnType) {
+  const array = /\"(.*?)\"/.exec(props.url.toString())
+  if (array?.length !== 2) {
+    return
+  }
+  const url = array[1]
+
+  const res = await defaultPostApi(url, form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  getList()
+  fn(true)
+}
+
+async function update(form: any, fn?: emitFnType) {
+  const array = /\"(.*?)\"/.exec(props.url.toString())
+  if (array?.length !== 2) {
+    return
+  }
+  const url = array[1]
+
+  const res = await defaultPutApi(url, form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  getList()
+  fn(true)
+}
+
 // 对外抛出
 defineExpose({
   getList,
@@ -310,6 +363,17 @@ defineExpose({
 
 <template>
   <div class="f_list_com">
+    <!-- 🔹 表单 -->
+    <f_modal_form
+        ref="modalFormRef"
+        @create="create"
+        @update="update"
+        v-if="props.formList?.length"
+        :add-label="props.addFormLabel"
+        :edit-label="props.editFormLabel"
+        v-model:visible="visible"
+        :form-list="props.formList"></f_modal_form>
+
     <!-- 🔹 顶部操作区域（创建、批量操作、搜索等） -->
     <div class="f_list_head">
 
@@ -373,7 +437,7 @@ defineExpose({
                     <!-- 操作列 -->
                     <div class="col_actions" v-if="col.slotName === 'action'">
                       <slot v-bind="data" name="action_left"></slot>
-                      <a-button v-if="!noEdit" type="primary" @click="update(data.record)">{{ editLabel }}</a-button>
+                      <a-button v-if="!noEdit" type="primary" @click="edit(data.record)">{{ editLabel }}</a-button>
                       <a-popconfirm v-if="!noDelete" @ok="remove(data.record)" content="确定要删除该记录吗？">
                         <a-button type="primary" status="danger">{{ deleteLabel }}</a-button>
                       </a-popconfirm>
