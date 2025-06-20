@@ -1,7 +1,5 @@
 <script setup lang="ts">
-
-//M
-
+// M
 import F_title from "@/components/common/f_title.vue";
 import {reactive, ref} from "vue";
 import F_image_upload from "@/components/common/f_image_upload.vue";
@@ -120,15 +118,18 @@ import F_site from "@/components/admin/site/f_site.vue";
           <a-col :span="8">
             <div class="form index_right_form">
               <f_title>首页右侧组件展示</f_title>
-              <f_index_right class="body" v-model="form.rightSidebar.list"></f_index_right>
+              <f_index_right class="body" v-model="form.indexRight.list"></f_index_right>
             </div>
             <div class="form article_form">
               <f_title>文章设置</f_title>
               <div class="body">
-                <a-form-item :label-col-props="{span: 5}" :wrapper-col-props="{span: 13}" label="文章免审核">
+                <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 14}" label="文章免审核">
                   <a-switch v-model="form.article.autoApprove"></a-switch>
+                  <template #help>
+                    开启文章免审核之后，文章直接可以在首页中查询
+                  </template>
                 </a-form-item>
-                <a-form-item :label-col-props="{span: 5}" :wrapper-col-props="{span: 13}" label="评论层数">
+                <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 14}" label="评论层数">
                   <a-input-number placeholder="评论层数" v-model="form.article.commentDepth"></a-input-number>
                 </a-form-item>
               </div>
@@ -142,14 +143,8 @@ import F_site from "@/components/admin/site/f_site.vue";
 
 <style lang="less">
 .site_view {
-  padding: 20px;
-
   .form {
     margin-bottom: 20px;
-
-    .body {
-      margin-top: 10px;
-    }
   }
 }
 </style>

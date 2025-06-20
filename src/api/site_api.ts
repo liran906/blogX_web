@@ -6,7 +6,7 @@ import {type baseResponse, useAxios} from "@/api/index";
 export interface siteResponse {
     "siteInfo": {
         "title": string
-        "logoURL": string
+        "logoURL": string //
         "archive": string
         "mode": 1 | 2
     },
@@ -21,9 +21,9 @@ export interface siteResponse {
     },
     "about": {
         "siteDate": string
-        "qqURL": string
+        "qqURL": string //
         "version": string
-        "wechatURL": string
+        "wechatURL": string //
         "gitee": string
         "bilibili": string
         "github": string
@@ -31,31 +31,29 @@ export interface siteResponse {
     "login": {
         "qqLogin": boolean
         "usernamePwdLogin": boolean
-        "emailRegister": boolean
+        "emailRegister": boolean //
         "captcha": boolean
     },
-    "rightSidebar": {
-        "list": component[]
+    "indexRight": {
+        "list": indexRightType[]
     },
     "article": {
-        "autoApprove": boolean
-        "commentDepth": number
+        "autoApprove": boolean //
+        "commentDepth": number //
     }
 }
 
-export interface component {
+export interface indexRightType {
     title: string
     enable: boolean
 }
-
-//
 
 export interface emailResponse {
     "domain": string
     "port": number
     "sendEmail": string
     "authCode": string
-    "alias": string
+    "alias": string //
     "ssl": boolean
     "tls": boolean
 }
@@ -71,14 +69,18 @@ export interface qiNiuResponse {
 }
 
 export interface aiResponse {
-
+    "enable": boolean,
+    "secretKey": string
+    "nickname": string
+    "avatarURL": string //
+    "abstract": string
 }
 
 interface siteBaseResponse {
     site: siteResponse
     email: emailResponse
     qq: qqResponse
-    qiNiu: qiNiuResponse
+    qiNiu: qiNiuResponse //
     ai: aiResponse
 }
 
