@@ -75,7 +75,7 @@ export const userStorei = defineStore('userStore', {
             if (payLoad.exp * 1000 - nowTime <= 0){
                 Message.warning("token已过期")
                 localStorage.removeItem("userInfo")
-                router.push({name: "web"})
+                router.push({name: "web_home"})
                 return;
             }
 

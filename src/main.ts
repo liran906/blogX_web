@@ -10,6 +10,7 @@ import '@arco-design/web-vue/dist/arco.css';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import '@/assets/public.less'
 import "@/assets/iconfont.css"
+import "@/assets/theme.css"
 import {apiMock} from "@/mock";
 
 const app = createApp(App)

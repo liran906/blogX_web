@@ -54,7 +54,7 @@ async function handleLogin() {
     return
   }
   // 没有重定向请求就去 web
-  router.push({ path: "/web" })
+  router.push({ path: "/web_home" })
 }
 </script>
 
@@ -112,14 +112,15 @@ async function handleLogin() {
 
 <style lang="less">
 .login_view {
-  background: url(https://www.fengfengzhidao.com/image/bg.png) 50% / cover no-repeat;
+  background: url(@/assets/img/bg.png) 50% / cover no-repeat;
   position: relative;
   height: 100vh;
 
   .login_mask {
     width: 400px;
     height: 100vh;
-    background-color: rgba(white, 0.8);
+    --color-bg: white;
+    background-color: var(--login_bg);
     position: absolute;
     right: 0;
     top: 0;
