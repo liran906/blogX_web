@@ -22,11 +22,8 @@ const columns = [
   {title: "文章标题", dataIndex: 'title'},
   {title: "发布用户", slotName: 'user', width: 150},
   {title: "文章封面", slotName: 'cover'},
-  {title: "浏览", dataIndex: 'readCount', width: 60}, //
-  {title: "评论", dataIndex: 'commentCount', width: 60},
-  {title: "点赞", dataIndex: 'likeCount', width: 60}, //
-  {title: "收藏", dataIndex: 'collectCount', width: 60},
-  {title: "是否开启评论", dataIndex: 'openForComment', type: "switch"},
+  {title: "数据：阅/赞/评/藏",  slotName: 'counts', width: 150},
+  {title: "开启评论", dataIndex: 'openForComment', type: "switch"},
   {title: "状态", dataIndex: 'status', type: "options", options: articleStatusOptions},
   {title: "分类", slotName: 'category'},
   {title: "文章置顶", slotName: 'adminTop'},
@@ -152,6 +149,9 @@ async function adminArticleTop(record: articleListType) {
       </template>
       <template #category="{record}:{record: articleListType}">
         <span>{{ record.categoryName ? record.categoryName : '-' }}</span>
+      </template>
+      <template #counts="{record}:{record: articleListType}">
+        <span>{{ record.readCount }} / {{record.likeCount}} / {{record.commentCount}} / {{record.collectCount}}</span>
       </template>
       <template #adminTop="{record}:{record: articleListType}">
         <a-switch v-model="record.pinnedByAdmin" @change="adminArticleTop(record)"></a-switch>

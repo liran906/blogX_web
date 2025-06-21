@@ -479,6 +479,9 @@ defineExpose({
                     <slot v-else :name="col.slotName" v-bind="data"></slot>
                   </template>
                 </a-table-column>
+
+                <!-- 兜底处理普通列 -->
+                <a-table-column v-else v-bind="col" />
               </template>
             </template>
           </a-table>

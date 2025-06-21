@@ -15,3 +15,13 @@ export const roleOptions = [
     {label: "用户", value: 2, color: "green"},
     {label: "访客", value: 3, color: "grey"},
 ]
+
+export const logLevelOptions = [
+    {label: "debug", value: 1, color: "grey"},
+    {label: "trace", value: 2, color: "grey"},
+    {label: "info", value: 3, color: "blue"},
+    {label: "warn", value: 4, color: "orange"},
+    {label: "error", value: 5, color: "red"},
+    {label: "fatal", value: 6, color: "black"},
+    {label: "panic", value: 7, color: "black"},
+]

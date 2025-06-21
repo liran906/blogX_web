@@ -57,7 +57,7 @@ async function handler() {
 <template>
   <div>
     <a-modal v-model:visible="visible" :title="data.id ? '更新banner' : '创建banner'" :on-before-ok="handler">
-      <a-form>
+      <a-form :model="data">
         <a-form-item label="封面">
           <f_image_upload v-model="data.url" shape=""  placeholder="banner封面" :width="300" :height="100"></f_image_upload>
         </a-form-item>

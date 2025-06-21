@@ -69,7 +69,7 @@ export function userLogoutApi():Promise<baseResponse<string>>{
 // }
 
 export function adminArticleTopApi(aid: number):Promise<baseResponse<string>>{
-    return useAxios.put("/api/article/admin_pin/" + aid)
+    return useAxios.put("/api/article/admin_pin/" + aid.toString())
 }
 
 export interface userListType{

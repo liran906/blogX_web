@@ -18,9 +18,9 @@ const columns = [
   {title: "用户名", dataIndex: 'username'},
   {title: "角色", dataIndex: 'role', type: "options", options: roleOptions},
   {title: "地址", slotName: 'addr'},
-  {title: "发文数", dataIndex: 'articleCount'},
+  {title: "发文", dataIndex: 'articleCount'},
   {title: "注册时间", dataIndex: 'createdAt',  type: "date"},
-  {title: "最近登录时间", dataIndex: 'lastLoginTime', type: "date"},
+  {title: "最近登录", dataIndex: 'lastLoginTime', type: "date"},
   {title: "操作", slotName: 'action'},
 ]
 
