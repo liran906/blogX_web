@@ -4,7 +4,8 @@ export interface optionsColorType  extends  optionsType{
     color?: string
 }
 export const articleStatusOptions = [
-    {label: "草稿", value: 1, color: "green"},
-    {label: "审核", value: 2, color: "red"},
+    {label: "草稿", value: 1, color: "grey"},
+    {label: "审核", value: 2, color: "orange"},
     {label: "发布", value: 3, color: "blue"},
+    {label: "拒绝", value: 4, color: "red"},
 ]

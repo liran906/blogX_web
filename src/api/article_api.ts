@@ -34,3 +34,40 @@ export interface articleListRequest extends paramsType {
 export function articleListApi(params: articleListRequest): Promise<baseResponse<listResponse<articleListType>>> {
     return useAxios.get("/api/article", {params})
 }
+
+export interface articleDetailType {
+    "id": number
+    "createdAt": string
+    "updatedAt": string
+    "title": string
+    "abstract": string
+    "content": string
+    "categoryID"?: number,
+    "categoryName"?: string //
+    "tags": string[]
+    "coverURL": string
+    "userID": number
+    "readCount": number
+    "likeCount": number
+    "commentCount": number
+    "collectCount": number
+    "openForComment": false,
+    "status": number
+    "username": string
+    "userNickname": string
+    "userAvatarURL": string
+}
+
+export function articleDetailApi(id: number): Promise<baseResponse<articleDetailType>> {
+    return useAxios.get("/api/article/" + id.toString())
+}
+
+export interface articleExamineRequest {
+    "articleID": number
+    "status": number // 3 审核通过 4 不通过
+    msg: string
+}
+
+export function articleExamineApi(data: articleExamineRequest):Promise<baseResponse<string>>{
+    return useAxios.post("/api/article/review", data)
+}
