@@ -62,27 +62,6 @@ export function userLogoutApi():Promise<baseResponse<string>>{
     return useAxios.delete("/api/user/logout")
 }
 
-export interface userListType{
-    "id": number,
-    "username": string,
-    "createdAt": string,
-    "email": string,
-    "status": number,
-    "nickname": string,
-    "avatarURL": string,
-    "role": number,
-    "articleCount": number,
-    "siteAge": number,
-    "lastLoginIP": string,
-    "lastLoginIPAddr": string,
-    "lastLoginTime": string,
-    "registerSource": number
-}
-
-// 用户列表
-export function userListApi(params?: paramsType):Promise<baseResponse<listResponse<userListType>>> {
-    return useAxios.get("/api/user/list", {params})
-}
 
 // todo 这里接口不对
 // export function articleCategoryOptionsApi(params?: paramsType): Promise<baseResponse<optionsType[]>> {
@@ -91,4 +70,35 @@ export function userListApi(params?: paramsType):Promise<baseResponse<listRespon
 
 export function adminArticleTopApi(aid: number):Promise<baseResponse<string>>{
     return useAxios.put("/api/article/admin_pin/" + aid)
+}
+
+export interface userListType{
+    "id": number,
+    "createdAt": string
+    "username": string,
+    "nickname": string,
+    "avatarURL": string,
+    "articleCount": number,
+    "indexCount":number, // todo ???
+    "lastLoginIP": string,
+    "lastLoginIPAddr": string,
+    "lastLoginTime": string,
+}
+
+// 用户列表
+export function userListApi(params?: paramsType):Promise<baseResponse<listResponse<userListType>>> {
+    return useAxios.get("/api/user/list", {params})
+}
+
+export interface userUpdateAdminRequest {
+    userID: number
+    username: string
+    nickname: string
+    avatarURL: string
+    bio?: string
+    role?: number
+}
+
+export function userUpdateAdminApi(data: userUpdateAdminRequest):Promise<baseResponse<string>>{
+    return  useAxios.put("/api/user/admin_update", data)
 }
