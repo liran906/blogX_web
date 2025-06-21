@@ -1,0 +1,10 @@
+import type {optionsType} from "@/api";
+
+export interface optionsColorType  extends  optionsType{
+    color?: string
+}
+export const articleStatusOptions = [
+    {label: "草稿", value: 1, color: "green"},
+    {label: "审核", value: 2, color: "red"},
+    {label: "发布", value: 3, color: "blue"},
+]

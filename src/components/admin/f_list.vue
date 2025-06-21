@@ -20,10 +20,14 @@ import { dateTemFormat, type dateTemType } from "@/utils/date"
 import {defaultDeleteApi, defaultPostApi, defaultPutApi} from "@/api";
 import type {emitFnType, formListType} from "@/components/admin/f_modal_form.vue";
 import F_modal_form from "@/components/admin/f_modal_form.vue";
+import {articleStatusOptions, type optionsColorType} from "@/options/options";
+import F_label from "@/components/common/f_label.vue";
 
 // 列定义扩展：继承自 arco 的 TableColumnData，并可选地添加日期格式化字段
 export interface columnType extends TableColumnData {
   dateFormat?: dateTemType
+  type?: "date" | "options" | "switch"
+  options?: optionsColorType
 }
 
 // 自定义的批量操作对象
@@ -52,6 +56,9 @@ interface Props {
 
   // *primaryKey 的名字
   rowKey?: string // 默认值是“id”
+
+  // 默认参数
+  defaultParams?: Object
 
   // 自定义组件
   actionGroup?: actionGroupType[] // 自定义批量操作列表
@@ -174,6 +181,11 @@ const params = reactive<paramsType>({
 
 // 获取列表数据函数（初始化和分页变化时都会调用）
 async function getList(newParams?: paramsType) {
+  // 判断有没有默认的params
+  if (props.defaultParams){
+    Object.assign(params, props.defaultParams)
+  }
+
   loading.value = true
 
   // 调用父组件传入的请求函数(一般会传入后端API调用函数)
@@ -429,7 +441,21 @@ defineExpose({
             <template #columns>
               <template v-for="col in props.columns">
                 <!-- 普通列直接绑定属性 -->
-                <a-table-column v-if="col.dataIndex" v-bind="col" />
+                <a-table-column v-if="col.type === 'date'" v-bind="col">
+                  <template #cell="data">
+                    {{ dateTemFormat(data.record[col.dataIndex], col.dateFormat) }}
+                  </template>
+                </a-table-column>
+                <a-table-column v-else-if="col.type === 'options'" v-bind="col">
+                  <template #cell="data">
+                    <f_label :options="col.options" :value="data.record[col.dataIndex]"></f_label>
+                  </template>
+                </a-table-column>
+                <a-table-column v-else-if="col.type === 'switch'" v-bind="col">
+                  <template #cell="data">
+                    <a-switch :model-value="data.record[col.dataIndex]"></a-switch>
+                  </template>
+                </a-table-column>
 
                 <!-- 插槽列 -->
                 <a-table-column v-else-if="col.slotName" v-bind="col">
