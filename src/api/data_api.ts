@@ -33,12 +33,25 @@ export function dataSumApi(): Promise<baseResponse<dataSumType>> {
 }
 
 export interface dataGrowthType {
-    "growthRate": number
-    "growthNum": number
-    "countList": number[]
-    "dateList": number[]
+    growthRateMap: { [key: string]: string }
+    growthMap: { [key: string]: number }
+    valueMap: { [key: string]: number }
 }
 
-export function dataGrowthApi(type: 1 | 2 | 3): Promise<baseResponse<dataGrowthType>> {
-    return useAxios.get("/api/data/growth", {params: {type}})
+export function dataGrowthApi(type: 1 | 2 | 3 | 4, interval: 1 | 2 | 3): Promise<baseResponse<dataGrowthType>> {
+    return useAxios.get("/api/data/growth", {params: {type, interval}})
+}
+
+export function dataArticleGrowthApi(): Promise<baseResponse<dataGrowthType>> {
+    return useAxios.get("/api/data/article/year")
+}
+
+export interface dataComputerType {
+    "cpuUsage": number
+    "memUsage": number
+    "diskUsage":  number
+}
+
+export function dataComputerApi():Promise<baseResponse<dataComputerType>>{
+    return  useAxios.get("/api/data/os")
 }
