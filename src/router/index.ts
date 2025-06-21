@@ -40,7 +40,7 @@ const router = createRouter({
           path: "",
           component: () => import("@/views/admin/home/index.vue"),
           meta: {
-            title: "首页"
+            title: "数据统计"
           }
         },
         {
@@ -175,7 +175,7 @@ const router = createRouter({
     {
       name: "test",
       path: "/test",
-      component: () => import("@/test/json.vue"),
+      component: () => import("@/test/echarts.vue"),
     },
     {
       name: "notfound",
