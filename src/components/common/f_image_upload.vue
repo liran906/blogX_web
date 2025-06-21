@@ -56,6 +56,12 @@ function fileUploadCallback(file: FileItem){
     &.circle{
       border-radius: 50%;
     }
+
+    .arco-image-img {
+      object-fit: contain; // 保持原始宽高比显示在指定区域内
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>
