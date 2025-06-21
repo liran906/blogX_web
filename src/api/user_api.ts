@@ -88,3 +88,7 @@ export function userListApi(params?: paramsType):Promise<baseResponse<listRespon
 // export function articleCategoryOptionsApi(params?: paramsType): Promise<baseResponse<optionsType[]>> {
 //     return useAxios.get("/api/article/category")
 // }
+
+export function adminArticleTopApi(aid: number):Promise<baseResponse<string>>{
+    return useAxios.put("/api/article/admin_pin/" + aid)
+}

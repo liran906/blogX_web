@@ -15,19 +15,21 @@ import {articleStatusOptions} from "@/options/options";
 import {Message} from "@arco-design/web-vue";
 import F_user from "@/components/common/f_user.vue";
 import {articleExamineApi} from "@/api/article_api";
+import {adminArticleTopApi} from "@/api/user_api";
 
 const columns = [
   {title: "ID", dataIndex: 'id', width: 55},
   {title: "文章标题", dataIndex: 'title'},
   {title: "发布用户", slotName: 'user', width: 150},
-  {title: "文章封面", slotName: 'cover'}, // todo
+  {title: "文章封面", slotName: 'cover'},
   {title: "浏览", dataIndex: 'readCount', width: 60}, //
   {title: "评论", dataIndex: 'commentCount', width: 60},
   {title: "点赞", dataIndex: 'likeCount', width: 60}, //
   {title: "收藏", dataIndex: 'collectCount', width: 60},
   {title: "是否开启评论", dataIndex: 'openForComment', type: "switch"},
   {title: "状态", dataIndex: 'status', type: "options", options: articleStatusOptions},
-  {title: "分类", slotName: 'category'}, // todo
+  {title: "分类", slotName: 'category'},
+  {title: "文章置顶", slotName: 'adminTop'},
   {title: "发布时间", dataIndex: 'createdAt', type: "date"},
   {title: "更新时间", dataIndex: 'updatedAt', type: "date", dateFormat: "current"},
   {title: "操作", slotName: 'action', width: 60},
@@ -89,6 +91,20 @@ async function handler() {
   return  true
 }
 
+async function adminArticleTop(record: articleListType) {
+  if (record.status !== 3){
+    Message.warning("只能置顶已发布的文章")
+    record.pinnedByAdmin = !record.pinnedByAdmin
+    return
+  }
+  const res = await adminArticleTopApi(record.id)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+}
+
 </script>
 
 <template>
@@ -136,6 +152,9 @@ async function handler() {
       </template>
       <template #category="{record}:{record: articleListType}">
         <span>{{ record.categoryName ? record.categoryName : '-' }}</span>
+      </template>
+      <template #adminTop="{record}:{record: articleListType}">
+        <a-switch v-model="record.pinnedByAdmin" @change="adminArticleTop(record)"></a-switch>
       </template>
     </f_list>
   </div>
