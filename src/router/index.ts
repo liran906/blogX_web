@@ -1,3 +1,4 @@
+// M
 import {createRouter, createWebHistory} from 'vue-router'
 import NProgress from "nprogress";
 import {Message} from "@arco-design/web-vue";
@@ -123,6 +124,14 @@ const router = createRouter({
                     title: "AI设置"
                   },
                   component: () => import("@/views/admin/settings_manage/site_manage/ai.vue"),
+                },
+                {
+                  name: "siteManageCloud",
+                  path: "cloud",
+                  meta: {
+                    title: "对象存储设置"
+                  },
+                  component: () => import("@/views/admin/settings_manage/site_manage/cloud/qiniu.vue"),
                 }
               ]
             },

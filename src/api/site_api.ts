@@ -64,8 +64,21 @@ export interface qqResponse {
     "redirect": string
 }
 
-export interface qiNiuResponse {
+export interface cloudResponse {
+    "qny": qiNiuType
+}
 
+export interface qiNiuType {
+    "enable": boolean
+    "localSave": boolean // 开启云存储后，是否存到本地
+    "accessKey": string
+    "secretKey": string
+    "bucket": string
+    "uri": string
+    "region": string
+    "prefix": string
+    "size": number // 单位MB
+    // "expiry": number // 单位秒
 }
 
 export interface aiResponse {
@@ -80,12 +93,12 @@ interface siteBaseResponse {
     site: siteResponse
     email: emailResponse
     qq: qqResponse
-    qiNiu: qiNiuResponse //
+    cloud: cloudResponse //
     ai: aiResponse
 }
 
 
-export type siteName = "site" | "email" | "qq" | "qiNiu" | "ai"
+export type siteName = "site" | "email" | "qq" | "cloud" | "ai"
 
 
 export function siteApi<T extends siteName>(name: T): Promise<baseResponse<siteBaseResponse[T]>> {

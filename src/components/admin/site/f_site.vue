@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {siteApi, type siteName, siteUpdateApi} from "@/api/site_api";
+import {type CloudResponse, siteApi, type siteName, siteUpdateApi} from "@/api/site_api";
 import {reactive, ref} from "vue";
 import {Message} from "@arco-design/web-vue";
 
@@ -18,6 +18,8 @@ async function getData() {
     Message.error(res.msg)
     return
   }
+  console.log(res.msg)
+  console.log(res)
   Object.assign(data, res.data)
   isShow.value = true
 }
