@@ -19,7 +19,7 @@ import Echarts_v3 from "@/components/echarts/echarts_1/echarts_v3.vue";
           <f_home_charts_v1 :type="1"></f_home_charts_v1>
         </div>
         <div class="item">
-          <f_title :type="2">点击率</f_title>
+          <f_title :type="2">点击量</f_title>
           <f_home_charts_v1 :type="2"></f_home_charts_v1>
         </div>
         <div class="item">
@@ -33,7 +33,7 @@ import Echarts_v3 from "@/components/echarts/echarts_1/echarts_v3.vue";
       </div>
       <div class="charts charts_2">
         <div class="item">
-          <f_title :type="2">发布文章</f_title>
+          <f_title :type="2">年度文章发布情况</f_title>
           <div class="body">
             <echarts_v2></echarts_v2>
           </div>

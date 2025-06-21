@@ -50,7 +50,6 @@ function initEcharts() {
       },
       formatter: (params: any) => {
         const data = params[0]
-        console.log(data)
         return `<div>
 <div>${data.name}</div>
 <div>${data.seriesName} ${(data.data as number).toFixed(1)}%</div>
@@ -61,6 +60,7 @@ function initEcharts() {
       left: '3%',
       right: '10%',
       bottom: '3%',
+      top: "5%",
       containLabel: true
     },
     xAxis: {
@@ -69,6 +69,11 @@ function initEcharts() {
       max: 100,
       axisLabel: {
         formatter: '{value}%'
+      },
+      splitLine: {
+        lineStyle: {
+          color: lineColor
+        }
       }
     },
     yAxis: {
