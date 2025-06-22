@@ -9,6 +9,25 @@ import {IconEdit} from "@arco-design/web-vue/es/icon";
 import {dateTimeFormat} from "../../../utils/date";
 import F_label from "@/components/common/f_label.vue";
 import {registerSourceOptions} from "@/options/options";
+import {nextTick, ref} from "vue";
+import F_edit_input from "@/components/common/input/f_edit_input.vue";
+import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api";
+import {Message} from "@arco-design/web-vue";
+
+async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio", value: string) {
+  const data: userDetailUpdateRequest = {}
+  data[column] = value
+
+  const res = await userDetailUpdateApi(data)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  userCenterStore.getUserDetail()
+
+}
+
 </script>
 
 <template>
@@ -28,24 +47,28 @@ import {registerSourceOptions} from "@/options/options";
       <div class="head">基本信息</div>
       <div class="body">
         <a-form :label-col-props="{span: 2}" label-align="left" :wrapper-col-props="{span: 22}">
-          <a-form-item label="用户昵称">{{ userCenterStore.userDetail.nickname }}
-            <a href="javascript:void 0"><IconEdit></IconEdit>编辑</a>
+
+          <a-form-item label="用户昵称">
+            <f_edit_input placeholder="用户昵称" @ok="userUpdateColumn('nickname', $event)"
+                          :value="userCenterStore.userDetail.nickname"></f_edit_input>
             <template #help>昵称30天内可修改一次</template>
           </a-form-item>
+
           <a-form-item label="用户名">
             {{ userCenterStore.userDetail.username }}
           </a-form-item>
-          <a-form-item label="简介">
-            <span>{{  userCenterStore.userDetail.bio }}</span>
-            <a href="javascript:void 0">
-              <IconEdit></IconEdit>
-              编辑</a>
 
+          <a-form-item label="简介">
+            <f_edit_input placeholder="用户简介" type="textarea" @ok="userUpdateColumn('bio', $event)"
+                          :value="userCenterStore.userDetail.bio"></f_edit_input>
           </a-form-item>
+
           <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt)}}</a-form-item>
+
           <a-form-item label="注册来源">
             <f_label :options="registerSourceOptions" :value="userCenterStore.userDetail.registerSource"></f_label>
           </a-form-item>
+
         </a-form>
       </div>
     </div>
@@ -110,6 +133,10 @@ import {registerSourceOptions} from "@/options/options";
       padding: 10px 20px 20px 20px;
 
       color: var(--color-text-2);
+
+      //.arco-form {
+      //
+      //}
     }
   }
 

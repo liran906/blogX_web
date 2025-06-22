@@ -153,3 +153,24 @@ export function emailRegisterApi(data: emailRegisterType): Promise<baseResponse<
 export function qqLoginApi(code:string):Promise<baseResponse<string>>{
     return  useAxios.post("/api/user/qq", {code})
 }
+
+export interface userDetailUpdateRequest {
+    nickname?: string
+    avatarURL?: string
+    bio?: string
+    tags?: string[]
+    displayCollections?: boolean
+    displayFans?: boolean
+    displayFollowing?: boolean
+    themeID?: number
+    gender?: number
+    phone?: string
+    country?: string
+    province?: string
+    city?: string
+    dateOfBirth?: string
+}
+
+export function userDetailUpdateApi(data: userDetailUpdateRequest): Promise<baseResponse<string>> {
+    return useAxios.put("/api/user/update", data)
+}
