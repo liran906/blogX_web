@@ -12,7 +12,7 @@ export function pwdLoginApi(data: pwdLoginRequest): Promise<baseResponse<string>
     return useAxios.post("/api/user/login", data)
 }
 
-// 详细信息，暂时没用
+// 详细信息
 export interface userDetailType {
     "id": number
     "createdAt": string
@@ -20,6 +20,7 @@ export interface userDetailType {
     "email": string
     "hasPassword": boolean
     "nickname": string
+    "nicknameUpdate": number // 秒级时间戳
     "avatarURL": string
     "bio": string
     "openid": string
@@ -41,7 +42,7 @@ export interface userDetailType {
     "followingCount": number
     "role": number
     "siteAge": number
-    "tags": string
+    "tags": string[]
     "updatedAt": string
     "themeID": number
     "displayCollections": boolean
@@ -55,7 +56,7 @@ export interface userDetailType {
     "homepageVisitCount": number
 }
 // 详细用户信息
-export function userDetailApi():Promise<baseResponse<userInfoType>>{
+export function userDetailApi():Promise<baseResponse<userDetailType>>{
     return  useAxios.get("/api/user/0")
 }
 

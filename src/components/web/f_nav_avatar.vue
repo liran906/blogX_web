@@ -11,8 +11,13 @@ function goRouter(name: string) {
     return
   }
   router.push({name: name})
-
 }
+
+
+function goUCenter() {
+  router.push("/center/info")
+}
+
 </script>
 
 <template>
@@ -27,11 +32,11 @@ function goRouter(name: string) {
         <div class="nickname">{{ store.userInfo.nickName }}</div>
         <div class="data">
           <a-statistic extra="粉丝" :value="store.userInfo.fansCount"/>
-          <a-statistic extra="关注" :value="store.userInfo.followCount"/>
+          <a-statistic extra="关注" :value="store.userInfo.followingCount"/>
           <a-statistic extra="文章" :value="store.userInfo.articleCount"/>
         </div>
         <div class="menu">
-          <div class="item" @click="goRouter('userCenter')"><i class="iconfont icon-list"></i> <span>个人中心</span>
+          <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-list"></i> <span>个人中心</span>
           </div>
           <div class="item" @click="goRouter('articleManage')"><i class="iconfont icon-wenzhangguanli"></i>
             <span>文章管理</span></div>
