@@ -174,3 +174,13 @@ export interface userDetailUpdateRequest {
 export function userDetailUpdateApi(data: userDetailUpdateRequest): Promise<baseResponse<string>> {
     return useAxios.put("/api/user/update", data)
 }
+
+export interface userPwdUpdateType {
+    "oldPwd": string
+    "pwd": string
+    rePwd: string
+}
+
+export function userPwdUpdateApi(data: userPwdUpdateType):Promise<baseResponse<string>>{
+    return useAxios.put("/api/user/password", data)
+}
