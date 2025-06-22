@@ -200,12 +200,7 @@ router.beforeEach((to, from, next) => {
       Message.warning("需要登录")
 
       // 重定向到登录页，同时附带原本想访问的路径（用于登录后跳转回来）
-      router.push({
-        name: "login",
-        query: {
-          redirect: to.path
-        }
-      })
+      showLogin({to: to.path, reload: true})
       return
     }
 

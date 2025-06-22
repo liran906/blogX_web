@@ -15,6 +15,7 @@ const props = defineProps<Props>()
 const form = reactive<emailRegisterType>({
   emailID: "",
   emailCode: "",
+  username: "",
   password: "",
   rePwd: ""
 })
@@ -43,7 +44,10 @@ async function handler() {
     <FormItem field="emailCode" :rules="[{required: true, message:'请输入邮箱验证码'}]">
       <Input v-model="form.emailCode" placeholder="邮箱验证码"></Input>
     </FormItem>
-    <FormItem field="pwd" :rules="[{required: true, message:'请输入密码'}]">
+    <FormItem field="username" :rules="[{required: true, message:'请输入用户名'}]">
+      <Input v-model="form.username" placeholder="用户名"></Input>
+    </FormItem>
+    <FormItem field="password" :rules="[{required: true, message:'请输入密码'}]">
       <Input v-model="form.password" type="password" placeholder="密码"></Input>
     </FormItem>
     <FormItem field="rePwd" :rules="[{required: true, message:'请输入确认密码'}, {validator: rePwdValida}]">

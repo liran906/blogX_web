@@ -123,7 +123,7 @@ export function userUpdateAdminApi(data: userUpdateAdminRequest):Promise<baseRes
 }
 
 export interface sendEmailType {
-    "type": 3
+    "type": 1|2|3
     "email": string
     "captchaID": string
     "captchaCode": string
@@ -140,10 +140,15 @@ export function sendEmailApi(data: sendEmailType): Promise<baseResponse<sendEmai
 export interface emailRegisterType {
     "emailID": string
     "emailCode": string
+    "username": string
     "password": string
     rePwd: string
 }
 
 export function emailRegisterApi(data: emailRegisterType): Promise<baseResponse<string>> {
-    return useAxios.post("/api/user/email", data)
+    return useAxios.post("/api/user/register_email", data)
+}
+
+export function qqLoginApi(code:string):Promise<baseResponse<string>>{
+    return  useAxios.post("/api/user/qq", {code})
 }

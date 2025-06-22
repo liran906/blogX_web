@@ -9,7 +9,7 @@ import F_captcha from "@/components/web/f_captcha.vue";
 const store = userStorei()
 const emits = defineEmits(["ok"])
 const form = reactive<sendEmailType>({
-  type: 3,
+  type: 1,
   email: "",
   captchaID: "",
   captchaCode: "",

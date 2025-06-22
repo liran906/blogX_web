@@ -114,3 +114,7 @@ export function siteApi<T extends siteName>(name: T): Promise<baseResponse<siteB
 export function siteUpdateApi<T extends siteName>(name: T, data: siteBaseResponse[T]):Promise<baseResponse<string>>{
     return useAxios.put("/api/site/" + name, data)
 }
+
+export function siteQQLoginUrlApi():Promise<baseResponse<string>>{
+    return useAxios.get("/api/site/qq_url")
+}
