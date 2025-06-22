@@ -31,3 +31,10 @@ export const registerSourceOptions = [
     {label: "QQ注册", value: 2, color: "orange"},
     {label: "命令行注册", value: 3, color: "red"},
 ]
+
+export const loginTypeOptions = [
+    {label: "账号密码", value: 1, color: "blue"},
+    {label: "邮箱密码", value: 2, color: "cyan"},
+    {label: "QQ登录", value: 3, color: "cyan"},
+    {label: "微信登录", value: 4, color: "green"},
+]
