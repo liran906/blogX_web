@@ -30,7 +30,7 @@ export const userStorei = defineStore('userStore', {
             //     token: ""
             // },
             userInfo: {
-                userID: 1,
+                userID: 0,
                 nickName: "LIR",
                 userName: "lir",
                 avatar: "https://tu.tuhenmei.com/uploads/allimg/2022012218/0d5psui4k1n.jpg",
