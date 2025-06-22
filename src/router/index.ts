@@ -1,8 +1,9 @@
 // M
 import {createRouter, createWebHistory} from 'vue-router'
 import NProgress from "nprogress";
+import {userStorei} from "@/stores/user_store";
 import {Message} from "@arco-design/web-vue";
-import {userStorei} from "@/stores/user_store"; // 导入 nprogress模块
+import {showLogin} from "@/components/web/f_login"; // 导入 nprogress模块
 
 
 const router = createRouter({
@@ -32,7 +33,7 @@ const router = createRouter({
       component: () => import("@/views/admin/index.vue"),
       meta: {
         title: "首页",
-        role: [1,2,3]
+        role: [1,3] // todo ??? 没有 2？
       },
       children: [
         {

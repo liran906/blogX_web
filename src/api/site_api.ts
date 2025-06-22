@@ -4,6 +4,12 @@
 import {type baseResponse, useAxios} from "@/api/index";
 
 export interface siteResponse {
+    "cloud": {
+        "enable": boolean
+    },
+    "ai": {
+        "enable": boolean
+    },
     "siteInfo": {
         "title": string
         "logoURL": string //

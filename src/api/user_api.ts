@@ -3,6 +3,8 @@ import {type baseResponse, type listResponse, type optionsType, type paramsType,
 export interface pwdLoginRequest {
     username: string;
     password: string;
+    captchaID: string
+    captchaCode: string
 }
 
 // 登录
@@ -10,7 +12,8 @@ export function pwdLoginApi(data: pwdLoginRequest): Promise<baseResponse<string>
     return useAxios.post("/api/user/login", data)
 }
 
-export interface userInfoType {
+// 详细信息，暂时没用
+export interface userDetailType {
     "id": number
     "createdAt": string
     "username": string
@@ -51,10 +54,26 @@ export interface userInfoType {
     "receiveStrangerMessage": boolean
     "homepageVisitCount": number
 }
+// 详细用户信息
+export function userDetailApi():Promise<baseResponse<userInfoType>>{
+    return  useAxios.get("/api/user/0")
+}
+
+export interface userInfoType {
+    "userID": number
+    "siteAge": number //
+    "avatarURL": string //
+    "nickname": string
+    "readCount": number //
+    "articleCount": number
+    "fansCount": number
+    "followingCount": number //
+    "ipLocation": string //
+}
 
 // 用户信息
-export function userInfoApi():Promise<baseResponse<userInfoType>>{
-    return  useAxios.get("/api/user/0")
+export function userInfoApi(userID: number): Promise<baseResponse<userInfoType>> {
+    return useAxios.get("/api/user/brief", {params: {id: userID}})
 }
 
 // 注销登录
@@ -101,4 +120,30 @@ export interface userUpdateAdminRequest {
 
 export function userUpdateAdminApi(data: userUpdateAdminRequest):Promise<baseResponse<string>>{
     return  useAxios.put("/api/user/admin_update", data)
+}
+
+export interface sendEmailType {
+    "type": 3
+    "email": string
+    "captchaID": string
+    "captchaCode": string
+}
+
+export interface sendEmailResponse {
+    emailID: string
+}
+
+export function sendEmailApi(data: sendEmailType): Promise<baseResponse<sendEmailResponse>> {
+    return useAxios.post("/api/user/send_email", data)
+}
+
+export interface emailRegisterType {
+    "emailID": string
+    "emailCode": string
+    "password": string
+    rePwd: string
+}
+
+export function emailRegisterApi(data: emailRegisterType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/user/email", data)
 }

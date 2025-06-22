@@ -7,6 +7,7 @@ const store = userStorei()
 
 function goRouter(name: string) {
   if (name === "exit") {
+    store.userLogout()
     return
   }
   router.push({name: name})
@@ -17,17 +18,17 @@ function goRouter(name: string) {
 <template>
   <a-avatar v-if="!store.isLogin" class="avatar_1" :size="30" @click="showLogin">登录</a-avatar>
   <a-trigger v-else class="f_nav_avatar_trigger" animation-name="fade" trigger="hover" :unmount-on-close="false">
-    <a-avatar class="avatar_1" :image-url="store.userInfo.avatar" :size="30"></a-avatar>
+    <a-avatar class="avatar_1" :image-url="store.userInfo.avatar" :size="30">{{ store.userInfo.nickName[0] }}</a-avatar>
     <template #content>
       <div class="f_nav_avatar_com">
         <div class="avatar">
-          <a-avatar :image-url="store.userInfo.avatar" :size="60"></a-avatar>
+          <a-avatar :image-url="store.userInfo.avatar"  :size="60">{{ store.userInfo.nickName[0] }}</a-avatar>
         </div>
-        <div class="nickname">fengfeng</div>
+        <div class="nickname">{{ store.userInfo.nickName }}</div>
         <div class="data">
-          <a-statistic extra="粉丝" :value="89"/>
-          <a-statistic extra="关注" :value="45"/>
-          <a-statistic extra="文章" :value="342"/>
+          <a-statistic extra="粉丝" :value="store.userInfo.fansCount"/>
+          <a-statistic extra="关注" :value="store.userInfo.followCount"/>
+          <a-statistic extra="文章" :value="store.userInfo.articleCount"/>
         </div>
         <div class="menu">
           <div class="item" @click="goRouter('userCenter')"><i class="iconfont icon-list"></i> <span>个人中心</span>
@@ -35,6 +36,8 @@ function goRouter(name: string) {
           <div class="item" @click="goRouter('articleManage')"><i class="iconfont icon-wenzhangguanli"></i>
             <span>文章管理</span></div>
           <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-xiaoxi"></i> <span>我的消息</span>
+          </div>
+          <div class="item" v-if="store.isAdmin" @click="goRouter('home')"><i class="iconfont icon-list"></i> <span>后台管理</span>
           </div>
         </div>
         <div class="exit">
@@ -49,6 +52,7 @@ function goRouter(name: string) {
 
 .avatar_1 {
   cursor: pointer;
+  background: rgb(var(--arcoblue-6));
 }
 
 .f_nav_avatar_com {
@@ -64,6 +68,9 @@ function goRouter(name: string) {
     top: -30px;
     left: 50%;
     transform: translateX(-50%);
+    .arco-avatar{
+      background: rgb(var(--arcoblue-6));
+    }
   }
 
   .nickname {
