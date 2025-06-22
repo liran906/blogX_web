@@ -56,7 +56,7 @@ async function handler(data: string) {
 <template>
   <Modal width="380px" modal-class="f_login_modal" :visible="props.visible" @cancel="cancel" :footer="false">
     <div class="banner">
-      <div class="title">BlogX 登录</div>
+      <div class="title">Generation Blog</div>
       <img src="@/assets/img/banner.png" alt="">
     </div>
 

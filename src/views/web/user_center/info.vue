@@ -15,10 +15,17 @@ import F_edit_input from "@/components/common/input/f_edit_input.vue";
 import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import F_avatar_cutter from "@/components/web/f_avatar_cutter.vue";
+import F_tags_input from "@/components/common/input/f_tags_input.vue";
 
-async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio", value: string) {
+async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio" | "tags", value: string | string[]) {
   const data: userDetailUpdateRequest = {}
-  data[column] = value
+  if (column === "tags") {
+    value = value as string[]
+    data[column] = value
+  } else {
+    value = value as string
+    data[column] = value
+  }
 
   const res = await userDetailUpdateApi(data)
   if (res.code) {
@@ -30,6 +37,19 @@ async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio", value:
 
 }
 
+const tags = ref<string[]>([])
+
+function editTag(val: string[]) {
+  tags.value = val
+}
+
+function updateTag(oldTags?: string[]) {
+  if (JSON.stringify(oldTags) === JSON.stringify(tags.value)){
+    return
+  }
+  userUpdateColumn("tags", tags.value)
+}
+
 </script>
 
 <template>
@@ -37,8 +57,9 @@ async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio", value:
     <div class="top">
       <div class="avatar">
         <div class="avatar_inner">
-          <f_avatar_cutter v-if="userCenterStore.userDetail.registerSource !== 2" @ok="userUpdateColumn('avatarURL', $event)">
-            <div class="camera_bg" title="头像上传">
+          <f_avatar_cutter v-if="userCenterStore.userDetail.registerSource !== 2"
+                           @ok="userUpdateColumn('avatarURL', $event)">
+          <div class="camera_bg" title="头像上传">
               <IconCamera></IconCamera>
             </div>
           </f_avatar_cutter>
@@ -71,11 +92,11 @@ async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio", value:
 
           <a-form-item label="简介">
             <f_edit_input placeholder="用户简介"
-                          type="textarea" @ok="userUpdateColumn('abstract', $event)"
-                          :value="userCenterStore.userDetail.abstract"></f_edit_input>
+                          type="textarea" @ok="userUpdateColumn('bio', $event)"
+                          :value="userCenterStore.userDetail.bio"></f_edit_input>
           </a-form-item>
 
-          <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt)}}</a-form-item>
+          <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt) }}</a-form-item>
 
           <a-form-item label="注册来源">
             <f_label :options="registerSourceOptions" :value="userCenterStore.userDetail.registerSource"></f_label>
@@ -90,11 +111,13 @@ async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio", value:
         <div class="abs">请您选择感兴趣的技术领域，BlogX会根据您的标签帮您找到 更适合您的内容</div>
       </div>
       <div class="body">
-        <a-tag>后端开发</a-tag>
-        <a-tag>前端开发</a-tag>
-        <a-tag>django</a-tag>
-        <a-tag>gorm</a-tag>
-        <a-tag>mysql</a-tag>
+        <div>
+          <f_tags_input :value="userCenterStore.userDetail.tags"
+                        @ok="editTag"></f_tags_input>
+        </div>
+        <div>
+          <a-button type="primary" @click="updateTag(userCenterStore.userDetail.tags)" size="mini">更新</a-button>
+        </div>
       </div>
     </div>
   </div>
@@ -202,11 +225,6 @@ async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio", value:
     .body {
       padding: 10px 20px 20px 20px;
 
-      span {
-        margin-right: 10px;
-        margin-bottom: 10px;
-        cursor: pointer;
-      }
     }
   }
 }
