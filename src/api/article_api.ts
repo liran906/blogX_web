@@ -71,3 +71,27 @@ export interface articleExamineRequest {
 export function articleExamineApi(data: articleExamineRequest):Promise<baseResponse<string>>{
     return useAxios.post("/api/article/review", data)
 }
+
+
+export interface articleHistoryListType {
+    "historyID": number
+    "createdAt": string
+    "userID": number
+    "articleID": number
+    "nickname": string
+    "avatarURL": string
+    "title": string
+    "coverURL": string
+}
+
+export interface articleHistoryListRequest extends paramsType {
+    type: 1 | 2
+}
+
+export function articleHistoryListApi(params: articleHistoryListRequest): Promise<baseResponse<listResponse<articleHistoryListType>>> {
+    return useAxios.get("/api/article/history", {params})
+}
+
+export function articleHistoryRemoveApi(idList: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete("/api/article/history", {data: {idList}})
+}
