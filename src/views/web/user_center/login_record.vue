@@ -17,7 +17,7 @@ const data= reactive<listResponse<loginRecordType>>({
 
 const params = reactive({
   page: 1,
-  limit: 20,
+  limit: 10,
 })
 
 async function getData() {

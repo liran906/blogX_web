@@ -11,7 +11,7 @@ import {
 } from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import type {listResponse} from "@/api";
-import {dateFormat} from "@/utils/date";
+import {dateFormat, timeFormat} from "@/utils/date";
 import {goArticle} from "@/utils/go_router";
 interface historyType {
   date: string
@@ -91,10 +91,12 @@ getData()
                 </div>
                 <div class="info">
                   <div class="title">{{ item.title }}</div>
-                  <div class="user">
-                    <f_user :size="30" :nickname="item.nickname" :avatar="item.avatarURL"></f_user>
-                  </div>
+<!--                  <div class="user">-->
+<!--                    <f_user :size="30" :nickname="item.nickname" :avatar="item.avatarURL"></f_user>-->
+<!--                  </div>-->
+                  <div class="time">{{ timeFormat(item.createdAt) }}</div>
                 </div>
+
                 <div class="action">
                   <a-button type="primary" @click.stop="removeHistory(item)" status="danger" size="mini">删除</a-button>
                 </div>
@@ -159,21 +161,23 @@ getData()
       .info {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
 
         .title {
           font-size: 15px;
           font-weight: 600;
           color: var(--color-text-1);
         }
-
-        .f_user_com {
+        .time {
           color: var(--color-text-2);
-
-          .text {
-            margin-left: 5px;
-          }
         }
+
+        //.f_user_com {
+        //  color: var(--color-text-2);
+        //
+        //  .text {
+        //    margin-left: 5px;
+        //  }
+        //}
       }
     }
   }
