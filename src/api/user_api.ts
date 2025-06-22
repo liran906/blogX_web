@@ -184,3 +184,14 @@ export interface userPwdUpdateType {
 export function userPwdUpdateApi(data: userPwdUpdateType):Promise<baseResponse<string>>{
     return useAxios.put("/api/user/password", data)
 }
+
+export interface userEmailUpdateType {
+    "emailID": string
+    "emailCode": string
+}
+
+
+export function userEmailUpdateApi(data: userEmailUpdateType): Promise<baseResponse<string>> {
+    return useAxios.put("/api/user/bind_email", data)
+}
+

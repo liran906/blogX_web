@@ -7,9 +7,10 @@ import {userStorei} from "@/stores/user_store";
 import F_captcha from "@/components/web/f_captcha.vue";
 
 const store = userStorei()
+const props = defineProps<{ type: 1|2|3 }>()
 const emits = defineEmits(["ok"])
 const form = reactive<sendEmailType>({
-  type: 1,
+  type: props.type, // todo
   email: "",
   captchaID: "",
   captchaCode: "",
@@ -20,6 +21,7 @@ const captchaRef = ref()
 async function handler() {
   const val = await formRef.value.validate()
   if (val) return
+  console.log(form)
   const res = await sendEmailApi(form)
   if (res.code) {
     Message.error(res.msg)

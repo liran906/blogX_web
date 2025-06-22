@@ -19,7 +19,7 @@ function emailRegisterOk(data: string){
 </script>
 
 <template>
-  <send_email v-if="step === 1" @ok="sendEmailOk"></send_email>
+  <send_email v-if="step === 1" :type="1" @ok="sendEmailOk"></send_email>
   <email_register :email-id="emailID" v-if="step === 2" @ok="emailRegisterOk"></email_register>
 </template>
 
