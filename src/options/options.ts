@@ -38,3 +38,11 @@ export const loginTypeOptions = [
     {label: "QQ登录", value: 3, color: "cyan"},
     {label: "微信登录", value: 4, color: "green"},
 ]
+
+export const relationOptions = [
+    {label: "陌生人", value: 1, color: "gray"},
+    {label: "已关注", value: 2, color: "purple"},
+    {label: "粉丝", value: 3, color: "green"},
+    {label: "好友", value: 4, color: "gold"},
+    {label: "我", value: 5, color: "orange"},
+]
