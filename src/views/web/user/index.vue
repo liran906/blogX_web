@@ -5,6 +5,7 @@ import {useRoute} from "vue-router";
 import {userStorei} from "@/stores/user_store";
 import {IconPlus} from "@arco-design/web-vue/es/icon";
 import {IconMessage} from "@arco-design/web-vue/es/icon";
+import {IconCheck} from "@arco-design/web-vue/es/icon";
 
 const store = userStorei()
 const route = useRoute()
@@ -12,8 +13,11 @@ import {userBaseStorei} from "@/stores/user_base_store";
 import F_a from "@/components/common/f_a.vue";
 import {ref, watch} from "vue";
 import router from "@/router";
-import {type focusType, focusUserApi, focusUserRemoveApi} from "@/api/focus_api";
 import {Message} from "@arco-design/web-vue";
+import {showLogin} from "@/components/web/f_login";
+import type {baseResponse} from "@/api";
+import {focusUserApi, focusUserRemoveApi} from "@/api/focus_api";
+import {goUser} from "@/utils/go_router";
 
 const baseStore = userBaseStorei()
 
@@ -30,24 +34,24 @@ async function search(){
   })
 }
 
-async function onClickFollow() {
-  const res = await focusUserApi({ focusUserID: baseStore.userBase.userID })
+async function focus(isFocus: boolean) {
+  if (!store.isLogin){
+    Message.warning("请登录")
+    showLogin({reload: true})
+    return
+  }
+  let res: baseResponse<string>
+  if (isFocus) {
+    res = await focusUserApi({focusUserID: baseStore.userBase.userID})
+  } else {
+    res = await focusUserRemoveApi({focusUserID: baseStore.userBase.userID})
+  }
   if (res.code) {
     Message.error(res.msg)
     return
   }
   Message.success(res.msg)
-  await baseStore.getUserBaseInfo(baseStore.userBase.userID)  // 自动刷新
-}
-
-async function onClickUnfollow() {
-  const res = await focusUserRemoveApi({ focusUserID: baseStore.userBase.userID })
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
-  Message.success(res.msg)
-  await baseStore.getUserBaseInfo(baseStore.userBase.userID)  // 自动刷新
+  baseStore.getUserBaseInfo(baseStore.userBase.userID)
 }
 
 
@@ -62,11 +66,12 @@ watch(()=>route.params.id, ()=>{
 
 <template>
   <div class="user_view" :class="`user_style_${baseStore.userBase.themeID}`">
+    <div class="banner"></div>
     <f_nav no-scroll></f_nav>
     <f_main>
       <div class="user_info">
         <div class="avatar">
-          <a-avatar :size="65" :image-url="baseStore.userBase.avatarURL"></a-avatar>
+          <a-avatar @click="goUser(baseStore.userBase.userID)" :size="65" :image-url="baseStore.userBase.avatarURL"></a-avatar>
         </div>
         <div class="info">
           <div class="nick">
@@ -92,18 +97,17 @@ watch(()=>route.params.id, ()=>{
         <div class="actions">
           <template v-if="baseStore.userBase.userID != store.userInfo.userID">
             <f_a>
-              <a-button v-if="baseStore.userBase.relation === 2 || baseStore.userBase.relation === 4" type="primary" size="mini"
-                        @click="onClickUnfollow()">
-                <template #icon>
-                  <icon-plus />
-                </template>
-                已关注
-              </a-button>
-              <a-button v-else type="outline" size="mini" @click="onClickFollow()">
+              <a-button @click="focus(true)" size="mini" type="outline" v-if="!(baseStore.userBase.relation === 2 || baseStore.userBase.relation === 4)">
                 <template #icon>
                   <icon-plus />
                 </template>
                 关注
+              </a-button>
+              <a-button @click="focus(false)" v-else size="mini" type="primary">
+                <template #icon>
+                  <icon-check />
+                </template>
+                已关注
               </a-button>
             </f_a>
 
@@ -147,9 +151,16 @@ watch(()=>route.params.id, ()=>{
 <style lang="less">
 .user_view {
   height: calc(100vh - 60px);
+  position: relative;
+  padding-top: 60px;
 
   .f_main_com {
-    height: 100%;
+    min-height: 100%;
+
+    .f_container {
+      z-index: 1;
+      margin-bottom: 20px;
+    }
   }
 
   .user_info {
@@ -254,6 +265,168 @@ watch(()=>route.params.id, ()=>{
     .body {
       height: calc(100vh - 270px);
     }
+  }
+}
+
+.user_style_1 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-color: var(--color-neutral-2);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -200px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 30px;
+  }
+}
+
+.user_style_2 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-image: url("@/assets/img/banner/02_balloon.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -200px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 300px;
+  }
+}
+
+.user_style_3 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-image: url("@/assets/img/banner/03_cubes.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -200px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 300px;
+  }
+}
+
+.user_style_4 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-image: url("@/assets/img/banner/04_mc.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -20px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 300px;
+  }
+}
+
+.user_style_5 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-image: url("@/assets/img/banner/05_circles.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -20px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 300px;
+  }
+}
+
+.user_style_6 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-image: url("@/assets/img/banner/06_lalaland.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -280px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 300px;
+  }
+}
+
+.user_style_7 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 705px;
+    background-image: url("@/assets/img/banner/07_walle.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -300px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 400px;
+  }
+}
+
+.user_style_8 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-image: url("@/assets/img/banner/08_math.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -300px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 300px;
+  }
+}
+
+.user_style_9 {
+  .banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 605px;
+    background-image: url("@/assets/img/banner/09_jupiter.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-y: -360px;
+    z-index: 0;
+  }
+
+  .f_container {
+    margin-top: 300px;
   }
 }
 </style>

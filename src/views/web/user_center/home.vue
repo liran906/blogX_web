@@ -27,23 +27,44 @@ async function userUpdateColumn() {
     <f_card title="主页设置">
       <a-form :model="store.userDetail" :label-col-props="{span: 4}" label-align="left">
         <a-form-item class="home_style_item" label="主页样式">
-          <a-radio-group v-model="store.userDetail.homeStyleID">
+          <a-radio-group v-model="store.userDetail.themeID">
             <a-radio :value="1">
               <img src="@/assets/img/home/img.png" alt="">
               <div class="text">默认样式</div>
             </a-radio>
             <a-radio :value="2">
-              <img src="@/assets/img/home/img_1.png" alt="">
-              <div class="text">海底探索</div>
+              <img src="@/assets/img/banner/02_balloon.png" alt="">
+              <div class="text">湖光山色</div>
             </a-radio>
             <a-radio :value="3">
-              <img src="@/assets/img/home/img_2.png" alt="">
-              <div class="text">恋人分别</div>
+              <img src="@/assets/img/banner/03_cubes.jpg" alt="">
+              <div class="text">立方体</div>
             </a-radio>
             <a-radio :value="4">
-              <img src="@/assets/img/home/img_3.png" alt="">
-              <div class="text">雷达探索</div>
+              <img src="@/assets/img/banner/04_mc.jpg" alt="">
+              <div class="text">我的世界</div>
             </a-radio>
+            <a-radio :value="5">
+              <img src="@/assets/img/banner/05_circles.jpg" alt="">
+              <div class="text">圆圆圈圈</div>
+            </a-radio>
+            <a-radio :value="6">
+              <img src="@/assets/img/banner/06_lalaland.jpg" alt="">
+              <div class="text">爱乐之城</div>
+            </a-radio>
+            <a-radio :value="7">
+              <img src="@/assets/img/banner/07_walle.jpg" alt="">
+              <div class="text">瓦力</div>
+            </a-radio>
+            <a-radio :value="8">
+              <img src="@/assets/img/banner/08_math.jpg" alt="">
+              <div class="text">数学公式</div>
+            </a-radio>
+            <a-radio :value="9">
+              <img src="@/assets/img/banner/09_jupiter.jpg" alt="">
+              <div class="text">土星</div>
+            </a-radio>
+
           </a-radio-group>
         </a-form-item>
       </a-form>

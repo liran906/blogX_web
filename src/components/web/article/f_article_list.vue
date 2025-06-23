@@ -79,6 +79,14 @@ watch(() => route.query, () => {
   getData()
 }, {deep: true})
 
+watch(() => route.params.id, () => {
+  const userID = Number(route.params.id)
+  if (!isNaN(userID)) {
+    params.userID = userID
+    getData()
+  }
+})
+
 function isCheckHandler() {
   isCheckShow.value = !isCheckShow.value
 }
@@ -99,10 +107,11 @@ defineExpose({
   <div class="f_article_list_parent_com">
     <div class="actions" v-if="props.isCheck">
       <span class="dispatch_span" @click="isCheckHandler">批量操作</span>
-      <a-button size="mini" v-if="checkIDList.length && isCheckShow" @click="dispatchDelete" status="danger">批量移除</a-button>
+      <a-button size="mini" v-if="checkIDList.length && isCheckShow" @click="dispatchDelete" status="danger">批量移除
+      </a-button>
     </div>
     <div class="f_article_list_com">
-      <a-checkbox-group v-model="checkIDList">
+      <a-checkbox-group style="width: 100%;" v-model="checkIDList">
         <div class="item" v-for="item in data.list">
           <div class="check" v-if="props.isCheck && isCheckShow">
             <a-checkbox :value="item.id"></a-checkbox>
@@ -166,6 +175,10 @@ defineExpose({
     display: flex;
     align-items: center;
     padding:  0 20px;
+
+    & + .f_article_list_com {
+      margin-top: 0;
+    }
 
     .dispatch_span {
       color: var(--color-text-1);

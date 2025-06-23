@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import type {listResponse, baseResponse} from "@/api";
 import {
   categoryCreateApi,
   type categoryCreateRequest,
-  categoryListApi,
+  categoryListApi, type categoryListRequest,
   type categoryListType, categoryRemoveApi
 } from "@/api/category_api";
 import {Message} from "@arco-design/web-vue";
@@ -26,11 +26,13 @@ const categoryData = reactive<listResponse<categoryListType>>({
   count: 0
 })
 
+const params = reactive<categoryListRequest>({
+  userID: props.userId,
+  type: 2,
+})
+
 async function getCategoryData() {
-  const res = await categoryListApi({
-    userID: props.userId,
-    type: 2,
-  })
+  const res = await categoryListApi(params)
   if (res.code) {
     Message.error(res.msg)
     return
@@ -100,6 +102,14 @@ function go(item:categoryListType) {
     params: route.params
   })
 }
+
+watch(() => props.userId, () => {
+  const userID = Number(props.userId)
+  if (!isNaN(userID)) {
+    params.userID = userID
+    getCategoryData()
+  }
+})
 
 getCategoryData()
 </script>

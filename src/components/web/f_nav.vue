@@ -74,8 +74,17 @@ if (!noScroll) {
 
   &.isShow {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.06);
-    background-color: var(--color-bg-1);
+    //background-color: var(--color-bg-1);
     color: var(--color-text-2);
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-bg-1);
+      opacity: 0.93;
+      pointer-events: none;
+      z-index: -1;
+    }
 
     .n1 {
       color: var(--color-text-1);

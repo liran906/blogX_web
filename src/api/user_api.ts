@@ -74,7 +74,7 @@ export interface userInfoType {
     "displayCollections": boolean
     "displayFans": boolean
     "displayFollowing": boolean
-    "relation": number
+    "relation": 0 | 1 | 2 | 3 | 4 | 5
 }
 
 // 用户信息
