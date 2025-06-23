@@ -1,6 +1,7 @@
 import axios from "axios";
 import {Message} from "@arco-design/web-vue";
 import {userStorei} from "@/stores/user_store";
+import type {Ref} from "vue";
 
 // 基本响应结构
 export interface baseResponse<T> {
@@ -64,3 +65,10 @@ export interface optionsType {
 }
 
 export type optionsFunc = (params?: paramsType) => Promise<baseResponse<optionsType[]>>
+
+
+export function getOptions(ref: Ref<optionsType[]>, func: optionsFunc, params?: paramsType){
+    func(params).then((res)=>{
+        ref.value = res.data
+    })
+}
