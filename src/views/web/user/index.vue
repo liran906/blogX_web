@@ -10,11 +10,12 @@ const store = userStorei()
 const route = useRoute()
 import {userBaseStorei} from "@/stores/user_base_store";
 import F_a from "@/components/common/f_a.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import router from "@/router";
+import {type focusType, focusUserApi, focusUserRemoveApi} from "@/api/focus_api";
+import {Message} from "@arco-design/web-vue";
 
 const baseStore = userBaseStorei()
-baseStore.getUserBaseInfo(Number(route.params.id))
 
 const text = ref("")
 
@@ -28,6 +29,34 @@ async function search(){
     params: route.params,
   })
 }
+
+async function onClickFollow() {
+  const res = await focusUserApi({ focusUserID: baseStore.userBase.userID })
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  await baseStore.getUserBaseInfo(baseStore.userBase.userID)  // 自动刷新
+}
+
+async function onClickUnfollow() {
+  const res = await focusUserRemoveApi({ focusUserID: baseStore.userBase.userID })
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  await baseStore.getUserBaseInfo(baseStore.userBase.userID)  // 自动刷新
+}
+
+
+watch(()=>route.params.id, ()=>{
+  const id = Number(route.params.id)
+  if (!isNaN(id)){
+    baseStore.getUserBaseInfo(id)
+  }
+}, {immediate: true})
 
 </script>
 
@@ -46,7 +75,7 @@ async function search(){
           </div>
           <div class="data">
             <span>
-              <span>{{ baseStore.userBase.readCount }}</span> <span>总访问量</span>
+              <span>{{ baseStore.userBase.homePageVisitCount }}</span> <span>总访问量</span>
             </span>
             <span>
               <span>{{ baseStore.userBase.articleCount }}</span> <span>文章</span>
@@ -63,7 +92,14 @@ async function search(){
         <div class="actions">
           <template v-if="baseStore.userBase.userID != store.userInfo.userID">
             <f_a>
-              <a-button size="mini" type="outline">
+              <a-button v-if="baseStore.userBase.relation === 2 || baseStore.userBase.relation === 4" type="primary" size="mini"
+                        @click="onClickUnfollow()">
+                <template #icon>
+                  <icon-plus />
+                </template>
+                已关注
+              </a-button>
+              <a-button v-else type="outline" size="mini" @click="onClickFollow()">
                 <template #icon>
                   <icon-plus />
                 </template>
@@ -93,9 +129,9 @@ async function search(){
         <div class="head">
           <div class="left">
             <router-link :to="{name: 'userArticle'}">{{ baseStore.isMe ? '我的文章' : '他的文章' }}</router-link>
-            <router-link :to="{name: 'userArticleCollect'}" v-if="baseStore.isMe || baseStore.userBase.openCollect" to="">{{ baseStore.isMe ? '我的收藏' : '他的收藏' }}</router-link>
-            <router-link v-if="baseStore.isMe || baseStore.userBase.displayFollowing" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
-            <router-link v-if="baseStore.isMe || baseStore.userBase.displayFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
+            <router-link :to="{name: 'userArticleCollect'}" v-if="baseStore.isMe || baseStore.userBase.displayCollections" to="">{{ baseStore.isMe ? '我的收藏' : '他的收藏' }}</router-link>
+            <router-link :to="{name: 'userFocusList'}" v-if="baseStore.isMe || baseStore.userBase.displayFollowing" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
+            <router-link :to="{name: 'userFansList'}" v-if="baseStore.isMe || baseStore.userBase.displayFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
           </div>
           <a-input-search v-model="text" @keydown.enter="search" @search="search" placeholder="搜TA的内容"></a-input-search>
         </div>

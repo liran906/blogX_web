@@ -13,7 +13,7 @@ interface userInfoType {
     avatar: string
     role: number
     token: string
-    "readCount": number
+    "homePageVisitCount": number
     "articleCount": number
     "fansCount": number
     "followingCount": number
@@ -35,7 +35,7 @@ export const userStorei = defineStore('userStore', {
                 avatar: "",
                 role: 0,
                 token: "",
-                readCount: 0,
+                homePageVisitCount: 0,
                 articleCount: 0,
                 fansCount: 0,
                 followingCount: 0,
@@ -109,7 +109,7 @@ export const userStorei = defineStore('userStore', {
                     avatar: res.data.avatarURL,
                     role: payLoad.role,
                     token: token,
-                    readCount: res.data.readCount,
+                    homePageVisitCount: res.data.homePageVisitCount,
                     articleCount: res.data.articleCount,
                     fansCount: res.data.fansCount,
                     followingCount: res.data.followingCount,
@@ -153,7 +153,7 @@ export const userStorei = defineStore('userStore', {
                 avatar: "",
                 role: 0,
                 token: "",
-                readCount: 0,
+                homePageVisitCount: 0,
                 articleCount: 0,
                 fansCount: 0,
                 followingCount: 0,

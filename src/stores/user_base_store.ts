@@ -17,7 +17,7 @@ export const userBaseStorei = defineStore('userBaseStore', {
                 siteAge: 0,
                 avatarURL: "",
                 nickname: "",
-                readCount: 0,
+                homePageVisitCount: 0,
                 articleCount: 0,
                 fansCount: 0,
                 followingCount: 0,
@@ -26,6 +26,7 @@ export const userBaseStorei = defineStore('userBaseStore', {
                 displayCollections: false,
                 displayFans: false,
                 displayFollowing: false,
+                relation: 0,
             }
         }
     },

@@ -65,7 +65,7 @@ export interface userInfoType {
     "siteAge": number //
     "avatarURL": string //
     "nickname": string
-    "readCount": number //
+    "homePageVisitCount": number //
     "articleCount": number
     "fansCount": number
     "followingCount": number //
@@ -74,6 +74,7 @@ export interface userInfoType {
     "displayCollections": boolean
     "displayFans": boolean
     "displayFollowing": boolean
+    "relation": number
 }
 
 // 用户信息

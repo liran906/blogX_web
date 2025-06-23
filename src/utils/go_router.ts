@@ -7,3 +7,10 @@ export function goArticle(id: number){
         params: {id}
     })
 }
+
+export function goUser(id: number) {
+    router.push({
+        name: "userArticle",
+        params: {id}
+    })
+}
