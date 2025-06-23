@@ -70,6 +70,10 @@ export interface userInfoType {
     "fansCount": number
     "followingCount": number //
     "ipLocation": string //
+    "themeID": number
+    "displayCollections": boolean
+    "displayFans": boolean
+    "displayFollowing": boolean
 }
 
 // 用户信息
