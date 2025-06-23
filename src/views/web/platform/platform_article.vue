@@ -6,6 +6,9 @@ import {articleListApi, type articleListRequest, type articleListType} from "@/a
 import {Message} from "@arco-design/web-vue";
 import {IconEye, IconMessage} from "@arco-design/web-vue/es/icon";
 import {dateCurrentFormat} from "../../../utils/date";
+import {IconMore} from "@arco-design/web-vue/es/icon";
+import {goArticle} from "@/utils/go_router";
+import router from "@/router";
 
 const data = reactive<listResponse<articleListType>>({
   list: [],
@@ -32,6 +35,15 @@ function checkStatus(status: number) {
   getData()
 }
 
+function handleSelect(id:number, val: string) {
+  if (val === "delete") {
+    return
+  }
+  router.push({
+    name: val,
+    params: {id}
+  })
+}
 
 getData()
 
@@ -61,25 +73,46 @@ getData()
       <div class="article_list">
         <div class="item" v-for="item in data.list">
           <div class="cover">
-            <img v-if="item.cover" :src="item.cover" alt="">
+            <img @click="goArticle(item.id)" v-if="item.coverURL" :src="item.coverURL" alt="">
           </div>
           <div class="info">
-            <div class="title">{{ item.title }}</div>
-            <div class="abs">{{ item.abstract }}</div>
+            <div class="title_row">
+              <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
+              <div class="more">
+                <a-dropdown @select="handleSelect(item.id, $event)">
+                  <IconMore></IconMore>
+                  <template #content>
+                    <a-doption value="platformArticleEdit">编辑文章</a-doption>
+                    <a-doption value="delete" style="color: red">删除文章</a-doption>
+                  </template>
+                </a-dropdown>
+              </div>
+            </div>
+            <div class="abs">
+              <a-typography-text :ellipsis="{rows: 2, css: true}">
+                {{ item.abstract }}
+              </a-typography-text>
+            </div>
             <div class="data">
               <div class="look">
                 <IconEye></IconEye>
-                <span>{{ item.lookCount }}</span>
+                <span>{{ item.readCount }}</span>
               </div>
               <div class="comment">
                 <IconMessage></IconMessage>
                 <span>{{ item.commentCount }}</span>
               </div>
               <div class="tags">
-                <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
+                <template v-if="item.tags.length <= 3">
+                  <a-tag class="tag" v-for="tag in item.tags">{{ tag }}</a-tag>
+                </template>
+                <a-overflow-list v-else :min="5">
+                  <a-tag v-for="tag in item.tags">{{ tag }}</a-tag>
+                </a-overflow-list>
               </div>
-              <div class="date">最后更新于{{ dateCurrentFormat(item.updatedAt) }}</div>
+              <div class="date">最后更新于 {{ dateCurrentFormat(item.updatedAt) }}</div>
             </div>
+
           </div>
         </div>
 
@@ -117,6 +150,7 @@ getData()
       align-items: center;
 
       .title {
+        color: var(--color-text-1);
         font-size: 16px;
         font-weight: 600;
         margin-right: 10px;
@@ -134,9 +168,11 @@ getData()
   }
 
   .body {
-    padding: 10px 20px 20px 20px;
+
 
     .menu {
+      padding: 10px 20px 0 20px;
+
       a {
         color: var(--color-text-2);
         margin-right: 20px;
@@ -156,7 +192,17 @@ getData()
 
       .item {
         display: flex;
-        margin-bottom: 10px;
+        position: relative;
+        padding: 10px 20px;
+
+
+        &:hover {
+          background: var(--color-fill-1);
+
+          .more {
+            opacity: 1;
+          }
+        }
 
         .cover {
           img {
@@ -171,14 +217,27 @@ getData()
           flex-direction: column;
           justify-content: space-between;
 
-          .title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--color-text-1);
+          .title_row {
+            display: flex;
+            align-items: center;
+
+            .title {
+              font-size: 15px;
+              font-weight: 600;
+              color: var(--color-text-1);
+              cursor: pointer;
+            }
+
+            .more {
+              margin-left: 15px;
+              color: var(--color-text-2);
+              cursor: pointer;
+            }
           }
 
+
+
           .abs {
-            height: 2rem;
             margin: 5px 0;
           }
 
@@ -196,14 +255,11 @@ getData()
             }
 
             .tags {
-              margin-right: 10px;
-
-              .arco-tag {
-                margin-right: 5px;
-              }
+              max-width: 500px;
             }
 
             .date {
+              margin-left: 10px;
               font-size: 12px;
               color: var(--color-text-2);
             }
@@ -212,8 +268,10 @@ getData()
       }
 
       .page {
+        margin-top: 10px;
         display: flex;
         justify-content: center;
+        margin-bottom: 15px;
       }
     }
   }

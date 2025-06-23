@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import F_card from "@/components/web/f_card.vue";
-import {articleAddApi, type articleAddType} from "@/api/article_api";
+import {articleAddApi, type articleAddType, articleUpdateApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import router from "@/router";
 import F_article_form from "@/components/web/article/f_article_form.vue";
+import {useRoute} from "vue-router";
 
-async function create(form: articleAddType) {
-  const res = await articleAddApi(form)
+const route = useRoute()
+
+async function edit(form: articleAddType) {
+  const res = await articleUpdateApi({
+    ...form,
+    id: Number(route.params.id)
+  })
   if (res.code) {
     Message.error(res.msg)
     return
@@ -19,8 +25,8 @@ async function create(form: articleAddType) {
 
 <template>
   <div class="platform_article_add_view">
-    <f_card title="发布文章">
-      <f_article_form @ok="create"></f_article_form>
+    <f_card title="编辑文章">
+      <f_article_form @ok="edit" :article-id="Number(route.params.id)"></f_article_form>
     </f_card>
   </div>
 </template>
