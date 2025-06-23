@@ -88,6 +88,10 @@ export function userLogoutApi():Promise<baseResponse<string>>{
 //     return useAxios.get("/api/article/category")
 // }
 
+export function userArticleTopApi(aid: number): Promise<baseResponse<string>> {
+    return useAxios.put("/api/article/pin/" + aid.toString())
+}
+
 export function adminArticleTopApi(aid: number):Promise<baseResponse<string>>{
     return useAxios.put("/api/article/admin_pin/" + aid.toString())
 }

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import F_a from "@/components/common/f_a.vue";
 import {reactive} from "vue";
-import type {listResponse} from "@/api";
-import {articleListApi, type articleListRequest, type articleListType} from "@/api/article_api";
+import type {baseResponse, listResponse} from "@/api";
+import {articleListApi, type articleListRequest, type articleListType, articleRemoveApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import {IconEye, IconMessage} from "@arco-design/web-vue/es/icon";
 import {dateCurrentFormat} from "../../../utils/date";
 import {IconMore} from "@arco-design/web-vue/es/icon";
 import {goArticle} from "@/utils/go_router";
 import router from "@/router";
+import {userArticleTopApi} from "@/api/user_api";
 
 const data = reactive<listResponse<articleListType>>({
   list: [],
@@ -35,14 +36,26 @@ function checkStatus(status: number) {
   getData()
 }
 
-function handleSelect(id:number, val: string) {
-  if (val === "delete") {
+async function handleSelect(id: number, val: string) {
+  if (val === "platformArticleEdit") {
+    router.push({
+      name: val,
+      params: {id}
+    })
     return
   }
-  router.push({
-    name: val,
-    params: {id}
-  })
+  let res: baseResponse<string> = {code: 0, msg: "", data: ""}
+  if (val === "delete") {
+    res = await articleRemoveApi(id)
+  } else {
+    res = await userArticleTopApi(id)
+  }
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  getData()
 }
 
 getData()
@@ -77,11 +90,16 @@ getData()
           </div>
           <div class="info">
             <div class="title_row">
+              <div v-if="item.pinnedByUser" class="user_top">
+                <a-tag color="blue">置顶</a-tag>
+              </div>
               <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
               <div class="more">
                 <a-dropdown @select="handleSelect(item.id, $event)">
                   <IconMore></IconMore>
                   <template #content>
+                    <a-doption v-if="item.pinnedByUser" value="cancelTop">取消置顶</a-doption>
+                    <a-doption v-if="!item.pinnedByUser && item.status === 3" value="top">置顶文章</a-doption>
                     <a-doption value="platformArticleEdit">编辑文章</a-doption>
                     <a-doption value="delete" style="color: red">删除文章</a-doption>
                   </template>
@@ -112,7 +130,6 @@ getData()
               </div>
               <div class="date">最后更新于 {{ dateCurrentFormat(item.updatedAt) }}</div>
             </div>
-
           </div>
         </div>
 
@@ -195,7 +212,6 @@ getData()
         position: relative;
         padding: 10px 20px;
 
-
         &:hover {
           background: var(--color-fill-1);
 
@@ -220,6 +236,10 @@ getData()
           .title_row {
             display: flex;
             align-items: center;
+
+            .user_top {
+              margin-right: 10px;
+            }
 
             .title {
               font-size: 15px;
