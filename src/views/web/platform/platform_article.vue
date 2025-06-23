@@ -137,7 +137,7 @@ getData()
           <a-pagination @change="getData" v-model:current="params.page" :page-size="params.limit" :total="data.count"
                         show-total></a-pagination>
         </div>
-        <div class="no_data" v-if="data.list.length === 0">
+        <div class="no_data" v-if="!data.list || data.list.length === 0">
           <a-empty></a-empty>
         </div>
       </div>

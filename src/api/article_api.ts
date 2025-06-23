@@ -25,10 +25,10 @@ export interface articleListType {
 }
 
 export interface articleListRequest extends paramsType {
-    type: 1 | 2 | 3
     userID?: number
-    collectID?: number
     status?: number
+    categoryID?:number
+    collectionID?:number
 }
 
 export function articleListApi(params: articleListRequest): Promise<baseResponse<listResponse<articleListType>>> {
@@ -126,4 +126,11 @@ export function articleUpdateApi(data: articleEditType):Promise<baseResponse<str
 }
 export function articleRemoveApi(id: number):Promise<baseResponse<string>>{
     return useAxios.delete("/api/article/" + id.toString())
+}
+
+export interface collectionArticleListRequest extends paramsType {
+    "collectionID": number
+}
+export function collectionArticleListApi(params: collectionArticleListRequest):Promise<baseResponse<listResponse<articleListType>>>{
+    return useAxios.get("/api/article/collection/", {params})
 }
