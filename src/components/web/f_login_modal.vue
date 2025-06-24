@@ -60,8 +60,8 @@ async function handler(data: string) {
       <img src="@/assets/img/banner.png" alt="">
     </div>
 
-    <pwd_login v-if="store.siteInfo.login.usernamePwdLogin && type === 1" @ok="handler"></pwd_login>
-    <email_login v-if="store.siteInfo.login.emailRegister && type===2" @ok="handler"></email_login>
+    <pwd_login v-if="store.siteInfo.login.usernamePwdLogin && type === 1" @keydown.enter="handler" @ok="handler"></pwd_login>
+    <email_login v-if="store.siteInfo.login.emailRegister && type===2" @keydown.enter="handler" @ok="handler"></email_login>
 
     <div class="form">
       <div class="register" v-if="store.siteInfo.login.emailRegister">

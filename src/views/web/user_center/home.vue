@@ -45,24 +45,52 @@ async function userUpdateColumn() {
               <div class="text">我的世界</div>
             </a-radio>
             <a-radio :value="5">
-              <img src="@/assets/img/banner/05_circles.jpg" alt="">
-              <div class="text">圆圆圈圈</div>
+              <img src="@/assets/img/banner/05_f22.jpeg" alt="">
+              <div class="text">F22猛禽</div>
             </a-radio>
             <a-radio :value="6">
               <img src="@/assets/img/banner/06_lalaland.jpg" alt="">
               <div class="text">爱乐之城</div>
             </a-radio>
             <a-radio :value="7">
-              <img src="@/assets/img/banner/07_walle.jpg" alt="">
-              <div class="text">瓦力</div>
+              <img src="@/assets/img/banner/07_interstellar.png" alt="">
+              <div class="text">星际穿越</div>
             </a-radio>
             <a-radio :value="8">
-              <img src="@/assets/img/banner/08_math.jpg" alt="">
-              <div class="text">数学公式</div>
+              <img src="@/assets/img/banner/08_budapest.jpg" alt="">
+              <div class="text">布达佩斯</div>
             </a-radio>
             <a-radio :value="9">
               <img src="@/assets/img/banner/09_jupiter.jpg" alt="">
               <div class="text">土星</div>
+            </a-radio>
+            <a-radio :value="10">
+              <img src="@/assets/img/banner/10_redleaves.webp" alt="">
+              <div class="text">红叶</div>
+            </a-radio>
+            <a-radio :value="11">
+              <img src="@/assets/img/banner/11_dune.webp" alt="">
+              <div class="text">沙漠落日</div>
+            </a-radio>
+            <a-radio :value="12">
+              <img src="@/assets/img/banner/12_aurora.webp" alt="">
+              <div class="text">极光</div>
+            </a-radio>
+            <a-radio :value="13">
+              <img src="@/assets/img/banner/13_leaves.webp" alt="">
+              <div class="text">树叶</div>
+            </a-radio>
+            <a-radio :value="14">
+              <img src="@/assets/img/banner/14_virtual.webp" alt="">
+              <div class="text">数字山峦</div>
+            </a-radio>
+            <a-radio :value="15">
+              <img src="@/assets/img/banner/15_spiritedaway.jpg" alt="">
+              <div class="text">千与千寻</div>
+            </a-radio>
+            <a-radio :value="16">
+              <img src="@/assets/img/banner/16_earth.png" alt="">
+              <div class="text">地球</div>
             </a-radio>
 
           </a-radio-group>
@@ -81,9 +109,8 @@ async function userUpdateColumn() {
 
       .arco-radio-group {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-row-gap: 20px;
-        grid-column-gap: 20px;
+        grid-template-columns: repeat(5, minmax(170px, 1fr));
+        grid-gap: 20px;
       }
 
       .arco-radio {
@@ -100,7 +127,11 @@ async function userUpdateColumn() {
           margin-left: 0;
 
           img {
+            aspect-ratio: 3 / 1;
             width: 100%;
+            object-fit: cover;  // 裁剪填充
+            object-position: center;
+            display: block;
           }
 
           .text {

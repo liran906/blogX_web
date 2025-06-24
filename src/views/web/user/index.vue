@@ -62,6 +62,38 @@ watch(()=>route.params.id, ()=>{
   }
 }, {immediate: true})
 
+
+// todo
+// watch(() => baseStore.userBase.themeID, (newID) => {
+//   const themeColorMap: Record<number, string> = {
+//     1: '#165DFF', // 默认
+//     2: '#3B80FF', // 湖光山色
+//     3: '#9C27B0', // 立方体
+//     4: '#4CAF50', // 我的世界
+//     5: '#E53935', // F22猛禽
+//     6: '#BA68C8', // 爱乐之城
+//     7: '#FF8F00', // 星际穿越
+//     8: '#FF4081', // 布达佩斯
+//     9: '#FDD835', // 土星
+//     10: '#D32F2F', // 红叶
+//     11: '#FF7043', // 沙漠落日
+//     12: '#00ACC1', // 极光
+//     13: '#66BB6A', // 树叶
+//     14: '#7C4DFF', // 数字山峦
+//     15: '#EC407A', // 千与千寻
+//     16: '#2196F3', // 地球
+//   }
+//
+//   const color = themeColorMap[newID] || '#409EFF'
+//
+//   document.documentElement.style.setProperty('--primary-6', '220, 220, 255'); // 这是默认蓝色
+//   document.documentElement.style.setProperty('--color-primary', color)
+//   document.documentElement.style.setProperty('--arcoblue-6', color)
+// }, { immediate: true })
+
+
+
+
 </script>
 
 <template>
@@ -149,6 +181,7 @@ watch(()=>route.params.id, ()=>{
 </template>
 
 <style lang="less">
+@import "@/assets/user_theme.less";
 .user_view {
   height: calc(100vh - 60px);
   position: relative;
@@ -265,168 +298,6 @@ watch(()=>route.params.id, ()=>{
     .body {
       height: calc(100vh - 270px);
     }
-  }
-}
-
-.user_style_1 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-color: var(--color-neutral-2);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -200px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 30px;
-  }
-}
-
-.user_style_2 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-image: url("@/assets/img/banner/02_balloon.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -200px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 300px;
-  }
-}
-
-.user_style_3 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-image: url("@/assets/img/banner/03_cubes.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -200px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 300px;
-  }
-}
-
-.user_style_4 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-image: url("@/assets/img/banner/04_mc.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -20px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 300px;
-  }
-}
-
-.user_style_5 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-image: url("@/assets/img/banner/05_circles.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -20px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 300px;
-  }
-}
-
-.user_style_6 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-image: url("@/assets/img/banner/06_lalaland.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -280px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 300px;
-  }
-}
-
-.user_style_7 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 705px;
-    background-image: url("@/assets/img/banner/07_walle.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -300px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 400px;
-  }
-}
-
-.user_style_8 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-image: url("@/assets/img/banner/08_math.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -300px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 300px;
-  }
-}
-
-.user_style_9 {
-  .banner {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 605px;
-    background-image: url("@/assets/img/banner/09_jupiter.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-y: -360px;
-    z-index: 0;
-  }
-
-  .f_container {
-    margin-top: 300px;
   }
 }
 </style>

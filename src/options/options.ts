@@ -42,7 +42,7 @@ export const loginTypeOptions = [
 export const relationOptions = [
     {label: "陌生人", value: 1, color: "gray"},
     {label: "已关注", value: 2, color: "purple"},
-    {label: "粉丝", value: 3, color: "green"},
-    {label: "好友", value: 4, color: "gold"},
-    {label: "我", value: 5, color: "orange"},
+    {label: "粉丝", value: 3, color: "cyan"},
+    {label: "好友", value: 4, color: "orange"},
+    {label: "我", value: 5, color: "gold"},
 ]

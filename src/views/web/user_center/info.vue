@@ -108,7 +108,7 @@ function updateTag(oldTags?: string[]) {
     <div class="tags">
       <div class="head">
         <div class="title">兴趣标签</div>
-        <div class="abs">请您选择感兴趣的技术领域，BlogX会根据您的标签帮您找到 更适合您的内容</div>
+        <div class="abs">请您选择感兴趣的技术领域，GenerationBlog 会根据您的标签帮您找到 更适合您的内容</div>
       </div>
       <div class="body">
         <div>

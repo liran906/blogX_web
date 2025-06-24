@@ -39,7 +39,7 @@ if (!noScroll) {
     <div class="container">
       <div class="logo">
         <a href="/">
-          <span class="n1">Blogx</span>
+          <span class="n1">GenerationBlog</span>
           <span class="n2">社区版</span>
         </a>
       </div>
