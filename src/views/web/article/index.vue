@@ -13,6 +13,7 @@ import {reactive, ref, watch} from "vue";
 import {dateTimeFormat} from "@/utils/date";
 import {theme} from "@/components/common/f_theme";
 import F_article_collect_modal from "@/components/web/article/f_article_collect_modal.vue";
+import Article_comment from "@/components/web/comment/article_comment.vue";
 
 const route = useRoute()
 const data = reactive<articleDetailType>({
@@ -107,7 +108,7 @@ function goTop() {
   document.documentElement.scrollTo({top: 0, behavior: "smooth"})
 }
 
-const textareaRef = ref()
+const articleCommentRef = ref()
 
 function goComment() {
   const div = document.querySelector(".add_comment") as HTMLDivElement
@@ -115,7 +116,7 @@ function goComment() {
   document.documentElement.scrollTo({top: top, behavior: "smooth"})
 
   setTimeout(() => {
-    textareaRef.value.focus()
+    articleCommentRef.value.focus()
   }, 800)
 }
 
@@ -141,16 +142,8 @@ function goComment() {
           </div>
         </div>
 
-        <div class="article_comment">
-          <div class="add_comment">
-            <a-textarea ref="textareaRef" :auto-size="{minRows: 5, maxRows: 6}"
-                        placeholder="请输入评论内容"></a-textarea>
-            <a-button type="primary" size="mini">发布评论</a-button>
-          </div>
-          <div class="comment_list">
+        <article_comment ref="articleCommentRef" :article-id="Number(route.params.id)"></article_comment>
 
-          </div>
-        </div>
       </div>
       <div class="article_info">
         <div class="user_info">

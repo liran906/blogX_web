@@ -38,3 +38,30 @@ export interface commentCreateRequest {
 export function commentCreateApi(data: commentCreateRequest):Promise<baseResponse<string>>{
     return useAxios.post("/api/comment", data)
 }
+
+
+export interface commentTreeType {
+    "id": number
+    "createdAt": string
+    "content": string
+    "userID": number
+    "userNickname": string
+    "userAvatar": string
+    "articleID": number
+    "parentID"?: number
+    "diggCount": number
+    "applyCount": number
+    "subComments": commentTreeType[]
+    "isDigg": boolean
+    "relation": 0 | 1 | 2 | 3 | 4
+    isApply?: boolean
+    applyContent?: string
+}
+
+export function commentTreeApi(id: number): Promise<baseResponse<listResponse<commentTreeType>>> {
+    return useAxios.get("/api/comment/tree/" + id.toString())
+}
+
+export function commentDiggApi(id: number): Promise<baseResponse<string>> {
+    return useAxios.get("/api/comment/digg/" + id.toString())
+}
