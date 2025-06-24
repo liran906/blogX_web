@@ -6,14 +6,16 @@ export interface collectListType {
     "updatedAt": string
     "title": string
     "abstract": string
-    "cover": string
+    "coverURL": string
     "userID": number
     "isDefault": boolean
     "articleCount": number
+    "articleUse": boolean
 }
 
 export interface collectListRequest extends paramsType {
     userID?: number
+    articleID?: number
 }
 
 export function collectListApi(params: collectListRequest): Promise<baseResponse<listResponse<collectListType>>> {

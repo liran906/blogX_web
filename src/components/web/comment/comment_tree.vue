@@ -30,13 +30,13 @@ function apply(item: commentTreeType) {
 }
 
 async function applyComment(item: commentTreeType) {
-  if (item.applyContent?.trim() === "") {
+  if (item.replyContent?.trim() === "") {
     Message.warning("请输入回复内容")
     return
   }
 
   const res = await commentCreateApi({
-    content: item.applyContent as string,
+    content: item.replyContent as string,
     articleID: item.articleID,
     parentID: item.id,
   })
@@ -59,10 +59,10 @@ function ok() {
              :datetime="dateCurrentFormat(item.createdAt)">
     <template #actions>
       <span class="action">
-          <i class="iconfont icon-dianzan_kuai"></i> 点赞（{{ item.diggCount }}）
+          <i class="iconfont icon-dianzan_kuai"></i> 点赞（{{ item.likeCount }}）
       </span>
       <span class="action" v-if="props.line != store.siteInfo.article.commentLine" @click="apply(item)">
-        <i class="iconfont icon-pinglun1"/> 回复（{{ item.applyCount }}）
+        <i class="iconfont icon-pinglun1"/> 回复（{{ item.replyCount }}）
       </span>
     </template>
     <template #author>
@@ -70,15 +70,15 @@ function ok() {
       <f_label style="margin-left: 10px" v-if="item.userID !== store.userInfo.userID && item.relation !== 1" :options="relationOptions" :value="item.relation"></f_label>
     </template>
     <template #avatar>
-      <a-avatar :image-url="item.userAvatar"></a-avatar>
+      <a-avatar :image-url="item.userAvatarURL"></a-avatar>
     </template>
     <div class="apply_comment" v-if="item.isApply">
-      <a-input v-model="item.applyContent" :class="`apply_comment_ipt_${item.id}`"
+      <a-input v-model="item.replyContent" :class="`apply_comment_ipt_${item.id}`"
                :placeholder="`回复${item.userNickname}`"></a-input>
       <a-button type="primary" @click="applyComment(item)">回复</a-button>
     </div>
-    <comment_tree :line="props.line + 1" @ok="ok" :list="item.subComments"
-                  v-if="item.subComments?.length"></comment_tree>
+    <comment_tree :line="props.line + 1" @ok="ok" :list="item.childComments"
+                  v-if="item.childComments?.length"></comment_tree>
   </a-comment>
 </template>
 

@@ -11,7 +11,7 @@ export interface commentListType {
     "articleTitle": string
     "articleCoverURL": string
     "likeCount": number
-    "relation"?: 1 | 2 | 3 | 4 | 5 // 陌生人  已关注  粉丝  好友  自己
+    "relation"?: 0 | 1 | 2 | 3 | 4 | 5 // 陌生人  已关注  粉丝  好友  自己
     "isMe": true
     visible?: boolean
 }
@@ -46,16 +46,16 @@ export interface commentTreeType {
     "content": string
     "userID": number
     "userNickname": string
-    "userAvatar": string
+    "userAvatarURL": string
     "articleID": number
     "parentID"?: number
-    "diggCount": number
-    "applyCount": number
-    "subComments": commentTreeType[]
-    "isDigg": boolean
-    "relation": 0 | 1 | 2 | 3 | 4
+    "likeCount": number
+    "replyCount": number
+    "childComments": commentTreeType[]
+    "isLiked": boolean
+    "relation": 0 | 1 | 2 | 3 | 4 | 5
     isApply?: boolean
-    applyContent?: string
+    replyContent?: string
 }
 
 export function commentTreeApi(id: number): Promise<baseResponse<listResponse<commentTreeType>>> {
@@ -63,5 +63,5 @@ export function commentTreeApi(id: number): Promise<baseResponse<listResponse<co
 }
 
 export function commentDiggApi(id: number): Promise<baseResponse<string>> {
-    return useAxios.get("/api/comment/digg/" + id.toString())
+    return useAxios.get("/api/comment/" + id.toString())
 }

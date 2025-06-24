@@ -147,3 +147,7 @@ export interface articleCollectRequest{
 export function articleCollectApi(data: articleCollectRequest):Promise<baseResponse<string>>{
     return useAxios.post("/api/article/collect/", data)
 }
+
+export function articleLookApi(articleID: number):Promise<baseResponse<string>>{
+    return useAxios.post("/api/article/history", {articleID})
+}

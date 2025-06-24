@@ -3,9 +3,11 @@ import F_nav from "@/components/web/f_nav.vue";
 import F_main from "@/components/web/f_main.vue";
 import {MdPreview, MdCatalog} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
-import {articleDetailApi, type articleDetailType, articleDiggApi} from "@/api/article_api";
+import {articleDetailApi, type articleDetailType, articleDiggApi, articleLookApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import {type articleCollectRequest, articleCollectApi} from "@/api/article_api";
+import {onUnmounted} from "vue";
+import {IconEdit} from "@arco-design/web-vue/es/icon";
 
 const scrollElement = document.documentElement;
 import {useRoute} from "vue-router";
@@ -14,7 +16,11 @@ import {dateTimeFormat} from "@/utils/date";
 import {theme} from "@/components/common/f_theme";
 import F_article_collect_modal from "@/components/web/article/f_article_collect_modal.vue";
 import Article_comment from "@/components/web/comment/article_comment.vue";
+import {goArticleEdit, goUser} from "@/utils/go_router";
+import {userStorei} from "@/stores/user_store";
+import {showLogin} from "@/components/web/f_login";
 
+const store = userStorei()
 const route = useRoute()
 const data = reactive<articleDetailType>({
   id: 0,
@@ -48,6 +54,16 @@ async function getData() {
     return
   }
   Object.assign(data, res.data)
+
+  setTimeout(look, 2000)
+}
+
+async function look() {
+  const res = await articleLookApi(data.id)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
 }
 
 watch(() => route.params.id, () => {
@@ -68,8 +84,15 @@ function scroll() {
 
 window.addEventListener("scroll", scroll)
 
+onUnmounted(() => {
+  window.removeEventListener("scroll", scroll)
+})
 
 async function digg() {
+  if (!store.isLogin) {
+    showLogin({reload: true})
+    return
+  }
   const res = await articleDiggApi(data.id)
   if (res.code) {
     Message.error(res.msg)
@@ -87,9 +110,9 @@ async function digg() {
 const visible = ref(false)
 
 async function collect() {
-  if (data.isCollected) {
-    // 取消收藏
-    // const res = await articleCollectApi({articleID: data.id, collectID: 1})
+  if (!store.isLogin) {
+    showLogin({reload: true})
+    return
   }
   visible.value = true
 }
@@ -101,6 +124,12 @@ async function collectArticle(id: number) {
     return
   }
   Message.success(res.msg)
+  if (res.msg === "收藏成功") {
+    data.isCollected = true
+    data.collectCount++
+  } else {
+    data.collectCount--
+  }
   return
 }
 
@@ -127,11 +156,15 @@ function goComment() {
   <div class="article_detail_view">
     <f_nav no-scroll></f_nav>
     <f_main>
-      <f_article_collect_modal @select="collectArticle" v-model:visible="visible"></f_article_collect_modal>
+      <f_article_collect_modal :article-id="data.id" @select="collectArticle"
+                               v-model:visible="visible"></f_article_collect_modal>
       <div class="article_container">
         <div class="article_content">
           <div class="head">
-            <div class="title">{{ data.title }}</div>
+            <div class="title">
+              <span>{{ data.title }}</span>
+              <IconEdit style="margin-left: 10px; cursor: pointer" title="去编辑" @click="goArticleEdit(data.id)" v-if="data.userID === store.userInfo.userID"></IconEdit>
+            </div>
             <div class="date">{{ dateTimeFormat(data.createdAt) }}</div>
             <div class="tags">
               <a-tag v-for="item in data.tags">{{ item }}</a-tag>
@@ -142,7 +175,8 @@ function goComment() {
           </div>
         </div>
 
-        <article_comment ref="articleCommentRef" :article-id="Number(route.params.id)"></article_comment>
+        <article_comment v-if="data.openForComment" ref="articleCommentRef"
+                         :article-id="Number(route.params.id)"></article_comment>
 
       </div>
       <div class="article_info">
@@ -173,7 +207,7 @@ function goComment() {
         <div class="catalog_action" :class="{isFixed: isFixed}">
           <div class="catalog">
             <div class="head">文章目录</div>
-            <div class="body">
+            <div class="body scrollbar">
               <MdCatalog :offsetTop="61" :scrollElementOffsetTop="60" :editorId="`md_${data.id}`"
                          :scrollElement="scrollElement"
                          :theme="theme"></MdCatalog>
@@ -344,6 +378,8 @@ function goComment() {
 
       .body {
         padding: 10px 20px 20px 20px;
+        max-height: calc(100vh - 240px);
+        overflow-y: auto;
 
         .md-editor-catalog-active > span {
           color: rgb(var(--arcoblue-6));
