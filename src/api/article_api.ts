@@ -56,6 +56,8 @@ export interface articleDetailType {
     "username": string
     "userNickname": string
     "userAvatarURL": string
+    "isLiked": boolean
+    "isCollected": boolean
 }
 
 export function articleDetailApi(id: number): Promise<baseResponse<articleDetailType>> {
@@ -133,4 +135,15 @@ export interface collectionArticleListRequest extends paramsType {
 }
 export function collectionArticleListApi(params: collectionArticleListRequest):Promise<baseResponse<listResponse<articleListType>>>{
     return useAxios.get("/api/article/collection/", {params})
+}
+
+export function articleDiggApi(id: number):Promise<baseResponse<string>>{
+    return  useAxios.post("/api/article/" + id.toString())
+}
+export interface articleCollectRequest{
+    "articleID": number
+    "collectionID"?: number
+}
+export function articleCollectApi(data: articleCollectRequest):Promise<baseResponse<string>>{
+    return useAxios.post("/api/article/collect/", data)
 }
