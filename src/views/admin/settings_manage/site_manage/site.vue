@@ -69,7 +69,7 @@ import F_site from "@/components/admin/site/f_site.vue";
           </a-col>
           <a-col :span="8">
             <div class="form about_form">
-              <f_title>关于我们</f_title>
+              <f_title>关于</f_title>
               <div class="body">
                 <a-form-item :label-col-props="{span: 4}" :wrapper-col-props="{span: 18}" label="建站日期">
                   <a-input placeholder="建站日期" v-model="form.about.siteDate"></a-input>

@@ -1,5 +1,6 @@
 // M
 import {type baseResponse, type listResponse, type optionsType, type paramsType, useAxios} from "@/api/index";
+import type {articleSearchType} from "@/api/search_api";
 
 export interface articleListType {
     "id": number
@@ -150,4 +151,26 @@ export function articleCollectApi(data: articleCollectRequest):Promise<baseRespo
 
 export function articleLookApi(articleID: number):Promise<baseResponse<string>>{
     return useAxios.post("/api/article/history", {articleID})
+}
+
+export interface authRecommendListType {
+    "userID": number
+    "userNickname": string
+    "userAvatar": string
+    "userAbstract": string
+}
+
+export function authRecommendListApi(params: paramsType): Promise<baseResponse<listResponse<authRecommendListType>>> {
+    return useAxios.get("/api/article/auth_recommend", {params})
+}
+
+export interface articleRecommendListType {
+    "id": number
+    "title": string
+    "lookCount": number
+}
+
+// 这里我改下，按照系统推荐”猜你喜欢“的前 6 篇文章
+export function articleRecommendListApi(): Promise<baseResponse<listResponse<articleSearchType>>> {
+    return useAxios.get("/api/search/article", {params: {type: 0,limit: 6,page: 1}})
 }
