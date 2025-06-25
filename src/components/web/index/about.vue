@@ -43,7 +43,7 @@ const version = import.meta.env.VITE_VERSION
         <a :href="store.siteInfo.about.gitee" target="_blank"> <img src="@/assets/img/index/gitee-copy.svg" alt=""></a>
       </div>
       <div class="icon" v-if="store.siteInfo.about.github">
-        <a :href="store.siteInfo.about.github" target="_blank"><img src="@/assets/img/index/GitHub.svg" alt=""></a>
+        <a :href="store.siteInfo.about.github" target="_blank"><img src="@/assets/img/index/Github.svg" alt=""></a>
       </div>
     </div>
     <div class="item beian" v-if="store.siteInfo.siteInfo.beian">

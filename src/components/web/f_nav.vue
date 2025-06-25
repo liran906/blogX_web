@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import {slogan, enSlogan} from "@/conf/global";
-import F_theme from "@/components/common/f_theme.vue";
-import {ref} from "vue";
-import F_user_dropdown from "@/components/common/f_user_dropdown.vue";
-
-import F_point from "@/components/common/f_point.vue";
+import {reactive, ref} from "vue";
 import F_nav_msg from "@/components/web/f_nav_msg.vue";
 import F_nav_avatar from "@/components/web/f_nav_avatar.vue";
+import type {listResponse, paramsType} from "@/api";
+import {textSearchApi, type textSearchType} from "@/api/search_api";
+import {Message} from "@arco-design/web-vue";
+import F_text_search_modal from "@/components/web/f_text_search_modal.vue";
 
 
 
@@ -31,6 +30,15 @@ if (!noScroll) {
   }
 }
 
+const visible = ref(false)
+const key = ref("")
+const textSearchRef = ref()
+function search(){
+  visible.value = true
+  if (key.value){
+    textSearchRef.value.setSearch(key.value)
+  }
+}
 
 </script>
 
@@ -43,9 +51,10 @@ if (!noScroll) {
           <span class="n2">社区版</span>
         </a>
       </div>
+      <f_text_search_modal ref="textSearchRef" v-model:visible="visible"></f_text_search_modal>
       <div class="center">
         <i class="iconfont icon-dengpao"></i>
-        <a-input-search placeholder="搜索你喜欢的文章"></a-input-search>
+        <a-input-search v-model="key" @search="search" @keydown.enter="search" placeholder="搜索你喜欢的文章"></a-input-search>
       </div>
       <div class="right">
         <f_nav_avatar></f_nav_avatar>
@@ -74,17 +83,17 @@ if (!noScroll) {
 
   &.isShow {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.06);
-    //background-color: var(--color-bg-1);
+    background-color: var(--color-bg-1);
     color: var(--color-text-2);
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-color: var(--color-bg-1);
-      opacity: 0.93;
-      pointer-events: none;
-      z-index: -1;
-    }
+    //&::after {
+    //  content: '';
+    //  position: absolute;
+    //  inset: 0;
+    //  background-color: var(--color-bg-1);
+    //  opacity: 0.93;
+    //  pointer-events: none;
+    //  z-index: -1;
+    //}
 
     .n1 {
       color: var(--color-text-1);
