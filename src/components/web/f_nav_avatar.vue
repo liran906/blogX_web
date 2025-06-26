@@ -30,7 +30,9 @@ function goUCenter() {
         <div class="avatar">
           <a-avatar @click="goUser(store.userInfo.userID)" :image-url="store.userInfo.avatar"  :size="60">{{ store.userInfo.nickName[0] }}</a-avatar>
         </div>
-        <div class="nickname">{{ store.userInfo.nickName }}</div>
+        <div class="nickname">
+          <a-typography-text :ellipsis="{rows: 1, css: true}">{{ store.userInfo.nickName }}</a-typography-text>
+        </div>
         <div class="data">
           <a-statistic extra="粉丝" :value="store.userInfo.fansCount"/>
           <a-statistic extra="关注" :value="store.userInfo.followingCount"/>

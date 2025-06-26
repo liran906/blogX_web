@@ -2,12 +2,11 @@
 import {reactive, ref} from "vue";
 import F_nav_msg from "@/components/web/f_nav_msg.vue";
 import F_nav_avatar from "@/components/web/f_nav_avatar.vue";
-import type {listResponse, paramsType} from "@/api";
-import {textSearchApi, type textSearchType} from "@/api/search_api";
-import {Message} from "@arco-design/web-vue";
 import F_text_search_modal from "@/components/web/f_text_search_modal.vue";
+import {userStorei} from "@/stores/user_store";
+import F_ai_modal from "@/components/web/f_ai_modal.vue";
 
-
+const store = userStorei()
 
 interface Props {
   noScroll?: boolean
@@ -39,7 +38,7 @@ function search(){
     textSearchRef.value.setSearch(key.value)
   }
 }
-
+const aiVisible = ref(false)
 </script>
 
 <template>
@@ -48,12 +47,13 @@ function search(){
       <div class="logo">
         <a href="/">
           <span class="n1">GenerationBlog</span>
-          <span class="n2">社区版</span>
+          <span class="n2">{{ store.siteInfo.siteInfo.mode === 1 ? '社区版' :'博客版'  }}</span>
         </a>
       </div>
+      <f_ai_modal v-if="store.siteInfo.ai.enable" v-model:visible="aiVisible"></f_ai_modal>
       <f_text_search_modal ref="textSearchRef" v-model:visible="visible"></f_text_search_modal>
       <div class="center">
-        <i class="iconfont icon-dengpao"></i>
+        <i v-if="store.siteInfo.ai.enable" @click="aiVisible=true" class="iconfont icon-dengpao"></i>
         <a-input-search v-model="key" @search="search" @keydown.enter="search" placeholder="搜索你喜欢的文章"></a-input-search>
       </div>
       <div class="right">
