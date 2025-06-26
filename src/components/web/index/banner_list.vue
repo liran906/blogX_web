@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {bannerListApi, type bannerListType} from "@/api/banner_api";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import type {listResponse} from "@/api";
+import {IconClose} from "@arco-design/web-vue/es/icon";
 
 const data = reactive<listResponse<bannerListType>>({
   list: [],
@@ -27,35 +28,60 @@ function goItem(item: bannerListType) {
 }
 
 getData()
+const isClose = ref(false)
 
+function close(){
+  isClose.value = true
+}
 
 </script>
 
 <template>
-  <a-carousel auto-play  show-arrow="hover" class="f_banner_com" v-if="data.list.length">
-    <a-carousel-item v-for="item in data.list">
-      <img
-          @click="goItem(item)"
-          :src="item.url"
-          :class="{isHref: item.href !== ''}"
-          :style="{
+  <div class="f_banner_list_com" v-if="!isClose">
+    <IconClose class="close" @click="close" title="删除"></IconClose>
+    <a-carousel auto-play  show-arrow="hover" class="f_banner_com" v-if="data.list.length">
+      <a-carousel-item v-for="item in data.list">
+        <img
+            @click="goItem(item)"
+            :src="item.url"
+            :class="{isHref: item.href !== ''}"
+            :style="{
           width: '100%',
         }"
-       alt=""/>
-    </a-carousel-item>
-  </a-carousel>
+        />
+      </a-carousel-item>
+    </a-carousel>
+  </div>
+
 </template>
 
 <style lang="less">
-.f_banner_com {
-  height: 300px;
+.f_banner_list_com{
+  position: relative;
+  &:hover{
+    >.close{
+      opacity: 1;
+    }
+  }
+  >.close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 10;
+    cursor: pointer;
+    opacity: 0;
+  }
+  .f_banner_com {
+    height: 300px;
 
-  .arco-carousel-item-current {
-    border-radius: 5px;
+    .arco-carousel-item-current {
+      border-radius: 5px;
 
-    img.isHref {
-      cursor: pointer;
+      img.isHref {
+        cursor: pointer;
+      }
     }
   }
 }
+
 </style>

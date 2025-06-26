@@ -46,3 +46,8 @@ export const relationOptions = [
     {label: "好友", value: 4, color: "orange"},
     {label: "我", value: 5, color: "gold"},
 ]
+
+export const bannerTypeOptions = [
+    {label: "banner", value: 1, color: "blue"},
+    {label: "推广", value: 2, color: "orange"},
+]

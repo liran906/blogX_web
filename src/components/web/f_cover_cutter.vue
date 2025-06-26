@@ -10,6 +10,14 @@ import {imageUploadApi} from "@/api/image_api";
 import {qiniuUploadConfigApi, type qiniuUploadConfigType} from "@/api/site_api";
 import {loadScript} from "@/utils/load_js";
 
+interface Props {
+  rate: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  rate: '16:9'
+})
+
 async function cutDown(e: any) {
   if (!store.siteInfo.cloud.enable) {
     const res = await imageUploadApi(e.file)
@@ -65,7 +73,7 @@ function upload(file: File, conf: qiniuUploadConfigType) {
 </script>
 
 <template>
-  <ImgCutter @cutDown="cutDown" rate="16:9">
+  <ImgCutter @cutDown="cutDown" :rate="props.rate">
     <template #open>
       <slot></slot>
     </template>

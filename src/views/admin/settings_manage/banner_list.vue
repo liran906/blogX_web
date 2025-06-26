@@ -1,5 +1,4 @@
 <script setup lang="ts">
-//M
 import F_list, {type filterGroupType} from "@/components/admin/f_list.vue";
 import type {columnType} from "@/components/admin/f_list.vue";
 import {type formListType} from "@/components/admin/f_modal_form.vue";
@@ -7,14 +6,15 @@ import {bannerListApi, type bannerListType, type bannerType, bannerUpdateApi} fr
 import {reactive, ref} from "vue";
 import F_image_upload from "@/components/common/f_image_upload.vue";
 import {Message} from "@arco-design/web-vue";
-import F_title from "@/components/common/f_title.vue";
-import * as https from "node:https";
+import {bannerTypeOptions} from "@/options/options";
+import F_banner_upload from "@/components/admin/f_banner_upload.vue";
 
 const columns = [
   {title: "ID", dataIndex: 'id'},
   {title: "图片", slotName: 'url'},
   {title: "跳转地址", slotName: 'href'},
   {title: "是否显示", slotName: 'activated'},
+  {title: "类型", dataIndex: 'type', type: "options", options: bannerTypeOptions},
   {title: "时间", slotName: 'createdAt'},
   {title: "操作", slotName: 'action'},
 ]
@@ -24,12 +24,15 @@ const data = reactive<bannerType>({
   url: "",
   href: "",
   activated: true,
+  type: 1,
 })
 
 function create() {
   data.id = undefined
   data.url = ""
   data.href = ""
+  data.activated = true
+  data.type = 1
   visible.value = true
 }
 
@@ -37,6 +40,7 @@ function edit(record: bannerListType) {
   data.id = record.id
   data.url = record.url
   data.href = record.href
+  data.type = record.type
   visible.value = true
 }
 
@@ -59,13 +63,19 @@ async function handler() {
     <a-modal v-model:visible="visible" :title="data.id ? '更新banner' : '创建banner'" :on-before-ok="handler">
       <a-form :model="data">
         <a-form-item label="封面">
-          <f_image_upload v-model="data.url" shape=""  placeholder="banner封面" :width="300" :height="100"></f_image_upload>
+          <f_banner_upload  v-model="data.url"  shape=""  placeholder="banner封面" :height="60"></f_banner_upload>
         </a-form-item>
         <a-form-item label="跳转地址">
           <a-input placeholder="跳转地址" v-model="data.href"></a-input>
         </a-form-item>
         <a-form-item label="是否显示">
           <a-switch v-model="data.activated"></a-switch>
+        </a-form-item>
+        <a-form-item label="类型">
+          <a-radio-group v-model="data.type">
+            <a-radio :value="1">banner</a-radio>
+            <a-radio :value="2">推广</a-radio>
+          </a-radio-group>
         </a-form-item>
       </a-form>
     </a-modal>

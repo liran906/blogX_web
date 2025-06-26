@@ -8,6 +8,7 @@ export interface bannerListType {
     "activated": boolean
     "url": string
     "href": string
+    type: 1 | 2
 }
 
 export interface bannerListParams extends paramsType {
@@ -23,6 +24,7 @@ export interface bannerType {
     "url": string
     "href": string
     "activated": boolean
+    type: 1 | 2
 }
 
 export function bannerUpdateApi(data: bannerType): Promise<baseResponse<string>> {

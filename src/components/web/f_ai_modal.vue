@@ -91,6 +91,7 @@ async function beforeOpen() {
     return
   }
   Object.assign(aiData, res.data)
+  aiData.avatar = "/src/assets/img/aiLogo.png"
   chatList.value.push(aiData)
   const list = res.data.abstract.split("")
   for (let i = 0; i < list.length; i++) {
