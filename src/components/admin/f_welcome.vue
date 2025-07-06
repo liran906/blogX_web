@@ -111,7 +111,7 @@ const welcomeTitle = computed(() => {
       <a-statistic animation title="今日注册" :value="data.newSignCount" show-group-separator/>
     </div>
     <div class="extra" v-if="!props.noHelp">
-      欢迎使用FengfengAdmin后台系统，可查看 <a href="">系统帮助</a> 以便更好的使用本系统
+      欢迎使用Admin后台系统，可查看 <a href="">系统帮助</a> 以便更好的使用本系统
     </div>
   </div>
 </template>
