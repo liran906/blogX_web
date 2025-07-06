@@ -1,5 +1,5 @@
 export const title = "GenerationBlog 后台管理系统"
 export const slogan = "BlogX"
 export const enSlogan = "GenerationBlog"
-export const ico = "/src/assets/img/aiLogo.png"
+export const ico = "/aiLogo.png"
 export const beian = "ICP备20000101001号-1"
