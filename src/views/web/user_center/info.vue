@@ -33,7 +33,15 @@ async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio" | "tags
     return
   }
   Message.success(res.msg)
-  userCenterStore.getUserDetail()
+
+  // ✅ 刷新 userCenterStore 数据
+  await userCenterStore.getUserDetail()
+
+  // ✅ 同步刷新登录用户信息（重要）
+  const store = userStorei()
+  if (store.userInfo.token) {
+    await store.saveUserInfo(store.userInfo.token)
+  }
 
 }
 
