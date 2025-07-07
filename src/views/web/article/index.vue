@@ -292,6 +292,7 @@ function goComment() {
 
         .md-editor-preview-wrapper {
           padding: 0;
+          background-color: var(--color-bg-1);
         }
       }
     }
