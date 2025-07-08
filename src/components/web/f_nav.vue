@@ -86,7 +86,7 @@ const aiVisible = ref(false)
   height: 60px;
   position: fixed;
   top: 0;
-  z-index: 99999999999999;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   transition: all 0.3s;

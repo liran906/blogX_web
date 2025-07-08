@@ -293,6 +293,10 @@ function goComment() {
         .md-editor-preview-wrapper {
           padding: 0;
           background-color: var(--color-bg-1);
+
+          .md-editor-code-head {
+            z-index: 999;
+          }
         }
       }
     }
