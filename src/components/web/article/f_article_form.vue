@@ -145,6 +145,7 @@ function coverRemove(){
             </template>
           </a-form-item>
           <a-form-item content-class="article_cover_col" label="设置文章封面">
+            <div class="msg">可以本地上传或直接填写图片 URL 地址</div>
             <div class="up">
               <f_cover_cutter style="width: 100%" @ok="coverBack">
                 <div class="cover_mask">
@@ -152,6 +153,9 @@ function coverRemove(){
                   <span>点击上传封面图（选填）</span>
                 </div>
               </f_cover_cutter>
+            </div>
+            <div class="addr">
+              <a-input v-model="form.coverURL" placeholder="URL地址"></a-input>
             </div>
             <div class="show" v-if="form.coverURL">
               <a-image :src="form.coverURL" :height="100">
@@ -240,6 +244,16 @@ function coverRemove(){
 
       > div {
         width: 100%;
+      }
+
+      .msg {
+        color: var(--color-text-3);
+        margin-bottom: 10px;
+        font-size: 12px;
+      }
+
+      .addr {
+        margin-top: 10px;
       }
 
       .show {
