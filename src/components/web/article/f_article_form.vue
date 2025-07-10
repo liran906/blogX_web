@@ -96,6 +96,40 @@ async function paste(e: ClipboardEvent) {
     // 粘贴的是图片
     return
   }
+  if (form.title != "" && form.abstract != "" && form.tags.length > 0) {
+    return
+  }
+  const res = await aiAnalysisApi(form.content)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  Object.assign(aiData, res.data)
+  if (form.title == "") {
+    form.title = aiData.title
+  }
+  if (form.abstract == "") {
+    form.abstract = aiData.abstract
+  }
+  if (form.tags.length == 0) {
+    form.tags = aiData.tags
+  }
+
+}
+
+async function aiGen() {
+  if (!store.siteInfo.ai.enable) {
+    return
+  }
+  if (form.title != "" && form.abstract != "" && form.tags.length > 0) {
+    Message.error("请将需要 AI 辅助生成的项目留空")
+    return
+  }
+  if (form.content.length > 20000 || form.content.length < 100) {
+    Message.error("文章内容不符合要求（长度 100-20000）")
+    return
+  }
   const res = await aiAnalysisApi(form.content)
   if (res.code) {
     Message.error(res.msg)
@@ -131,59 +165,73 @@ function coverRemove(){
       <a-textarea v-model="form.abstract" :auto-size="{minRows: 3, maxRows: 4}" placeholder="文章简介"></a-textarea>
     </a-form-item>
     <a-form-item field="content" validate-trigger="blur" :rules="[{required: true, message:'请输入文章内容'}]">
-      <MdEditor @onUploadImg="onUploadImg" @paste="paste" v-model="form.content"
-                placeholder="请输入文章内容"></MdEditor>
+<!--      <MdEditor @onUploadImg="onUploadImg" @paste="paste" v-model="form.content" placeholder="请输入文章内容"></MdEditor>-->
+      <MdEditor @onUploadImg="onUploadImg" v-model="form.content" placeholder="请输入文章内容"></MdEditor>
     </a-form-item>
     <a-collapse :default-active-key="[1]" :bordered="false">
       <a-collapse-item header="更多设置" :key="1">
-        <a-form :label-col-props="{span: 4}" :wrapper-col-props="{span: 8}" class="form2" label-align="left"
-                :model="form">
-          <a-form-item label="请选择文章分类">
-            <a-select v-model="form.categoryID" placeholder="文章分类" :options="categoryOptions"></a-select>
-            <template #help>
-              <span v-if="aiData.category">基于ai推荐 适合的分类名称： {{ aiData.category }}</span>
-            </template>
-          </a-form-item>
-          <a-form-item content-class="article_cover_col" label="设置文章封面">
-            <div class="msg">可以本地上传或直接填写图片 URL 地址</div>
-            <div class="up">
-              <f_cover_cutter style="width: 100%" @ok="coverBack">
-                <div class="cover_mask">
-                  <IconImage></IconImage>
-                  <span>点击上传封面图（选填）</span>
-                </div>
-              </f_cover_cutter>
-            </div>
-            <div class="addr">
-              <a-input v-model="form.coverURL" placeholder="URL地址"></a-input>
-            </div>
-            <div class="show" v-if="form.coverURL">
-              <a-image :src="form.coverURL" :height="100">
-                <template #extra>
-                  <IconDelete @click="coverRemove"></IconDelete>
-                </template>
-              </a-image>
-            </div>
-            <template #help>
-              <div v-if="store.siteInfo.cloud.enable">
-                云服务供应商：七牛云
+
+        <div class="form-container">
+          <a-form :label-col-props="{span: 14}" :wrapper-col-props="{span: 20}" class="form2" label-align="left"
+                  :model="form">
+            <a-form-item content-class="article_cover_col" label="设置文章封面">
+
+                <f_cover_cutter style="width: 100%; height: 30%" @ok="coverBack">
+                  <div class="cover_mask">
+                    <IconImage></IconImage>
+                    <span>本地上传</span>
+                  </div>
+                </f_cover_cutter>
+
+              <div class="addr">
+                <a-input v-model="form.coverURL" placeholder="URL地址"></a-input>
               </div>
-            </template>
-          </a-form-item>
-          <a-form-item label="文章标签">
-            <a-select allow-create allow-clear multiple :options="tagOptions" v-model="form.tags"
-                      placeholder="请输入标签"></a-select>
-          </a-form-item>
-          <a-form-item label="设置评论状态">
-            <a-checkbox v-model="form.openForComment">开启评论</a-checkbox>
-          </a-form-item>
-        </a-form>
+              <div class="show" v-if="form.coverURL">
+                <a-image :src="form.coverURL" :width="300">
+                  <template #extra>
+                    <IconDelete @click="coverRemove"></IconDelete>
+                  </template>
+                </a-image>
+              </div>
+              <template #help>
+                <div v-if="store.siteInfo.cloud.enable">
+                  云服务供应商：七牛云
+                </div>
+              </template>
+            </a-form-item>
+          </a-form>
+
+          <a-form :label-col-props="{span: 14}" :wrapper-col-props="{span: 24}" class="form3" label-align="left"
+                  :model="form">
+            <a-form-item label="请选择文章分类">
+              <a-select v-model="form.categoryID" placeholder="文章分类" :options="categoryOptions" style="cursor: pointer"></a-select>
+              <template #help>
+                <span v-if="aiData.category">基于ai推荐 适合的分类名称： {{ aiData.category }}</span>
+              </template>
+            </a-form-item>
+            <a-form-item label="文章标签">
+              <a-select allow-create allow-clear multiple :options="tagOptions" v-model="form.tags"
+                        placeholder="请输入标签" style="cursor: pointer"></a-select>
+            </a-form-item>
+            <a-form-item label="AI 辅助生成">
+              <div class="aiGen">
+                <span>根据文章内容，由AI生成留空的题目、简介及标签</span>
+                <a-button @click="aiGen()">一键生成</a-button>
+              </div>
+            </a-form-item>
+            <a-form-item label="设置评论状态">
+              <a-checkbox v-model="form.openForComment">开启评论</a-checkbox>
+            </a-form-item>
+          </a-form>
+        </div>
+
       </a-collapse-item>
     </a-collapse>
 
+
     <div class="actions">
-      <a-button type="primary" @click="create(2)">{{ props.articleId ? '更新' : '发布文章'}}</a-button>
       <a-button @click="create(1)">存为草稿</a-button>
+      <a-button type="primary" @click="create(2)">{{ props.articleId ? '更新' : '发布文章'}}</a-button>
     </div>
   </a-form>
 </template>
@@ -212,70 +260,173 @@ function coverRemove(){
     }
   }
 
-  .form2 {
-    .arco-row {
-      display: flex;
-      flex-direction: column;
-    }
+  .form-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap; // 如果屏幕小可自动换行
+    gap: 20px;
 
-    .cover_mask {
-      width: 100%;
-      height: 120px;
-      cursor: pointer;
-      border: @f_border;
-      border-radius: 5px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-2);
+    .form2 {
+      flex: 1 1 45%;
 
-      span {
-        font-size: 12px;
+      .arco-row {
+        display: flex;
+        flex-direction: column;
       }
 
-      svg {
-        font-size: 30px;
-      }
-    }
-
-    .article_cover_col {
-      flex-direction: column;
-
-      > div {
+      .cover_mask {
         width: 100%;
+        height: 120px;
+        cursor: pointer;
+        border: @f_border;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-text-2);
+
+        span {
+          font-size: 12px;
+        }
+
+        svg {
+          font-size: 30px;
+        }
       }
 
-      .msg {
-        color: var(--color-text-3);
-        margin-bottom: 10px;
-        font-size: 12px;
-      }
+      .article_cover_col {
+        flex-direction: column;
 
-      .addr {
-        margin-top: 10px;
-      }
+        > div {
+          width: 100%;
+        }
 
-      .show {
-        margin-top: 10px;
-        .arco-image-footer{
-          display: flex;
-          justify-content: center;
-          .arco-image-footer-extra{
-            padding-left: 0;
-            svg{
-              font-size: 20px;
-              cursor: pointer;
+        .msg {
+          color: var(--color-text-3);
+          margin-bottom: 10px;
+          font-size: 12px;
+        }
+
+        .addr {
+          margin-top: 10px;
+        }
+
+        .show {
+          margin-top: 10px;
+          .arco-image-footer{
+            display: flex;
+            justify-content: center;
+            .arco-image-footer-extra{
+              padding-left: 0;
+              svg{
+                font-size: 20px;
+                cursor: pointer;
+              }
             }
           }
+        }
+      }
+
+      .aiGen {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%; // 确保占满一行
+
+        .text {
+          flex: 1;
+          white-space: nowrap; // 防止换行
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .form3 {
+      flex: 1 1 50%;
+      .arco-row {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .cover_mask {
+        width: 100%;
+        height: 120px;
+        cursor: pointer;
+        border: @f_border;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-text-2);
+
+        span {
+          font-size: 12px;
+        }
+
+        svg {
+          font-size: 30px;
+        }
+      }
+
+      .article_cover_col {
+        flex-direction: column;
+
+        > div {
+          width: 100%;
+        }
+
+        .msg {
+          color: var(--color-text-3);
+          margin-bottom: 10px;
+          font-size: 12px;
+        }
+
+        .addr {
+          margin-top: 10px;
+        }
+
+        .show {
+          margin-top: 10px;
+          .arco-image-footer{
+            display: flex;
+            justify-content: center;
+            .arco-image-footer-extra{
+              padding-left: 0;
+              svg{
+                font-size: 20px;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+      }
+
+      .aiGen {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%; // 确保占满一行
+
+        .text {
+          flex: 1;
+          white-space: nowrap; // 防止换行
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
   }
 
+
   .actions {
+    display: flex;
+    justify-content: flex-end; // 靠右对齐
     .arco-btn {
-      margin-right: 10px;
+      margin-left: 10px;
     }
   }
 }
