@@ -54,6 +54,7 @@ const map = {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+    margin-left: 12.5px;
 
     .f_banner_com{
       margin-top: 20px;
