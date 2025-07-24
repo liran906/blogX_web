@@ -8,6 +8,7 @@ import {userStorei} from "@/stores/user_store";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
 import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const store = userStorei()
 
@@ -104,7 +105,7 @@ async function remove(item: commentTreeType) {
                :options="relationOptions" :value="item.relation"></f_label>
     </template>
     <template #avatar>
-      <a-avatar @click="goUser(item.userID)" :image-url="item.userAvatarURL"></a-avatar>
+      <f_avatar @click="goUser(item.userID)" :image-url="item.userAvatarURL" :nickname="item.userNickname"/>
     </template>
     <div class="apply_comment" v-if="item.isApply">
       <a-input v-model="item.replyContent" :class="`apply_comment_ipt_${item.id}`"
