@@ -16,6 +16,8 @@ import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api"
 import {Message} from "@arco-design/web-vue";
 import F_avatar_cutter from "@/components/web/f_avatar_cutter.vue";
 import F_tags_input from "@/components/common/input/f_tags_input.vue";
+import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 async function userUpdateColumn(column: "nickname" | "avatarURL" | "bio" | "tags", value: string | string[]) {
   const data: userDetailUpdateRequest = {}
@@ -71,7 +73,8 @@ function updateTag(oldTags?: string[]) {
               <IconCamera></IconCamera>
             </div>
           </f_avatar_cutter>
-          <a-avatar :image-url="userCenterStore.userDetail.avatarURL" :size="60"></a-avatar>
+<!--          <a-avatar :image-url="userCenterStore.userDetail.avatarURL" :size="60"></a-avatar>-->
+          <f_avatar :image-url="userCenterStore.userDetail.avatarURL" :size="60" :nickname="userCenterStore.userDetail.nickname"/>
         </div>
       </div>
       <div class="info">

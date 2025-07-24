@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import F_avatar from "@/components/web/f_avatar.vue";
+
 interface Props {
   avatar: string
   nickname: string
@@ -11,6 +13,7 @@ const {size=40}= props
 
 <template>
   <div class="f_user_com">
+<!--    <f_avatar :size="size" :avatar-url="item.userAvatarURL" :nickname="item.userNickname"/>-->
     <a-avatar :image-url="props.avatar" :size="size"></a-avatar>
     <span class="text">{{ props.nickname }}</span>
   </div>

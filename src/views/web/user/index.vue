@@ -18,6 +18,7 @@ import {showLogin} from "@/components/web/f_login";
 import type {baseResponse} from "@/api";
 import {focusUserApi, focusUserRemoveApi} from "@/api/focus_api";
 import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const baseStore = userBaseStorei()
 
@@ -103,7 +104,7 @@ watch(()=>route.params.id, ()=>{
     <f_main>
       <div class="user_info">
         <div class="avatar">
-          <a-avatar @click="goUser(baseStore.userBase.userID)" :size="65" :image-url="baseStore.userBase.avatarURL"></a-avatar>
+          <f_avatar @click="goUser(baseStore.userBase.userID)" :size="65" :image-url="baseStore.userBase.avatarURL" :nickname="baseStore.userBase.nickname"/>
         </div>
         <div class="info">
           <div class="nick">

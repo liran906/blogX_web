@@ -5,6 +5,7 @@ import {articleSearchApi, type articleSearchRequest, type articleSearchType} fro
 import {Message} from "@arco-design/web-vue";
 import {dateCurrentFormat} from "../../../utils/date";
 import {goArticle, goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const data = reactive<listResponse<articleSearchType>>({
   list: [],
@@ -58,7 +59,7 @@ console.log(data)
           管理员置顶
         </div>
         <div class="top_info">
-          <a-avatar @click="goUser(item.userID)" :size="30" :image-url="item.userAvatarURL"></a-avatar>
+          <f_avatar @click="goUser(item.userID)" :size="30" :avatar-url="item.userAvatarURL" :nickname="item.userNickname"/>
           <span @click="goUser(item.userID)" class="nick" style="color: var(--color-text-1)">{{ item.userNickname }}</span>
           <span class="date">最后更新于{{ dateCurrentFormat(item.updatedAt) }}</span>
         </div>

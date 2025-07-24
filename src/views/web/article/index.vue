@@ -9,6 +9,7 @@ import {type articleCollectRequest, articleCollectApi} from "@/api/article_api";
 import {onUnmounted} from "vue";
 import {IconEdit} from "@arco-design/web-vue/es/icon";
 import {onMounted} from "vue";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const scrollElement = document.documentElement;
 import {useRoute} from "vue-router";
@@ -196,7 +197,7 @@ function goComment() {
       <div class="article_info">
         <div class="user_info">
           <div class="user">
-            <a-avatar :size="60" :image-url="data.userAvatarURL" @click="goUser(data.userID)"></a-avatar>
+            <f_avatar :size="60" :avatar-url="data.userAvatarURL" :nickname="data.userNickname" @click="goUser(data.userID)"/>
           </div>
           <div class="nick" @click="goUser(data.userID)">{{ data.userNickname }}</div>
           <div class="data">
