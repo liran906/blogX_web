@@ -7,7 +7,7 @@ import {Message} from "@arco-design/web-vue";
 
 const store = userCenterStorei()
 
-async function userUpdateColumn(column: "openCollect" | "openFollow" | "openFans", value: boolean) {
+async function userUpdateColumn(column: "displayCollections" | "displayFollowing" | "displayFans", value: boolean) {
   const data: userDetailUpdateRequest = {}
   data[column] = value
 
@@ -27,13 +27,13 @@ async function userUpdateColumn(column: "openCollect" | "openFollow" | "openFans
     <f_card title="隐私设置">
       <a-form :model="store.userDetail" :label-col-props="{span: 4}" label-align="left">
         <a-form-item label="公开我的收藏">
-          <a-switch v-model="store.userDetail.displayCollections" @change="userUpdateColumn('displayCollections', $event)"></a-switch>
+          <a-switch v-model="store.userDetail.displayCollections" @change="userUpdateColumn('displayCollections', $event as boolean)"></a-switch>
         </a-form-item>
         <a-form-item label="公开我的关注列表">
-          <a-switch v-model="store.userDetail.displayFollowing" @change="userUpdateColumn('displayFollowing', $event)"></a-switch>
+          <a-switch v-model="store.userDetail.displayFollowing" @change="userUpdateColumn('displayFollowing', $event as boolean)"></a-switch>
         </a-form-item>
         <a-form-item label="公开我的粉丝列表">
-          <a-switch v-model="store.userDetail.displayFans" @change="userUpdateColumn('displayFans', $event)"></a-switch>
+          <a-switch v-model="store.userDetail.displayFans" @change="userUpdateColumn('displayFans', $event as boolean)"></a-switch>
         </a-form-item>
       </a-form>
     </f_card>

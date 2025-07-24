@@ -50,6 +50,7 @@ export const userCenterStorei = defineStore('userCenterStore', {
                 "receivePrivateMessage": false,
                 "receiveStrangerMessage": false,
                 "homepageVisitCount": 0,
+                "subscribe": false
             }
         }
     },

@@ -54,6 +54,7 @@ export interface userDetailType {
     "receivePrivateMessage": boolean
     "receiveStrangerMessage": boolean
     "homepageVisitCount": number
+    "subscribe": boolean // 是否订阅
 }
 // 详细用户信息
 export function userDetailApi():Promise<baseResponse<userDetailType>>{
@@ -178,6 +179,7 @@ export interface userDetailUpdateRequest {
     province?: string
     city?: string
     dateOfBirth?: string
+    subscribe?: boolean
 }
 
 export function userDetailUpdateApi(data: userDetailUpdateRequest): Promise<baseResponse<string>> {

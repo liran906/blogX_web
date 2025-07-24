@@ -1,13 +1,35 @@
 <script setup lang="ts">
 import {userCenterStorei} from "@/stores/user_center_store";
-import {reactive} from "vue";
+import {reactive, onMounted} from "vue";
 import {showUpdatePwd} from "@/components/common/f_update_password";
 import {showUpdateEmail} from "@/components/common/f_update_email";
 import F_card from "@/components/web/f_card.vue";
+import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api";
+import {Message} from "@arco-design/web-vue";
 
 const userCenterStore = userCenterStorei()
 
 const form = reactive({})
+
+// 确保页面加载时获取最新用户数据
+onMounted(() => {
+  userCenterStore.getUserDetail()
+})
+
+async function userUpdateColumn(column: "subscribe", value: boolean) {
+  const data: userDetailUpdateRequest = {}
+  data[column] = value
+
+  const res = await userDetailUpdateApi(data)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  
+  // 刷新用户数据确保与后端同步
+  await userCenterStore.getUserDetail()
+}
 
 
 
@@ -17,6 +39,10 @@ const form = reactive({})
   <div class="user_center_account_view">
     <f_card title="账号设置">
       <a-form :model="form" :label-col-props="{span: 2}">
+        <a-form-item label="订阅报告">
+          <a-switch v-model="userCenterStore.userDetail.subscribe" @change="userUpdateColumn('subscribe', $event as boolean)"></a-switch>
+          <template #help>订阅后您将收到网站会自动发送每日分析报告至您的邮箱</template>
+        </a-form-item>
         <a-form-item label="密码">
           <span v-if="userCenterStore.userDetail.hasPassword">
             <span class="col" style="color: var(--color-text-1);">******</span> <a href="javascript:void 0" @click="showUpdatePwd"> 修改密码</a>
