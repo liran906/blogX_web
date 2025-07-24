@@ -4,12 +4,13 @@ import {type siteMsgListType} from "@/api/site_msg_api";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions, siteMsgTypeOptions} from "@/options/options";
 import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 </script>
 
 <template>
   <msg_base class="msg_digg_view" :t="2" v-slot="{item}:{item: siteMsgListType}">
-    <a-avatar @click="goUser(item.ActionUserID)" :image-url="item.actionUserAvatar"></a-avatar>
+    <f_avatar @click="goUser(item.ActionUserID)" :image-url="item.actionUserAvatar" :nickname="item.actionUserNickname"/>
     <div class="content">
       <div class="user">
         <span  @click="goUser(item.ActionUserID)" class="nick">{{ item.actionUserNickname }}</span>

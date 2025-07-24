@@ -5,6 +5,7 @@ import {Message} from "@arco-design/web-vue";
 import {userStorei} from "@/stores/user_store";
 import {showLogin} from "@/components/web/f_login";
 import type {baseResponse} from "@/api";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const store = userStorei()
 
@@ -114,7 +115,7 @@ const key = ref("")
            :visible="props.visible" @cancel="cancel">
     <div class="body scrollbar">
       <div class="item" :class="{isMe: item.isMe}" v-for="item in chatList">
-        <a-avatar :image-url="item.avatar"></a-avatar>
+        <f_avatar :image-url="item.avatar" :nickname="item.nickname"/>
         <div class="chat" v-if="!item.isMe" v-html="item.content"></div>
         <div class="chat" v-else>{{ item.content }}</div>
       </div>

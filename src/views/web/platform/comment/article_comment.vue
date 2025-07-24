@@ -8,6 +8,8 @@ import Comment_list from "@/components/web/comment/comment_list.vue";
 import {reactive, ref} from "vue";
 import {commentCreateApi} from "@/api/comment_api";
 import {Message} from "@arco-design/web-vue";
+import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const form = reactive<commentCreateRequest>({
   articleID: 0,
@@ -49,7 +51,7 @@ function hide() {
   <div class="article_comment_view">
     <comment_list ref="commentListRef" :type="1" v-slot="{item}:{item: commentListType}">
       <div class="user">
-        <a-avatar :image-url="item.userAvatarURL"></a-avatar>
+        <f_avatar @click="goUser(item.userID)" :image-url="item.userAvatarURL" :nickname="item.userNickname"/>
       </div>
       <div class="info">
         <div class="nickname">

@@ -13,8 +13,7 @@ const {size=40}= props
 
 <template>
   <div class="f_user_com">
-<!--    <f_avatar :size="size" :avatar-url="item.userAvatarURL" :nickname="item.userNickname"/>-->
-    <a-avatar :image-url="props.avatar" :size="size"></a-avatar>
+    <f_avatar :image-url="props.avatar" :size="size" :nickname="props.nickname"/>
     <span class="text">{{ props.nickname }}</span>
   </div>
 </template>

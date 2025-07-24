@@ -5,6 +5,8 @@ import {reactive} from "vue";
 import type {listResponse} from "@/api";
 import {authRecommendListApi, type authRecommendListType} from "@/api/article_api";
 import {focusHandler} from "@/service/focus_service";
+import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const data = reactive<listResponse<authRecommendListType>>({
   list: [],
@@ -28,7 +30,7 @@ getData()
 <template>
   <f_card title="作者推荐" class="auth_recommend_com">
     <div class="item" v-for="item in data.list">
-      <a-avatar :image-url="item.userAvatar"></a-avatar>
+      <f_avatar :image-url="item.userAvatar" :nickname="item.userNickname"/>
       <div class="info">
         <div class="title">
           <a-typography-text :ellipsis="{rows: 1}">{{ item.userNickname }}</a-typography-text>

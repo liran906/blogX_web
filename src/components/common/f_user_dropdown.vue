@@ -3,6 +3,8 @@
 import router from "@/router";
 import {userStorei} from "@/stores/user_store";
 import {ref} from "vue";
+import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const store = userStorei();
 
@@ -40,8 +42,7 @@ if (store.isAdmin){
 <template>
   <a-dropdown @select="handleSelect" :popup-max-height="false">
     <div class="f_user_dropdown_com">
-      <a-avatar :size="35"
-                :image-url="store.userInfo.avatar"></a-avatar>
+      <f_avatar :size="35" :image-url="store.userInfo.avatar" :nickname="store.userInfo.nickName"/>
       <span class="user_name">{{ store.userInfo.userName }}</span>
       <icon-down/>
     </div>

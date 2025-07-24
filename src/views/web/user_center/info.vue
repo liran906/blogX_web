@@ -73,7 +73,6 @@ function updateTag(oldTags?: string[]) {
               <IconCamera></IconCamera>
             </div>
           </f_avatar_cutter>
-<!--          <a-avatar :image-url="userCenterStore.userDetail.avatarURL" :size="60"></a-avatar>-->
           <f_avatar :image-url="userCenterStore.userDetail.avatarURL" :size="60" :nickname="userCenterStore.userDetail.nickname"/>
         </div>
       </div>

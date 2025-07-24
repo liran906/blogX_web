@@ -4,32 +4,33 @@ import {type siteMsgListType} from "@/api/site_msg_api";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions, siteMsgTypeOptions} from "@/options/options";
 import {goUser} from "@/utils/go_router";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 </script>
 
 <template>
   <msg_base class="msg_comment_view" :t="1" v-slot="{item}:{item: siteMsgListType}">
-      <a-avatar @click="goUser(item.ActionUserID)" :image-url="item.actionUserAvatar"></a-avatar>
-      <div class="content">
-        <div class="user">
-          <span  @click="goUser(item.ActionUserID)" class="nick">{{ item.actionUserNickname }}</span>
-          <span class="relation">
-               <f_label v-if="item.relation !== 0 && item.relation !== 1" :options="relationOptions"
-                        :value="item.relation"></f_label>
-          </span>
-          <span class="type">
-            <f_label type="span" :options="siteMsgTypeOptions" :value="item.type"></f_label>
-          </span>
-        </div>
-        <div class="content_inner" :class="{is_read: item.isRead}">
-          <a-typography-text :ellipsis="{rows: 2, css: true}">
-            {{ item.content }}
-          </a-typography-text>
-        </div>
-        <div class="article">
-          <router-link :to="{name: 'articleDetail', params: {id: item.articleID}}">{{ item.articleTitle }}</router-link>
-        </div>
+    <f_avatar @click="goUser(item.ActionUserID)" :image-url="item.actionUserAvatar" :nickname="item.actionUserNickname"/>
+    <div class="content">
+      <div class="user">
+        <span  @click="goUser(item.ActionUserID)" class="nick">{{ item.actionUserNickname }}</span>
+        <span class="relation">
+             <f_label v-if="item.relation !== 0 && item.relation !== 1" :options="relationOptions"
+                      :value="item.relation"></f_label>
+        </span>
+        <span class="type">
+          <f_label type="span" :options="siteMsgTypeOptions" :value="item.type"></f_label>
+        </span>
       </div>
+      <div class="content_inner" :class="{is_read: item.isRead}">
+        <a-typography-text :ellipsis="{rows: 2, css: true}">
+          {{ item.content }}
+        </a-typography-text>
+      </div>
+      <div class="article">
+        <router-link :to="{name: 'articleDetail', params: {id: item.articleID}}">{{ item.articleTitle }}</router-link>
+      </div>
+    </div>
   </msg_base>
 </template>
 

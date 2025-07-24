@@ -18,6 +18,7 @@ import router from "@/router";
 import {useRoute} from "vue-router";
 import {goUser} from "@/utils/go_router";
 import {showLogin} from "@/components/web/f_login";
+import F_avatar from "@/components/web/f_avatar.vue";
 
 const route = useRoute()
 
@@ -93,10 +94,7 @@ watch(() => route.query.key, ()=>{
   <div class="f_focus_list_com">
     <div class="user_list">
       <div class="item" v-for="item in data.list">
-        <a-avatar @click="goUser(item.userID)" :size="60" :image-url="item.userAvatar">{{ item.userNickname[0] }}</a-avatar>
-<!--        <a-avatar @click="goUser(item.ID)" :size="60" :image-url="item.userAvatarURL">-->
-<!--          {{ item.userNickname?.[0] || '' }}-->
-<!--        </a-avatar>-->
+        <f_avatar @click="goUser(item.userID)" :size="60" :image-url="item.userAvatar" :nickname="item.userNickname">{{ item.userNickname[0] }}</f_avatar>
         <div class="info">
           <div class="nick">
             <span @click="goUser(item.userID)" class="nickname">
