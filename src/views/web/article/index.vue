@@ -178,7 +178,7 @@ function goComment() {
             <div class="title">
               <span>{{ data.title }}</span>
               <IconEdit style="margin-left: 10px; cursor: pointer" title="去编辑" @click="goArticleEdit(data.id)"
-                        v-if="data.userID === store.userInfo.userID"></IconEdit>
+                        v-if="data.userID === store.userInfo.userID || store.userInfo.role === 1"></IconEdit>
             </div>
             <div class="date">{{ dateTimeFormat(data.createdAt) }}</div>
             <div class="tags">
