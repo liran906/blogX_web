@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import F_a from "@/components/common/f_a.vue";
+import {useI18n} from 'vue-i18n';
 import {reactive} from "vue";
 import type {baseResponse, listResponse} from "@/api";
 import {articleListApi, type articleListRequest, type articleListType, articleRemoveApi} from "@/api/article_api";
@@ -10,6 +11,8 @@ import {IconMore} from "@arco-design/web-vue/es/icon";
 import {goArticle} from "@/utils/go_router";
 import router from "@/router";
 import {userArticleTopApi} from "@/api/user_api";
+
+const {t} = useI18n()
 
 const data = reactive<listResponse<articleListType>>({
   list: [],
@@ -67,21 +70,21 @@ getData()
   <div class="platform_article_view">
     <div class="head">
       <div class="left">
-        <div class="title">我的文章</div>
+        <div class="title">{{ t('platform.myArticles') }}</div>
         <router-link :to="{name: 'platformArticleAdd'}">
-          <a-button type="primary">发布文章</a-button>
+          <a-button type="primary">{{ t('article.publish') }}</a-button>
         </router-link>
       </div>
       <div class="right">
         <a-input-search @search="getData" @keydown.enter="getData" v-model="params.key"
-                        placeholder="搜索文章"></a-input-search>
+                        :placeholder="t('nav.search')"></a-input-search>
       </div>
     </div>
     <div class="body scrollbar">
       <div class="menu">
-        <f_a :class="{active: params.status === 3}" @click="checkStatus(3)">已发布</f_a>
-        <f_a :class="{active: params.status === 2}" @click="checkStatus(2)">审核中</f_a>
-        <f_a :class="{active: params.status === 1}" @click="checkStatus(1)">草稿箱</f_a>
+        <f_a :class="{active: params.status === 3}" @click="checkStatus(3)">{{ t('article.published') }}</f_a>
+        <f_a :class="{active: params.status === 2}" @click="checkStatus(2)">{{ t('article.reviewing') }}</f_a>
+        <f_a :class="{active: params.status === 1}" @click="checkStatus(1)">{{ t('article.draft') }}</f_a>
       </div>
       <div class="article_list">
         <div class="item" v-for="item in data.list">
@@ -91,17 +94,17 @@ getData()
           <div class="info">
             <div class="title_row">
               <div v-if="item.pinnedByUser" class="user_top">
-                <a-tag color="blue">置顶</a-tag>
+                <a-tag color="blue">{{ t('article.pinned') }}</a-tag>
               </div>
               <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
               <div class="more">
                 <a-dropdown @select="handleSelect(item.id, $event)">
                   <IconMore></IconMore>
                   <template #content>
-                    <a-doption v-if="item.pinnedByUser" value="cancelTop">取消置顶</a-doption>
-                    <a-doption v-if="!item.pinnedByUser && item.status === 3" value="top">置顶文章</a-doption>
-                    <a-doption value="platformArticleEdit">编辑文章</a-doption>
-                    <a-doption value="delete" style="color: red">删除文章</a-doption>
+                    <a-doption v-if="item.pinnedByUser" value="cancelTop">{{ t('action.cancelPin') }}</a-doption>
+                    <a-doption v-if="!item.pinnedByUser && item.status === 3" value="top">{{ t('action.pinArticle') }}</a-doption>
+                    <a-doption value="platformArticleEdit">{{ t('article.edit') }}</a-doption>
+                    <a-doption value="delete" style="color: red">{{ t('article.delete') }}</a-doption>
                   </template>
                 </a-dropdown>
               </div>
@@ -128,7 +131,7 @@ getData()
                   <a-tag v-for="tag in item.tags">{{ tag }}</a-tag>
                 </a-overflow-list>
               </div>
-              <div class="date">最后更新于 {{ dateCurrentFormat(item.updatedAt) }}</div>
+              <div class="date">{{ t('article.lastUpdated') }} {{ dateCurrentFormat(item.updatedAt) }}</div>
             </div>
           </div>
         </div>
@@ -138,7 +141,7 @@ getData()
                         show-total></a-pagination>
         </div>
         <div class="no_data" v-if="!data.list || data.list.length === 0">
-          <a-empty></a-empty>
+          <a-empty :description="t('common.noData')"></a-empty>
         </div>
       </div>
     </div>

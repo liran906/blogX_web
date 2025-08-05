@@ -6,7 +6,9 @@ import {userStorei} from "@/stores/user_store";
 import {IconPlus} from "@arco-design/web-vue/es/icon";
 import {IconMessage} from "@arco-design/web-vue/es/icon";
 import {IconCheck} from "@arco-design/web-vue/es/icon";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const store = userStorei()
 const route = useRoute()
 import {userBaseStorei} from "@/stores/user_base_store";
@@ -37,7 +39,7 @@ async function search(){
 
 async function focus(isFocus: boolean) {
   if (!store.isLogin){
-    Message.warning("请登录")
+    Message.warning(t('user.pleaseLogin'))
     showLogin({reload: true})
     return
   }
@@ -109,23 +111,23 @@ watch(()=>route.params.id, ()=>{
         <div class="info">
           <div class="nick">
             <span>{{ baseStore.userBase.nickname }}</span>
-            <a-tag>站龄{{ baseStore.userBase.siteAge }}年</a-tag>
+            <a-tag>{{ t('user.siteAge', {years: baseStore.userBase.siteAge}) }}</a-tag>
           </div>
           <div class="data">
             <span>
-              <span>{{ baseStore.userBase.homePageVisitCount }}</span> <span>总访问量</span>
+              <span>{{ baseStore.userBase.homePageVisitCount }}</span> <span>{{ t('user.totalVisits') }}</span>
             </span>
             <span>
-              <span>{{ baseStore.userBase.articleCount }}</span> <span>文章</span>
+              <span>{{ baseStore.userBase.articleCount }}</span> <span>{{ t('user.articles') }}</span>
             </span>
             <span>
-              <span>{{ baseStore.userBase.fansCount }}</span> <span>粉丝</span>
+              <span>{{ baseStore.userBase.fansCount }}</span> <span>{{ t('user.fans') }}</span>
             </span>
             <span>
-              <span>{{ baseStore.userBase.followingCount }}</span> <span>关注</span>
+              <span>{{ baseStore.userBase.followingCount }}</span> <span>{{ t('user.following') }}</span>
             </span>
           </div>
-          <div class="place">ip归属： {{ baseStore.userBase.ipLocation }}</div>
+          <div class="place">{{ t('user.ipLocation') }}: {{ baseStore.userBase.ipLocation }}</div>
         </div>
         <div class="actions">
           <template v-if="baseStore.userBase.userID != store.userInfo.userID">
@@ -134,13 +136,13 @@ watch(()=>route.params.id, ()=>{
                 <template #icon>
                   <icon-plus />
                 </template>
-                关注
+                {{ t('user.follow') }}
               </a-button>
               <a-button @click="focus(false)" v-else size="mini" type="primary">
                 <template #icon>
                   <icon-check />
                 </template>
-                已关注
+                {{ t('user.following') }}
               </a-button>
             </f_a>
 
@@ -149,15 +151,15 @@ watch(()=>route.params.id, ()=>{
                 <template #icon>
                   <icon-message />
                 </template>
-                私信</a-button>
+                {{ t('user.privateMessage') }}</a-button>
             </router-link>
           </template>
           <template v-else>
             <router-link :to="{name: 'userCenterInfo'}">
-              <a-button size="mini" type="outline">编辑资料</a-button>
+              <a-button size="mini" type="outline">{{ t('user.editProfile') }}</a-button>
             </router-link>
             <router-link :to="{name: 'platformArticle'}">
-              <a-button size="mini"  type="outline">管理博文</a-button>
+              <a-button size="mini"  type="outline">{{ t('user.manageBlog') }}</a-button>
             </router-link>
           </template>
         </div>
@@ -165,12 +167,12 @@ watch(()=>route.params.id, ()=>{
       <div class="user_sub_view">
         <div class="head">
           <div class="left">
-            <router-link :to="{name: 'userArticle'}">{{ baseStore.isMe ? '我的文章' : '他的文章' }}</router-link>
-            <router-link :to="{name: 'userArticleCollect'}" v-if="baseStore.isMe || baseStore.userBase.displayCollections" to="">{{ baseStore.isMe ? '我的收藏' : '他的收藏' }}</router-link>
-            <router-link :to="{name: 'userFocusList'}" v-if="baseStore.isMe || baseStore.userBase.displayFollowing" to="">{{ baseStore.isMe ? '我的关注' : '他的关注' }}</router-link>
-            <router-link :to="{name: 'userFansList'}" v-if="baseStore.isMe || baseStore.userBase.displayFans" to="">{{ baseStore.isMe ? '我的粉丝' : '他的粉丝' }}</router-link>
+            <router-link :to="{name: 'userArticle'}">{{ baseStore.isMe ? t('user.myArticles') : t('user.hisArticles') }}</router-link>
+            <router-link :to="{name: 'userArticleCollect'}" v-if="baseStore.isMe || baseStore.userBase.displayCollections" to="">{{ baseStore.isMe ? t('user.myCollections') : t('user.hisCollections') }}</router-link>
+            <router-link :to="{name: 'userFocusList'}" v-if="baseStore.isMe || baseStore.userBase.displayFollowing" to="">{{ baseStore.isMe ? t('user.myFollowing') : t('user.hisFollowing') }}</router-link>
+            <router-link :to="{name: 'userFansList'}" v-if="baseStore.isMe || baseStore.userBase.displayFans" to="">{{ baseStore.isMe ? t('user.myFans') : t('user.hisFans') }}</router-link>
           </div>
-          <a-input-search v-model="text" @keydown.enter="search" @search="search" placeholder="搜TA的内容"></a-input-search>
+          <a-input-search v-model="text" @keydown.enter="search" @search="search" :placeholder="t('user.searchContent')"></a-input-search>
         </div>
         <div class="body">
           <router-view></router-view>

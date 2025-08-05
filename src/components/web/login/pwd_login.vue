@@ -4,7 +4,9 @@ import {Button, Form, FormItem, Input, Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
 import {userStorei} from "@/stores/user_store";
 import F_captcha from "@/components/web/f_captcha.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const store = userStorei()
 const form = reactive<pwdLoginRequest>({
   username: "",
@@ -33,18 +35,18 @@ async function handler() {
 
 <template>
   <Form ref="formRef" :model="form" :label-col-props="{span: 0}" :wrapper-col-props="{span: 24}">
-    <FormItem field="username" :rules="[{required: true, message:'请输入用户名'}]">
-      <Input v-model="form.username" placeholder="用户名"></Input>
+    <FormItem field="username" :rules="[{required: true, message: t('user.usernameRequired')}]">
+      <Input v-model="form.username" :placeholder="t('user.username')"></Input>
     </FormItem>
-    <FormItem field="password" :rules="[{required: true, message:'请输入密码'}]">
-      <Input v-model="form.password" type="password" placeholder="密码"></Input>
+    <FormItem field="password" :rules="[{required: true, message: t('user.passwordRequired')}]">
+      <Input v-model="form.password" type="password" :placeholder="t('user.password')"></Input>
     </FormItem>
-    <FormItem content-class="captcha_item" field="captchaCode"  :rules="[{required: true, message:'请输入图形验证码'}]" v-if="store.siteInfo.login.captcha">
-      <Input v-model="form.captchaCode" placeholder="图形验证码"></Input>
+    <FormItem content-class="captcha_item" field="captchaCode"  :rules="[{required: true, message: t('user.captchaRequired')}]" v-if="store.siteInfo.login.captcha">
+      <Input v-model="form.captchaCode" :placeholder="t('user.captcha')"></Input>
       <f_captcha ref="captchaRef" v-model="form.captchaID"></f_captcha>
     </FormItem>
     <FormItem>
-      <Button type="primary" @click="handler" long>登录</Button>
+      <Button type="primary" @click="handler" long>{{ t('user.login') }}</Button>
     </FormItem>
   </Form>
 </template>

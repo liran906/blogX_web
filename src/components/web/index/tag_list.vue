@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import F_card from "@/components/web/f_card.vue";
 import {reactive} from "vue";
+import {useI18n} from 'vue-i18n';
 import type {listResponse} from "@/api";
 import {tagListApi, type tagListType} from "@/api/search_api";
 import router from "@/router";
 import {useRoute} from "vue-router";
+
+const {t} = useI18n();
 
 const route = useRoute()
 const data = reactive<listResponse<tagListType>>({
@@ -34,7 +37,7 @@ getData()
 </script>
 
 <template>
-  <f_card title="标签云" class="f_tag_list_com">
+  <f_card :title="t('home.tagCloud')" class="f_tag_list_com">
     <div class="tag_list">
       <div class="item" @click="goTag(item)" :class="{active: item.tag === route.query.tag}" v-for="item in data.list">
         <span>

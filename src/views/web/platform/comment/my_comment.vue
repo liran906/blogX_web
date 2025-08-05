@@ -5,7 +5,9 @@ import F_a from "@/components/common/f_a.vue";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
 import Comment_list from "@/components/web/comment/comment_list.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 </script>
 
 <template>
@@ -13,7 +15,7 @@ import Comment_list from "@/components/web/comment/comment_list.vue";
     <comment_list :type="2" v-slot="{item}:{item: commentListType}">
       <div class="info">
         <div class="article">
-          评论了文章：
+          {{ t('comment.commentedArticle') }}：
           <router-link to="">{{ item.articleTitle }}</router-link>
         </div>
         <div class="content">
@@ -24,7 +26,7 @@ import Comment_list from "@/components/web/comment/comment_list.vue";
         <div class="data">
           <span class="date">{{ dateTimeFormat(item.createdAt) }}</span>
           <span class="digg">
-              <i title="点赞" class="iconfont icon-dianzanliang"></i>
+              <i :title="t('comment.like')" class="iconfont icon-dianzanliang"></i>
               <span>{{ item.likeCount }}</span>
             </span>
         </div>

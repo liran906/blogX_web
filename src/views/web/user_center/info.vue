@@ -3,7 +3,9 @@
 import {userStorei} from "@/stores/user_store";
 import {userCenterStorei} from "@/stores/user_center_store";
 import {IconCamera} from "@arco-design/web-vue/es/icon";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const store = userStorei()
 const userCenterStore = userCenterStorei()
 import {IconEdit} from "@arco-design/web-vue/es/icon";
@@ -69,7 +71,7 @@ function updateTag(oldTags?: string[]) {
         <div class="avatar_inner">
           <f_avatar_cutter v-if="userCenterStore.userDetail.registerSource !== 2"
                            @ok="userUpdateColumn('avatarURL', $event)">
-          <div class="camera_bg" title="头像上传">
+          <div class="camera_bg" :title="t('user.uploadAvatar')">
               <IconCamera></IconCamera>
             </div>
           </f_avatar_cutter>
@@ -79,36 +81,36 @@ function updateTag(oldTags?: string[]) {
       <div class="info">
         <div class="title">{{ userCenterStore.userDetail.nickname }}</div>
         <div class="code_age">
-          <a-tag>站龄{{ userCenterStore.userDetail.siteAge }}年</a-tag>
+          <a-tag>{{ t('user.siteAge', {years: userCenterStore.userDetail.siteAge}) }}</a-tag>
         </div>
       </div>
     </div>
     <div class="base_info">
-      <div class="head">基本信息</div>
+      <div class="head">{{ t('user.basicInfo') }}</div>
       <div class="body">
         <a-form :model="userCenterStore.userDetail" :label-col-props="{span: 2}" label-align="left"
                 :wrapper-col-props="{span: 22}">
 
-          <a-form-item label="用户昵称">
-            <f_edit_input placeholder="用户昵称" :no-edit="userCenterStore.userDetail.registerSource === 2"
+          <a-form-item :label="t('user.nickname')">
+            <f_edit_input :placeholder="t('user.nickname')" :no-edit="userCenterStore.userDetail.registerSource === 2"
                           @ok="userUpdateColumn('nickname', $event)"
                           :value="userCenterStore.userDetail.nickname"></f_edit_input>
-            <template #help>昵称30天内可修改一次</template>
+            <template #help>{{ t('user.nicknameEditLimit') }}</template>
           </a-form-item>
 
-          <a-form-item label="用户名">
+          <a-form-item :label="t('user.username')">
             {{ userCenterStore.userDetail.username }}
           </a-form-item>
 
-          <a-form-item label="简介">
-            <f_edit_input placeholder="用户简介"
+          <a-form-item :label="t('user.bio')">
+            <f_edit_input :placeholder="t('user.bio')"
                           type="textarea" @ok="userUpdateColumn('bio', $event)"
                           :value="userCenterStore.userDetail.bio"></f_edit_input>
           </a-form-item>
 
-          <a-form-item label="注册时间">{{ dateTimeFormat(userCenterStore.userDetail.createdAt) }}</a-form-item>
+          <a-form-item :label="t('user.registerTime')">{{ dateTimeFormat(userCenterStore.userDetail.createdAt) }}</a-form-item>
 
-          <a-form-item label="注册来源">
+          <a-form-item :label="t('user.registerSource')">
             <f_label :options="registerSourceOptions" :value="userCenterStore.userDetail.registerSource"></f_label>
           </a-form-item>
 
@@ -117,8 +119,8 @@ function updateTag(oldTags?: string[]) {
     </div>
     <div class="tags">
       <div class="head">
-        <div class="title">兴趣标签</div>
-        <div class="abs">请您选择感兴趣的技术领域，GenerationBlog 会根据您的标签帮您找到 更适合您的内容</div>
+        <div class="title">{{ t('user.interestTags') }}</div>
+        <div class="abs">{{ t('user.interestTagsDesc') }}</div>
       </div>
       <div class="body">
         <div>
@@ -126,7 +128,7 @@ function updateTag(oldTags?: string[]) {
                         @ok="editTag"></f_tags_input>
         </div>
         <div>
-          <a-button type="primary" @click="updateTag(userCenterStore.userDetail.tags)" size="mini">更新</a-button>
+          <a-button type="primary" @click="updateTag(userCenterStore.userDetail.tags)" size="mini">{{ t('action.update') }}</a-button>
         </div>
       </div>
     </div>

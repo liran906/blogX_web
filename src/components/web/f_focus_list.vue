@@ -13,6 +13,9 @@ import {userStorei} from "@/stores/user_store";
 import {Message} from "@arco-design/web-vue";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import type {baseResponse} from "@/api";
 import router from "@/router";
 import {useRoute} from "vue-router";
@@ -115,7 +118,7 @@ watch(() => route.query.key, ()=>{
       </div>
     </div>
     <div class="no_data" v-if="data.list.length === 0">
-      <a-empty></a-empty>
+      <a-empty :description="t('common.noData')"></a-empty>
     </div>
     <div class="page" v-if="data.list.length">
       <a-pagination :page-size="params.limit" v-model:current="params.page" :total="data.count" show-total

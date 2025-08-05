@@ -2,8 +2,10 @@
 import {ref} from "vue";
 import router from "@/router";
 import {useRoute} from "vue-router";
+import {useI18n} from "vue-i18n";
 
 const route = useRoute()
+const {t} = useI18n()
 const key = ref("")
 
 
@@ -20,13 +22,13 @@ async function search(){
 <template>
   <div class="comment_view">
     <div class="head">
-      <div class="title">评论管理</div>
-      <a-input-search v-model="key" @search="search" @keydown.enter="search" placeholder="搜索文章评论"></a-input-search>
+      <div class="title">{{ t('platform.commentManagement') }}</div>
+      <a-input-search v-model="key" @search="search" @keydown.enter="search" :placeholder="t('comment.searchArticleComments')"></a-input-search>
     </div>
     <div class="body scrollbar">
       <div class="menu">
-        <router-link :to="{name: 'platformCommentArticle'}">文章评论</router-link>
-        <router-link :to="{name: 'platformCommentMy'}">我的评论</router-link>
+        <router-link :to="{name: 'platformCommentArticle'}">{{ t('platform.articleComment') }}</router-link>
+        <router-link :to="{name: 'platformCommentMy'}">{{ t('platform.myComments') }}</router-link>
       </div>
       <div class="sub_view">
         <router-view></router-view>

@@ -22,6 +22,7 @@ import type {emitFnType, formListType} from "@/components/admin/f_modal_form.vue
 import F_modal_form from "@/components/admin/f_modal_form.vue";
 import {articleStatusOptions, type optionsColorType} from "@/options/options";
 import F_label from "@/components/common/f_label.vue";
+import {useI18n} from "vue-i18n";
 
 // 列定义扩展：继承自 arco 的 TableColumnData，并可选地添加日期格式化字段
 export interface columnType extends TableColumnData {
@@ -89,16 +90,17 @@ interface Props {
 
 // 接收 props（使用 defineProps 声明）
 const props = defineProps<Props>()
+const {t} = useI18n()
 
 // 这是对 props 中传进来的 参数 做了解构赋值，
 // 如果父组件没有传入 相应的值，就用默认的。
 const {
   rowKey = "id",
   noDefaultDelete = false,
-  searchPlaceholder = "搜索",
-  addLabel = "添加",
-  editLabel = "编辑",
-  deleteLabel = "删除",
+  searchPlaceholder = t('action.search'),
+  addLabel = t('action.create'),
+  editLabel = t('common.edit'),
+  deleteLabel = t('common.delete'),
   limit = 10,
 } = props
 
@@ -110,7 +112,7 @@ function initActionGroup() {
   // 一般都有删除操作，但先判断一下
   if (!props.noBatchDelete) {
     actionGroupOptions.value.push({
-      label: "批量删除",
+      label: t('action.batchRemove'),
       value: 1,
       callback: (keyList: number[]) => {
         baseDelete(keyList)
@@ -307,7 +309,7 @@ function search() {
 // 刷新
 function refresh() {
   getList()
-  Message.success("刷新成功")
+  Message.success(t('common.success'))
 }
 
 const selectedKeys = ref([]);
@@ -398,8 +400,8 @@ defineExpose({
 
       <!-- 批量操作 -->
       <div class="action_group" v-if="!noActionGroup">
-        <a-select style="width: 140px;" placeholder="操作" v-model="actionValue" :options="actionGroupOptions"></a-select>
-        <a-button type="primary" status="danger" @click="actionGroupAction" v-if="actionValue">执行</a-button>
+        <a-select style="width: 140px;" :placeholder="t('action.batchOperation')" v-model="actionValue" :options="actionGroupOptions"></a-select>
+        <a-button type="primary" status="danger" @click="actionGroupAction" v-if="actionValue">{{ t('common.submit') }}</a-button>
       </div>
 
       <!-- 搜索 -->
@@ -428,7 +430,7 @@ defineExpose({
     <!-- 🔹 表格区域 -->
     <div class="f_list_body">
       <!-- 表格加载状态包裹 -->
-      <a-spin :loading="loading" tip="加载中...">
+      <a-spin :loading="loading" :tip="t('common.loading')">
         <div class="f_list_table">
           <!-- 全选按钮 -->
           <a-table @row-click="rowClick"
@@ -464,7 +466,7 @@ defineExpose({
                     <div class="col_actions" v-if="col.slotName === 'action'">
                       <slot v-bind="data" name="action_left"></slot>
                       <a-button v-if="!noEdit" type="primary" @click="edit(data.record)">{{ editLabel }}</a-button>
-                      <a-popconfirm v-if="!noDelete" @ok="remove(data.record)" content="确定要删除该记录吗？">
+                      <a-popconfirm v-if="!noDelete" @ok="remove(data.record)" :content="t('admin.deleteConfirm')">
                         <a-button type="primary" status="danger">{{ deleteLabel }}</a-button>
                       </a-popconfirm>
                       <slot v-bind="data" name="action_right"></slot>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
+import {useI18n} from 'vue-i18n';
 import type {listResponse} from "@/api";
 import {
   articleListApi,
@@ -23,6 +24,7 @@ const emits = defineEmits(["dispatchDelete"])
 const checkIDList = ref<number[]>([])
 
 const route = useRoute()
+const {t} = useI18n()
 const data = reactive<listResponse<articleListType>>({
   list: [],
   count: 0,
@@ -106,8 +108,8 @@ defineExpose({
 <template>
   <div class="f_article_list_parent_com">
     <div class="actions" v-if="props.isCheck">
-      <span class="dispatch_span" @click="isCheckHandler">批量操作</span>
-      <a-button size="mini" v-if="checkIDList.length && isCheckShow" @click="dispatchDelete" status="danger">批量移除
+      <span class="dispatch_span" @click="isCheckHandler">{{ t('action.batchOperation') }}</span>
+      <a-button size="mini" v-if="checkIDList.length && isCheckShow" @click="dispatchDelete" status="danger">{{ t('action.batchRemove') }}
       </a-button>
     </div>
     <div class="f_article_list_com">
@@ -122,7 +124,7 @@ defineExpose({
           <div class="info">
             <div class="title_row">
               <div v-if="item.pinnedByUser" class="user_top">
-                <a-tag color="blue">置顶</a-tag>
+                <a-tag color="blue">{{ t('article.pinned') }}</a-tag>
               </div>
               <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
             </div>
@@ -148,7 +150,7 @@ defineExpose({
                   <a-tag v-for="tag in item.tags">{{ tag }}</a-tag>
                 </a-overflow-list>
               </div>
-              <div class="date">最后更新于{{ dateCurrentFormat(item.updatedAt) }}</div>
+              <div class="date">{{ t('home.lastUpdated', {date: dateCurrentFormat(item.updatedAt)}) }}</div>
             </div>
           </div>
         </div>
@@ -160,7 +162,7 @@ defineExpose({
                       show-total></a-pagination>
       </div>
       <div class="no_data" v-if="!data.list || data.list.length === 0">
-        <a-empty></a-empty>
+        <a-empty :description="t('common.noData')"></a-empty>
       </div>
     </div>
   </div>

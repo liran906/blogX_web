@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
+import {useI18n} from 'vue-i18n';
 import type {listResponse, baseResponse} from "@/api";
 import {
   categoryCreateApi,
@@ -13,6 +14,7 @@ import F_a from "@/components/common/f_a.vue";
 import router from "@/router";
 
 const route = useRoute()
+const {t} = useI18n()
 
 interface Props {
   userId: number
@@ -61,7 +63,7 @@ function showEdit(item: categoryListType) {
 
 async function addCategoryHandler() {
   if (form.title.trim() === "") {
-    Message.warning("请输入分类名称")
+    Message.warning(t('form.categoryNameRequired'))
     return
   }
   let res: baseResponse<string>
@@ -121,12 +123,12 @@ getCategoryData()
         <template #icon>
           <icon-plus></icon-plus>
         </template>
-        创建分类
+        {{ t('action.createCategory') }}
       </a-button>
     </div>
-    <a-modal v-if="props.isMe" width="30%" :title="form.id ? '编辑分类' : '创建分类'" v-model:visible="visible"
+    <a-modal v-if="props.isMe" width="30%" :title="form.id ? t('action.editCategory') : t('action.createCategory')" v-model:visible="visible"
              :on-before-ok="addCategoryHandler" :body-style="{color: 'var(--color-text-1)'}">
-      <a-input placeholder="分类名称" v-model="form.title"></a-input>
+      <a-input :placeholder="t('form.categoryName')" v-model="form.title"></a-input>
     </a-modal>
     <div class="list">
       <div class="item" :class="{active: item.id===Number(route.query.categoryID)}" v-for="item in categoryData.list">
@@ -138,8 +140,8 @@ getCategoryData()
             <span>{{ item.articleCount }}</span>
           </f_a>
           <template #content>
-            <div class="item" @click="showEdit(item)">编辑</div>
-            <div class="item delete" @click="remove(item)">删除</div>
+            <div class="item" @click="showEdit(item)">{{ t('common.edit') }}</div>
+            <div class="item delete" @click="remove(item)">{{ t('common.delete') }}</div>
           </template>
         </a-trigger>
         <f_a v-else @click="go(item)">

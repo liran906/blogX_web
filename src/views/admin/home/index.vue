@@ -6,6 +6,9 @@ import F_title from "@/components/common/f_title.vue";
 import F_home_charts_v1 from "@/components/admin/f_home_charts_v1.vue";
 import Echarts_v2 from "@/components/echarts/echarts_1/echarts_v2.vue";
 import Echarts_v3 from "@/components/echarts/echarts_1/echarts_v3.vue";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 </script>
 
@@ -15,31 +18,31 @@ import Echarts_v3 from "@/components/echarts/echarts_1/echarts_v3.vue";
       <f_welcome></f_welcome>
       <div class="charts charts_4">
         <div class="item">
-          <f_title :type="2">访问人数</f_title>
+          <f_title :type="2">{{ t('admin.visitorsCount') }}</f_title>
           <f_home_charts_v1 :type="1"></f_home_charts_v1>
         </div>
         <div class="item">
-          <f_title :type="2">点击量</f_title>
+          <f_title :type="2">{{ t('admin.clickCount') }}</f_title>
           <f_home_charts_v1 :type="2"></f_home_charts_v1>
         </div>
         <div class="item">
-          <f_title :type="2">新增文章</f_title>
+          <f_title :type="2">{{ t('admin.newArticles') }}</f_title>
           <f_home_charts_v1 :type="3"></f_home_charts_v1>
         </div>
         <div class="item">
-          <f_title :type="2">新增用户</f_title>
+          <f_title :type="2">{{ t('admin.newUsers') }}</f_title>
           <f_home_charts_v1 :type="4"></f_home_charts_v1>
         </div>
       </div>
       <div class="charts charts_2">
         <div class="item">
-          <f_title :type="2">年度文章发布情况</f_title>
+          <f_title :type="2">{{ t('admin.yearlyArticleStats') }}</f_title>
           <div class="body">
             <echarts_v2></echarts_v2>
           </div>
         </div>
         <div class="item">
-          <f_title :type="2">系统资源</f_title>
+          <f_title :type="2">{{ t('admin.systemResources') }}</f_title>
           <div class="body">
             <echarts_v3></echarts_v3>
           </div>

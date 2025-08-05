@@ -5,6 +5,7 @@ import {reactive, ref, watch} from "vue";
 import type {listResponse} from "@/api";
 import {commentCreateApi, type commentCreateRequest, commentTreeApi, type commentTreeType} from "@/api/comment_api";
 import {Message} from "@arco-design/web-vue";
+import {useI18n} from "vue-i18n";
 
 interface Props {
   articleId: number
@@ -12,6 +13,7 @@ interface Props {
 
 
 const props = defineProps<Props>()
+const {t} = useI18n()
 
 const data = reactive<listResponse<commentTreeType>>({
   list: [],
@@ -38,7 +40,7 @@ const form = reactive<commentCreateRequest>({
 async function create() {
   form.articleID = props.articleId
   if (form.content.trim() === "") {
-    Message.warning("请输入评论内容")
+    Message.warning(t('comment.placeholder'))
     return
   }
   const res = await commentCreateApi(form)
@@ -70,8 +72,8 @@ defineExpose({focus})
   <div class="article_comment_com">
     <div class="add_comment">
       <a-textarea v-model="form.content" ref="textareaRef" @keydown.enter="create" :auto-size="{minRows: 5, maxRows: 6}"
-                  placeholder="请输入评论内容"></a-textarea>
-      <a-button type="primary" @click="create" size="mini">发布评论</a-button>
+                  :placeholder="t('comment.placeholder')"></a-textarea>
+      <a-button type="primary" @click="create" size="mini">{{ t('comment.publish') }}</a-button>
     </div>
     <div class="comment_list">
       <comment_tree :line="1" @ok="getData" :list="data.list"></comment_tree>

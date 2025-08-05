@@ -6,8 +6,11 @@ import F_text_search_modal from "@/components/web/f_text_search_modal.vue";
 import { userStorei } from "@/stores/user_store";
 import F_ai_modal from "@/components/web/f_ai_modal.vue";
 import F_theme from "@/components/common/f_theme.vue";
+import F_language_switcher from "@/components/common/f_language_switcher.vue";
+import { useI18n } from 'vue-i18n'
 
 const store = userStorei()
+const { t } = useI18n()
 
 interface Props {
   noScroll?: boolean
@@ -47,9 +50,11 @@ const aiVisible = ref(false)
           <span class="n1">GenerationBlog</span>
         </a>
         <span class="n2">
-          {{ store.siteInfo.siteInfo.mode === 1 ? '社区版' : '博客版' }}
+          {{ store.siteInfo.siteInfo.mode === 1 ? t('nav.communityMode') : t('nav.blogMode') }}
         </span>
+        <f_language_switcher class="language-switch" />
         <f_theme class="theme-switch" />
+
       </div>
 
       <div class="nav-center">
@@ -58,18 +63,18 @@ const aiVisible = ref(false)
             v-model="key"
             @search="search"
             @keydown.enter="search"
-            placeholder="搜索你喜欢的文章"
+            :placeholder="t('nav.search')"
         />
       </div>
 
       <div class="nav-right">
         <f_nav_avatar />
         <f_nav_msg />
-        <router-link class="history" :to="{ name: 'userCenterHistory' }">历史</router-link>
+        <router-link class="history" :to="{ name: 'userCenterHistory' }">{{ t('nav.history') }}</router-link>
         <router-link :to="{ name: 'platformArticleAdd' }">
           <a-button type="primary" class="post-btn">
             <i class="iconfont icon-jia"></i>
-            <span>发布</span>
+            <span>{{ t('nav.publish') }}</span>
           </a-button>
         </router-link>
       </div>
@@ -103,7 +108,8 @@ const aiVisible = ref(false)
 
     .n2,
     a,
-    .theme-switch {
+    .theme-switch,
+    .language-switch {
       color: var(--color-text-2) !important;
     }
   }
@@ -132,8 +138,10 @@ const aiVisible = ref(false)
       color: var(--color-text-2);
     }
 
-    .theme-switch {
+    .theme-switch,
+    .language-switch {
       cursor: pointer;
+      color: var(--color-text-2);
     }
   }
 

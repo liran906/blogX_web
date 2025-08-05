@@ -3,7 +3,9 @@
 import F_nav from "@/components/web/f_nav.vue";
 import F_main from "@/components/web/f_main.vue";
 import {userCenterStorei} from "@/stores/user_center_store";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const userCenterStore = userCenterStorei()
 userCenterStore.getUserDetail()
 
@@ -14,11 +16,11 @@ userCenterStore.getUserDetail()
     <f_nav no-scroll></f_nav>
     <f_main>
       <div class="menu">
-        <router-link :to="{name: 'userCenterInfo'}">个人资料</router-link>
-        <router-link :to="{name: 'userCenterAccount'}">账号设置</router-link>
-        <router-link :to="{name: 'userCenterPrivacy'}">隐私设置</router-link>
-        <router-link :to="{name: 'userCenterHome'}">主页设置</router-link>
-        <router-link :to="{name: 'userCenterHistory'}">浏览历史</router-link>
+        <router-link :to="{name: 'userCenterInfo'}">{{ t('userCenter.profile') }}</router-link>
+        <router-link :to="{name: 'userCenterAccount'}">{{ t('userCenter.account') }}</router-link>
+        <router-link :to="{name: 'userCenterPrivacy'}">{{ t('userCenter.privacy') }}</router-link>
+        <router-link :to="{name: 'userCenterHome'}">{{ t('userCenter.home') }}</router-link>
+        <router-link :to="{name: 'userCenterHistory'}">{{ t('userCenter.history') }}</router-link>
       </div>
       <div class="view">
         <router-view/>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {collectCreateApi} from "@/api/collect_api";
+import {useI18n} from 'vue-i18n';
 import {Message} from "@arco-design/web-vue";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const emits = defineEmits(["update:visible", "update:title", "update:abstract", "ok"])
+const {t} = useI18n()
 
 async function addCategoryHandler() {
   const res = await collectCreateApi({
@@ -43,15 +45,15 @@ function abstractInput(val: string) {
 </script>
 
 <template>
-  <a-modal @cancel="cancel" width="30%" :title="props.id ? '编辑收藏夹' : '创建收藏夹'" :visible="props.visible"
+  <a-modal @cancel="cancel" width="30%" :title="props.id ? t('action.editCollection') : t('action.createCollection')" :visible="props.visible"
            :on-before-ok="addCategoryHandler">
     <a-form ref="formRef" :model="props" :label-col-props="{span: 7}" :wrapper-col-props="{span: 17}">
-      <a-form-item label="收藏夹标题" field="title" :validate-trigger="'blur'"
-                   :rules="[{required: true, message:'请输入收藏夹标题'}]">
-        <a-input placeholder="收藏夹标题" @input="titleInput"></a-input>
+      <a-form-item :label="t('collection.title')" field="title" :validate-trigger="'blur'"
+                   :rules="[{required: true, message: t('form.collectionTitleRequired')}]">
+        <a-input :placeholder="t('collection.title')" @input="titleInput"></a-input>
       </a-form-item>
-      <a-form-item v-if="props.abstract !== undefined" label="收藏夹简介">
-        <a-textarea placeholder="收藏夹简介" :auto-size="{minRows: 2, maxRows: 4}"
+      <a-form-item v-if="props.abstract !== undefined" :label="t('collection.description')">
+        <a-textarea :placeholder="t('collection.description')" :auto-size="{minRows: 2, maxRows: 4}"
                     @input="abstractInput"></a-textarea>
       </a-form-item>
     </a-form>

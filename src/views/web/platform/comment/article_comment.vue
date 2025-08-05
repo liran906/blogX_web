@@ -10,7 +10,9 @@ import {commentCreateApi} from "@/api/comment_api";
 import {Message} from "@arco-design/web-vue";
 import {goUser} from "@/utils/go_router";
 import F_avatar from "@/components/web/f_avatar.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const form = reactive<commentCreateRequest>({
   articleID: 0,
   parentID: 0,
@@ -22,7 +24,7 @@ async function apply(item: commentListType) {
   form.articleID = item.articleID
   form.parentID = item.id
   if (form.content.trim() === "") {
-    Message.warning("请输入回复内容")
+    Message.warning(t('comment.replyPlaceholder'))
     return
   }
   const res = await commentCreateApi(form)
@@ -60,7 +62,7 @@ function hide() {
               <f_label :options="relationOptions" :value="item.relation"></f_label>
           </span>
           <span class="article" v-if="!item.articleCoverURL">
-              评论了文章： <router-link to="">{{ item.articleTitle }}</router-link>
+              {{ t('comment.commentedArticle') }}： <router-link to="">{{ item.articleTitle }}</router-link>
           </span>
         </div>
         <div class="content">
@@ -71,14 +73,14 @@ function hide() {
         <div class="data">
           <span class="date">{{ dateTimeFormat(item.createdAt) }}</span>
           <span class="digg">
-              <i title="点赞" class="iconfont icon-dianzanliang"></i>
+              <i :title="t('comment.like')" class="iconfont icon-dianzanliang"></i>
               <span>{{ item.likeCount }}</span>
             </span>
           <a-trigger v-model:popup-visible="item.visible" @show="show" @hide="hide" trigger="click" content-class="apply_comment_trigger" :unmount-on-close="false">
-            <f_a class="apply">回复</f_a>
+            <f_a class="apply">{{ t('comment.reply') }}</f_a>
             <template #content>
-              <a-button type="primary" size="mini" @click="apply(item)">回复</a-button>
-              <a-textarea ref="textareaRef" :auto-size="{minRows: 3}" placeholder="请输入回复的内容" @keydown.enter="apply(item)"
+              <a-button type="primary" size="mini" @click="apply(item)">{{ t('comment.reply') }}</a-button>
+              <a-textarea ref="textareaRef" :auto-size="{minRows: 3}" :placeholder="t('comment.replyPlaceholder')" @keydown.enter="apply(item)"
                           v-model="form.content"></a-textarea>
             </template>
           </a-trigger>
@@ -88,7 +90,7 @@ function hide() {
       <div class="cover" v-if="item.articleCoverURL">
         <img :src="item.articleCoverURL" alt="">
         <span>
-            <a-typography-text :ellipsis="{rows: 1, css: true}">文章：{{ item.articleTitle }}</a-typography-text>
+            <a-typography-text :ellipsis="{rows: 1, css: true}">{{ t('article.title') }}：{{ item.articleTitle }}</a-typography-text>
           </span>
       </div>
     </comment_list>

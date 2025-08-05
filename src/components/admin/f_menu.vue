@@ -9,8 +9,10 @@ import router from "@/router";
 import {useRoute} from "vue-router";
 import {watch} from "vue";
 import F_menu_item from "@/components/admin/f_menu_item.vue";
+import {useI18n} from "vue-i18n";
 
 const route = useRoute()
+const {t} = useI18n()
 
 interface MenuType {
   title: string
@@ -22,35 +24,35 @@ interface MenuType {
 
 
 const menuList: MenuType[] = [
-  {title: "数据统计", name: "home", icon: "iconfont icon-shuju"},
+  {title: t('admin.dashboard'), name: "home", icon: "iconfont icon-shuju"},
   {
-    title: "个人中心", name: "userCenter", icon: IconUser, children: [
-      {title: "个人信息", name: "userInfo", icon: "iconfont icon-yonghuxinxi-"}
+    title: t('userCenter.profile'), name: "userCenter", icon: IconUser, children: [
+      {title: t('user.profile'), name: "userInfo", icon: "iconfont icon-yonghuxinxi-"}
     ]
   },
   {
-    title: "文章管理", role: 1, name: "articleManage", icon: "iconfont icon-yonghuguanli", children: [
-      {title: "文章列表", name: "articleList", icon: "iconfont icon-list",}
+    title: t('admin.articleManage'), role: 1, name: "articleManage", icon: "iconfont icon-yonghuguanli", children: [
+      {title: t('admin.articleList'), name: "articleList", icon: "iconfont icon-list",}
     ]
   },
   {
-    title: "用户管理", role: 1, name: "userManage", icon: "iconfont icon-wenzhangguanli", children: [
-      {title: "用户列表", name: "userList", icon: "iconfont icon-navicon-wzgl",}
+    title: t('admin.userManage'), role: 1, name: "userManage", icon: "iconfont icon-wenzhangguanli", children: [
+      {title: t('admin.userList'), name: "userList", icon: "iconfont icon-navicon-wzgl",}
     ]
   },
   {
-    title: "系统管理", role: 1, name: "settingsManage", icon: "iconfont icon-setting", children: [
+    title: t('admin.systemManage'), role: 1, name: "settingsManage", icon: "iconfont icon-setting", children: [
       {
-        title: "站点配置", name: "siteManage", icon: "iconfont icon-zhandianpeizhi", children: [
-          {title: "网站设置", name: "siteManageSite", icon: "iconfont icon-wangzhan"},
-          {title: "邮箱设置", name: "siteManageEmail", icon: "iconfont icon-youxiang"},
-          {title: "QQ设置", name: "siteManageQQ", icon: "iconfont icon-qq"},
-          {title: "AI设置", name: "siteManageAi", icon: "iconfont icon-wuguan"},
-          {title: "对象存储设置", name: "siteManageCloud", icon: "iconfont icon-yuntupian"}, //
+        title: t('admin.siteConfig'), name: "siteManage", icon: "iconfont icon-zhandianpeizhi", children: [
+          {title: t('admin.siteSettings'), name: "siteManageSite", icon: "iconfont icon-wangzhan"},
+          {title: t('admin.emailSettings'), name: "siteManageEmail", icon: "iconfont icon-youxiang"},
+          {title: t('admin.qqSettings'), name: "siteManageQQ", icon: "iconfont icon-qq"},
+          {title: t('admin.aiSettings'), name: "siteManageAi", icon: "iconfont icon-wuguan"},
+          {title: t('admin.cloudStorageSettings'), name: "siteManageCloud", icon: "iconfont icon-yuntupian"}, //
         ]
       },
-      {title: "Banner管理", name: "bannerList", icon: "iconfont icon-banner"},
-      {title: "日志列表", name: "logList", icon: "iconfont icon-xitongrizhi"},
+      {title: t('admin.bannerManage'), name: "bannerList", icon: "iconfont icon-banner"},
+      {title: t('admin.logList'), name: "logList", icon: "iconfont icon-xitongrizhi"},
     ]
   },
 ]

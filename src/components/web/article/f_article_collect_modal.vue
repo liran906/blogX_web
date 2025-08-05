@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
+import {useI18n} from 'vue-i18n';
 import {userStorei} from "@/stores/user_store";
 
 const store = userStorei()
+const {t} = useI18n()
 
 interface Props {
   visible: boolean
@@ -40,7 +42,7 @@ async function beforeOpen() {
       "id": 0,
       "createdAt": "",
       "updatedAt": "",
-      "title": "默认收藏夹",
+      "title": t('collection.defaultCollection'),
       "abstract": "",
       "coverURL": "",
       "userID": store.userInfo.userID,
@@ -68,7 +70,7 @@ function select(item: collectListType) {
 </script>
 
 <template>
-  <a-modal :footer="false" body-class="collect_modal_body scrollbar" title="收藏文章" @before-open="beforeOpen"
+  <a-modal :footer="false" body-class="collect_modal_body scrollbar" :title="t('article.collect')" @before-open="beforeOpen"
            @cancel="cancel"
            :visible="props.visible">
     <f_collect_form_modal v-model:title="title" v-model:visible="collectVisible"
@@ -76,19 +78,19 @@ function select(item: collectListType) {
     <div class="add">
       <div class="inner" @click="addModal">
         <i class="iconfont icon-jia"></i>
-        <span>创建收藏夹</span>
+        <span>{{ t('action.createCollection') }}</span>
       </div>
     </div>
     <div class="list">
       <div class="item" v-for="item in data.list">
         <div class="left">
           <div class="title">{{ item.title }}
-            <a-tag color="blue" v-if="item.isDefault">默认收藏夹</a-tag>
+            <a-tag color="blue" v-if="item.isDefault">{{ t('collection.defaultCollection') }}</a-tag>
           </div>
-          <div class="count">{{ item.articleCount }}篇文章</div>
+          <div class="count">{{ item.articleCount }}{{ t('article.articlesUnit') }}</div>
         </div>
         <a-button @click="select(item)" type="primary" :status="item.articleUse ? 'danger' : ''" size="mini">
-          {{ item.articleUse ? '取消收藏' : '收藏' }}
+          {{ item.articleUse ? t('action.uncollect') : t('article.collect') }}
         </a-button>
       </div>
     </div>

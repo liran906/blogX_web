@@ -3,7 +3,9 @@ import {userStorei} from "@/stores/user_store";
 import router from "@/router";
 import {showLogin} from "@/components/web/f_login";
 import {goUser} from "@/utils/go_router";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const store = userStorei()
 
 function goRouter(name: string) {
@@ -22,7 +24,7 @@ function goUCenter() {
 </script>
 
 <template>
-  <a-avatar v-if="!store.isLogin" class="avatar_1" :size="30" @click="showLogin">登录</a-avatar>
+  <a-avatar v-if="!store.isLogin" class="avatar_1" :size="30" @click="showLogin">{{ t('user.login') }}</a-avatar>
   <a-trigger v-else class="f_nav_avatar_trigger"
              animation-name="fade" trigger="click" :unmount-on-close="false">
     <a-avatar class="avatar_1" :image-url="store.userInfo.avatar" :size="30">{{ store.userInfo.nickName[0] }}</a-avatar>
@@ -35,22 +37,22 @@ function goUCenter() {
           <a-typography-text @click="goUser(store.userInfo.userID)" :ellipsis="{rows: 1, css: true}">{{ store.userInfo.nickName }}</a-typography-text>
         </div>
         <div class="data">
-          <a-statistic extra="粉丝" :value="store.userInfo.fansCount"/>
-          <a-statistic extra="关注" :value="store.userInfo.followingCount"/>
-          <a-statistic extra="文章" :value="store.userInfo.articleCount"/>
+          <a-statistic :extra="t('user.fans')" :value="store.userInfo.fansCount"/>
+          <a-statistic :extra="t('user.following')" :value="store.userInfo.followingCount"/>
+          <a-statistic :extra="t('user.articles')" :value="store.userInfo.articleCount"/>
         </div>
         <div class="menu">
-          <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-list"></i> <span>个人中心</span>
+          <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-list"></i> <span>{{ t('userCenter.profile') }}</span>
           </div>
           <div class="item" @click="goRouter('platformArticle')"><i class="iconfont icon-wenzhangguanli"></i>
-            <span>文章管理</span></div>
-          <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-xiaoxi"></i> <span>我的消息</span>
+            <span>{{ t('platform.manageArticles') }}</span></div>
+          <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-xiaoxi"></i> <span>{{ t('user.myMessages') }}</span>
           </div>
-          <div class="item" v-if="store.isAdmin" @click="goRouter('home')"><i class="iconfont icon-list"></i> <span>后台管理</span>
+          <div class="item" v-if="store.isAdmin" @click="goRouter('home')"><i class="iconfont icon-list"></i> <span>{{ t('admin.dashboard') }}</span>
           </div>
         </div>
         <div class="exit">
-          <div class="item" @click="goRouter('exit')"><i class="iconfont icon-liulanliang"></i> <span>退出</span></div>
+          <div class="item" @click="goRouter('exit')"><i class="iconfont icon-liulanliang"></i> <span>{{ t('user.logout') }}</span></div>
         </div>
       </div>
     </template>

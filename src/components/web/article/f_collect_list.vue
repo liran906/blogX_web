@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
+import {useI18n} from 'vue-i18n';
 import type {listResponse, baseResponse} from "@/api";
 import {
   categoryCreateApi,
@@ -17,6 +18,7 @@ import {type collectCreateRequest, collectRemoveApi, collectCreateApi} from "@/a
 import F_collect_form_modal from "@/components/web/article/f_collect_form_modal.vue";
 
 const route = useRoute()
+const {t} = useI18n()
 
 interface Props {
   userId: number
@@ -104,7 +106,7 @@ getCollectData()
         <template #icon>
           <icon-plus></icon-plus>
         </template>
-        创建
+        {{ t('common.create') }}
       </a-button>
     </div>
     <f_collect_form_modal  v-if="props.isMe" @ok="getCollectData" :id="form.id" v-model:title="form.title" v-model:abstract="form.abstract" v-model:visible="visible"></f_collect_form_modal>
@@ -118,8 +120,8 @@ getCollectData()
             <span>{{ item.articleCount }}</span>
           </f_a>
           <template #content>
-            <div class="item" @click="showEdit(item)">编辑</div>
-            <div class="item delete" @click="remove(item)">删除</div>
+            <div class="item" @click="showEdit(item)">{{ t('common.edit') }}</div>
+            <div class="item delete" @click="remove(item)">{{ t('common.delete') }}</div>
           </template>
         </a-trigger>
         <f_a v-else @click="go(item)">

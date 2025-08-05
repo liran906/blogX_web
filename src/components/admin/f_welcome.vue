@@ -4,6 +4,7 @@ import {type dataSumType, dataSumApi, type weatherType} from "@/api/data_api";
 import {userStorei} from "@/stores/user_store";
 import {computed} from "vue";
 import {Message} from "@arco-design/web-vue";
+import {useI18n} from "vue-i18n";
 
 interface Props {
   noWeather?: boolean
@@ -12,6 +13,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const store = userStorei()
+const {t} = useI18n()
 const data = reactive<dataSumType>({
   flowCount: 0,
   clickCount: 0,
@@ -50,42 +52,42 @@ const weatherData = reactive<weatherType>({
 const temperatureLabel = computed(() => {
   const num = Number(weatherData.temperature)
   if (num > 40) {
-    return "天气炎热，注意避暑"
+    return t('admin.weather.veryHot')
   }
   if (num > 30) {
-    return "天气较热，多在阴凉出休息"
+    return t('admin.weather.hot')
   }
   if (num > 10) {
-    return "天气不错，适合工作"
+    return t('admin.weather.nice')
   }
   if (num > 0) {
-    return "天气较冷，多穿点衣服"
+    return t('admin.weather.cold')
   }
-  return "天气很冷，注意保暖"
+  return t('admin.weather.veryCold')
 })
 
 const welcomeTitle = computed(() => {
   const now = new Date()
   const h = now.getHours()
   if (h < 9 && h >= 6) {
-    return "早安"
+    return t('admin.greeting.morning')
   }
   if (h >= 9 && h < 12) {
-    return "上午好"
+    return t('admin.greeting.forenoon')
   }
   if (h >= 12 && h < 14) {
-    return "中午好"
+    return t('admin.greeting.noon')
   }
   if (h >= 14 && h < 16) {
-    return "下午好"
+    return t('admin.greeting.afternoon')
   }
   if (h >= 16 && h < 20) {
-    return "傍晚好"
+    return t('admin.greeting.evening')
   }
   if (h >= 20 && h < 24) {
-    return "晚安"
+    return t('admin.greeting.night')
   }
-  return "早安"
+  return t('admin.greeting.morning')
 })
 
 // getData()
@@ -94,24 +96,24 @@ const welcomeTitle = computed(() => {
 
 <template>
   <div class="f_welcome">
-    <div class="title">{{ welcomeTitle }} {{ store.userInfo.nickName }}，请开始一天的工作吧</div>
+    <div class="title">{{ welcomeTitle }} {{ store.userInfo.nickName }}，{{ t('admin.welcome.startWork') }}</div>
     <div v-if="!props.noWeather" class="weather">
-      {{ weatherData.province }} · {{ weatherData.city }} 今日 {{ weatherData.weather }}，{{
+      {{ weatherData.province }} · {{ weatherData.city }} {{ t('admin.weather.today') }} {{ weatherData.weather }}，{{
         weatherData.temperature
       }}℃，{{ temperatureLabel }}
     </div>
     <div class="statistics">
-      <a-statistic animation title="今日访问" :value="data.flowCount" show-group-separator/>
-      <a-statistic animation title="今日点击" :value="data.clickCount" show-group-separator/>
-      <a-statistic animation title="用户总数" :value="data.userCount" show-group-separator/>
-      <a-statistic animation title="文章总数" :value="data.articleCount" show-group-separator/>
-      <a-statistic animation title="消息总数" :value="data.messageCount" show-group-separator/>
-      <a-statistic animation title="评论总数" :value="data.commentCount" show-group-separator/>
-      <a-statistic animation title="今日登录" :value="data.newLoginCount" show-group-separator/>
-      <a-statistic animation title="今日注册" :value="data.newSignCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.todayVisits')" :value="data.flowCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.todayClicks')" :value="data.clickCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.totalUsers')" :value="data.userCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.totalArticles')" :value="data.articleCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.totalMessages')" :value="data.messageCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.totalComments')" :value="data.commentCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.todayLogins')" :value="data.newLoginCount" show-group-separator/>
+      <a-statistic animation :title="t('admin.stats.todayRegisters')" :value="data.newSignCount" show-group-separator/>
     </div>
     <div class="extra" v-if="!props.noHelp">
-      欢迎使用Admin后台系统，可查看 <a href="">系统帮助</a> 以便更好的使用本系统
+      {{ t('admin.welcome.systemIntro') }} <a href="">{{ t('admin.systemHelp') }}</a> {{ t('admin.welcome.betterUse') }}
     </div>
   </div>
 </template>

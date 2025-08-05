@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import F_card from "@/components/web/f_card.vue";
+import {useI18n} from 'vue-i18n';
 import {articleAddApi, type articleAddType, articleUpdateApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import router from "@/router";
@@ -7,6 +8,7 @@ import F_article_form from "@/components/web/article/f_article_form.vue";
 import {useRoute} from "vue-router";
 
 const route = useRoute()
+const {t} = useI18n()
 
 async function edit(form: articleAddType) {
   const res = await articleUpdateApi({
@@ -25,7 +27,7 @@ async function edit(form: articleAddType) {
 
 <template>
   <div class="platform_article_add_view">
-    <f_card title="编辑文章">
+    <f_card :title="t('article.edit')">
       <f_article_form @ok="edit" :article-id="Number(route.params.id)"></f_article_form>
     </f_card>
   </div>

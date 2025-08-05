@@ -5,7 +5,9 @@ import {reactive, ref} from "vue";
 import {sendEmailApi, type sendEmailType} from "@/api/user_api";
 import {userStorei} from "@/stores/user_store";
 import F_captcha from "@/components/web/f_captcha.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const store = userStorei()
 const props = defineProps<{ type: 1|2|3 }>()
 const emits = defineEmits(["ok"])
@@ -37,16 +39,16 @@ async function handler() {
 
 <template>
   <Form ref="formRef" :model="form" :label-col-props="{span: 0}" :wrapper-col-props="{span: 24}">
-    <FormItem field="email" :rules="[{required: true, message:'请输入邮箱'}]">
-      <Input v-model="form.email" placeholder="邮箱"></Input>
+    <FormItem field="email" :rules="[{required: true, message: t('user.emailRequired')}]">
+      <Input v-model="form.email" :placeholder="t('user.email')"></Input>
     </FormItem>
     <FormItem content-class="captcha_item" v-if="store.siteInfo.login.captcha" field="captchaCode"
-              :rules="[{required: true, message:'请输入图形验证码'}]">
-      <Input v-model="form.captchaCode" placeholder="图形验证码"></Input>
+              :rules="[{required: true, message: t('user.captchaRequired')}]">
+      <Input v-model="form.captchaCode" :placeholder="t('user.captcha')"></Input>
       <f_captcha ref="captchaRef" v-model="form.captchaID"></f_captcha>
     </FormItem>
     <FormItem>
-      <Button type="primary" @click="handler" long>验证邮箱</Button>
+      <Button type="primary" @click="handler" long>{{ t('user.verifyEmail') }}</Button>
     </FormItem>
   </Form>
 </template>

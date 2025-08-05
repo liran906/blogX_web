@@ -3,7 +3,9 @@
 import {Button, Form, FormItem, Input, Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
 import {emailRegisterApi, type emailRegisterType} from "@/api/user_api";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const formRef = ref()
 const emits = defineEmits(["ok"])
 
@@ -22,7 +24,7 @@ const form = reactive<emailRegisterType>({
 
 function rePwdValida(value: string | undefined, callback: (error?: string) => void) {
   if (value !== form.password) {
-    callback("两次密码不一致")
+    callback(t('user.passwordMismatch'))
   }
 }
 
@@ -41,20 +43,20 @@ async function handler() {
 
 <template>
   <Form ref="formRef" :model="form" :label-col-props="{span: 0}" :wrapper-col-props="{span: 24}">
-    <FormItem field="emailCode" :rules="[{required: true, message:'请输入邮箱验证码'}]">
-      <Input v-model="form.emailCode" placeholder="邮箱验证码"></Input>
+    <FormItem field="emailCode" :rules="[{required: true, message: t('user.emailCodeRequired')}]">
+      <Input v-model="form.emailCode" :placeholder="t('user.emailCode')"></Input>
     </FormItem>
-    <FormItem field="username" :rules="[{required: true, message:'请输入用户名'}]">
-      <Input v-model="form.username" placeholder="用户名"></Input>
+    <FormItem field="username" :rules="[{required: true, message: t('user.usernameRequired')}]">
+      <Input v-model="form.username" :placeholder="t('user.username')"></Input>
     </FormItem>
-    <FormItem field="password" :rules="[{required: true, message:'请输入密码'}]">
-      <Input v-model="form.password" type="password" placeholder="密码"></Input>
+    <FormItem field="password" :rules="[{required: true, message: t('user.passwordRequired')}]">
+      <Input v-model="form.password" type="password" :placeholder="t('user.password')"></Input>
     </FormItem>
-    <FormItem field="rePwd" :rules="[{required: true, message:'请输入确认密码'}, {validator: rePwdValida}]">
-      <Input v-model="form.rePwd" type="password" placeholder="确认密码"></Input>
+    <FormItem field="rePwd" :rules="[{required: true, message: t('user.confirmPasswordRequired')}, {validator: rePwdValida}]">
+      <Input v-model="form.rePwd" type="password" :placeholder="t('user.confirmPassword')"></Input>
     </FormItem>
     <FormItem>
-      <Button type="primary" @click="handler" long>注册</Button>
+      <Button type="primary" @click="handler" long>{{ t('user.register') }}</Button>
     </FormItem>
   </Form>
 </template>

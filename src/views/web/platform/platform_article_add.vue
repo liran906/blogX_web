@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import F_card from "@/components/web/f_card.vue";
+import {useI18n} from 'vue-i18n';
 import {articleAddApi, type articleAddType} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import router from "@/router";
 import F_article_form from "@/components/web/article/f_article_form.vue";
+
+const {t} = useI18n()
 
 async function create(form: articleAddType) {
   const res = await articleAddApi(form)
@@ -19,7 +22,7 @@ async function create(form: articleAddType) {
 
 <template>
   <div class="platform_article_add_view">
-    <f_card title="发布文章">
+    <f_card :title="t('article.publish')">
       <f_article_form @ok="create"></f_article_form>
     </f_card>
   </div>

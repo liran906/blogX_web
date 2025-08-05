@@ -5,7 +5,9 @@ import {userStorei} from "@/stores/user_store";
 import {ref} from "vue";
 import {goUser} from "@/utils/go_router";
 import F_avatar from "@/components/web/f_avatar.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n();
 const store = userStorei();
 
 function handleSelect(val: string) {
@@ -23,16 +25,16 @@ interface OptionType {
 }
 
 const options = ref<OptionType[]>([
-  {title: "个人信息", name: "userInfo"},
-  {title: "注销退出", name: "logout"},
+  {title: t('userCenter.profile'), name: "userInfo"},
+  {title: t('user.logout'), name: "logout"},
 ])
 
 if (store.isAdmin){
   options.value = [
-    {title: "个人信息", name: "userInfo"},
-    {title: "用户列表", name: "userList"},
-    {title: "系统信息", name: "settings"},
-    {title: "注销退出", name: "logout"},
+    {title: t('userCenter.profile'), name: "userInfo"},
+    {title: t('admin.userManage'), name: "userList"},
+    {title: t('admin.settings'), name: "settings"},
+    {title: t('user.logout'), name: "logout"},
   ]
 }
 

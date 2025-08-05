@@ -1,5 +1,6 @@
 import F_login_modal from "@/components/web/f_login_modal.vue";
 import {createApp, defineComponent, h, ref} from "vue";
+import i18n from '@/locales'
 
 const visible = ref<boolean | undefined>(undefined)
 
@@ -29,6 +30,9 @@ export function showLogin(options?: options) {
         })
         // 生成app
         const app = createApp(component)
+        
+        // 安装i18n插件
+        app.use(i18n)
 
         // 挂载到真实dom上
         const div = document.createElement("div")

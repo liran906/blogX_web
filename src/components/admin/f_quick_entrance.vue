@@ -4,6 +4,7 @@ import {type Component, ref} from "vue";
 import {IconUser} from "@arco-design/web-vue/es/icon";
 import F_component from "@/components/common/f_component.vue";
 import router from "@/router";
+import {useI18n} from "vue-i18n";
 
 interface quickType {
   label: string
@@ -11,13 +12,15 @@ interface quickType {
   name: string
 }
 
+const {t} = useI18n()
+
 const list: quickType[] = [
-  {label: "用户列表", icon: "iconfont icon-list", name: "userList"},
-  {label: "文章列表", icon: "iconfont icon-navicon-wzgl", name: "articleList"},
-  {label: "网站设置", icon: "iconfont icon-wangzhan", name: "siteManageSite"},
-  {label: "AI设置", icon: "iconfont icon-wuguan", name: "siteManageAi"},
-  {label: "Banner设置", icon: "iconfont icon-banner", name: "bannerList"},
-  {label: "日志列表", icon: "iconfont icon-xitongrizhi", name: "logList"},
+  {label: t('admin.userList'), icon: "iconfont icon-list", name: "userList"},
+  {label: t('admin.articleList'), icon: "iconfont icon-navicon-wzgl", name: "articleList"},
+  {label: t('admin.siteSettings'), icon: "iconfont icon-wangzhan", name: "siteManageSite"},
+  {label: t('admin.aiSettings'), icon: "iconfont icon-wuguan", name: "siteManageAi"},
+  {label: t('admin.bannerSettings'), icon: "iconfont icon-banner", name: "bannerList"},
+  {label: t('admin.logList'), icon: "iconfont icon-xitongrizhi", name: "logList"},
 ]
 
 function goRouter(item: quickType) {
@@ -27,7 +30,7 @@ function goRouter(item: quickType) {
 </script>
 
 <template>
-  <f_card title="快捷入口" class="f_quick_entrance">
+  <f_card :title="t('admin.quickEntrance')" class="f_quick_entrance">
     <div class="item" v-for="item in list">
       <div class="icon" @click="goRouter(item)">
         <f_component :is="item.icon"></f_component>

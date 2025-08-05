@@ -18,17 +18,12 @@ const props = defineProps({
   }
 })
 
-// 调试输出
-console.log('🔍 F_avatar props:', props)
-
 // 图片加载状态
 const imageLoaded = ref(true)
 
 // 取首字母（大写）
 const firstLetter = computed(() => {
-  const letter = props.nickname ? props.nickname[0].toUpperCase() : ''
-  console.log('📝 首字母:', letter, '昵称:', props.nickname)
-  return letter
+  return props.nickname ? props.nickname[0].toUpperCase() : ''
 })
 
 // 是否显示图片
@@ -38,13 +33,11 @@ const showImage = computed(() => {
 
 // 图片加载失败处理
 function onImageError() {
-  console.log('❌ 图片加载失败:', props.avatarUrl)
   imageLoaded.value = false
 }
 
 // 图片加载成功处理
 function onImageLoad() {
-  console.log('✅ 图片加载成功:', props.avatarUrl)
   imageLoaded.value = true
 }
 </script>

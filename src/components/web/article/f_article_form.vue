@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref} from 'vue';
+import {useI18n} from 'vue-i18n';
 import {MdEditor} from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import F_card from "@/components/web/f_card.vue";
@@ -17,6 +18,7 @@ import {onUploadImg} from "@/api/image_api";
 import {IconDelete} from "@arco-design/web-vue/es/icon";
 
 const store = userStorei()
+const {t} = useI18n()
 const form = reactive<articleAddType>({
   title: "",
   content: "",
@@ -123,11 +125,11 @@ async function aiGen() {
     return
   }
   if (form.title != "" && form.abstract != "" && form.tags.length > 0) {
-    Message.error("请将需要 AI 辅助生成的项目留空")
+    Message.error(t('article.aiGenTip'))
     return
   }
   if (form.content.length > 20000 || form.content.length < 100) {
-    Message.error("文章内容不符合要求（长度 100-20000）")
+    Message.error(t('article.contentLengthError'))
     return
   }
   const res = await aiAnalysisApi(form.content)
@@ -158,33 +160,33 @@ function coverRemove(){
 <template>
   <a-form class="f_article_form_com" ref="formRef" :model="form" :label-col-props="{span: 0}"
           :wrapper-col-props="{span: 24}">
-    <a-form-item field="title" validate-trigger="blur" :rules="[{required: true, message:'请输入文章标题'}]">
-      <a-input v-model="form.title" placeholder="请输入标题（建议20字以内）"></a-input>
+    <a-form-item field="title" validate-trigger="blur" :rules="[{required: true, message: t('form.titleRequired')}]">
+      <a-input v-model="form.title" :placeholder="t('form.titlePlaceholder')"></a-input>
     </a-form-item>
     <a-form-item>
-      <a-textarea v-model="form.abstract" :auto-size="{minRows: 3, maxRows: 4}" placeholder="文章简介"></a-textarea>
+      <a-textarea v-model="form.abstract" :auto-size="{minRows: 3, maxRows: 4}" :placeholder="t('form.abstractPlaceholder')"></a-textarea>
     </a-form-item>
-    <a-form-item field="content" validate-trigger="blur" :rules="[{required: true, message:'请输入文章内容'}]">
-<!--      <MdEditor @onUploadImg="onUploadImg" @paste="paste" v-model="form.content" placeholder="请输入文章内容"></MdEditor>-->
-      <MdEditor @onUploadImg="onUploadImg" v-model="form.content" placeholder="请输入文章内容"></MdEditor>
+    <a-form-item field="content" validate-trigger="blur" :rules="[{required: true, message: t('form.contentRequired')}]">
+<!--      <MdEditor @onUploadImg="onUploadImg" @paste="paste" v-model="form.content" :placeholder="t('form.contentPlaceholder')"></MdEditor>-->
+      <MdEditor @onUploadImg="onUploadImg" v-model="form.content" :placeholder="t('form.contentPlaceholder')"></MdEditor>
     </a-form-item>
     <a-collapse :default-active-key="[1]" :bordered="false">
-      <a-collapse-item header="更多设置" :key="1">
+      <a-collapse-item :header="t('form.moreSettings')" :key="1">
 
         <div class="form-container">
           <a-form :label-col-props="{span: 14}" :wrapper-col-props="{span: 20}" class="form2" label-align="left"
                   :model="form">
-            <a-form-item content-class="article_cover_col" label="设置文章封面">
+            <a-form-item content-class="article_cover_col" :label="t('form.setCover')">
 
                 <f_cover_cutter style="width: 100%; height: 30%" @ok="coverBack">
                   <div class="cover_mask">
                     <IconImage></IconImage>
-                    <span>本地上传</span>
+                    <span>{{ t('form.localUpload') }}</span>
                   </div>
                 </f_cover_cutter>
 
               <div class="addr">
-                <a-input v-model="form.coverURL" placeholder="URL地址"></a-input>
+                <a-input v-model="form.coverURL" :placeholder="t('form.urlAddress')"></a-input>
               </div>
               <div class="show" v-if="form.coverURL">
                 <a-image :src="form.coverURL" :width="300">
@@ -195,7 +197,7 @@ function coverRemove(){
               </div>
               <template #help>
                 <div v-if="store.siteInfo.cloud.enable">
-                  云服务供应商：七牛云
+                  {{ t('form.cloudProvider') }}：{{ t('form.qiniuCloud') }}
                 </div>
               </template>
             </a-form-item>
@@ -203,24 +205,24 @@ function coverRemove(){
 
           <a-form :label-col-props="{span: 14}" :wrapper-col-props="{span: 24}" class="form3" label-align="left"
                   :model="form">
-            <a-form-item label="请选择文章分类">
-              <a-select v-model="form.categoryID" placeholder="文章分类" :options="categoryOptions" style="cursor: pointer"></a-select>
+            <a-form-item :label="t('form.selectCategory')">
+              <a-select v-model="form.categoryID" :placeholder="t('article.category')" :options="categoryOptions" style="cursor: pointer"></a-select>
               <template #help>
-                <span v-if="aiData.category">基于ai推荐 适合的分类名称： {{ aiData.category }}</span>
+                <span v-if="aiData.category">{{ t('form.aiRecommendCategory') }}：{{ aiData.category }}</span>
               </template>
             </a-form-item>
-            <a-form-item label="文章标签">
+            <a-form-item :label="t('article.tags')">
               <a-select allow-create allow-clear multiple :options="tagOptions" v-model="form.tags"
-                        placeholder="请输入标签" style="cursor: pointer"></a-select>
+                        :placeholder="t('form.tagsPlaceholder')" style="cursor: pointer"></a-select>
             </a-form-item>
-            <a-form-item label="AI 辅助生成">
+            <a-form-item :label="t('form.aiAssist')">
               <div class="aiGen">
-                <span>根据文章内容，由AI生成留空的题目、简介及标签</span>
-                <a-button @click="aiGen()">一键生成</a-button>
+                <span>{{ t('form.aiGenDescription') }}</span>
+                <a-button @click="aiGen()">{{ t('form.oneClickGenerate') }}</a-button>
               </div>
             </a-form-item>
-            <a-form-item label="设置评论状态">
-              <a-checkbox v-model="form.openForComment">开启评论</a-checkbox>
+            <a-form-item :label="t('form.commentSettings')">
+              <a-checkbox v-model="form.openForComment">{{ t('form.enableComments') }}</a-checkbox>
             </a-form-item>
           </a-form>
         </div>
@@ -230,8 +232,8 @@ function coverRemove(){
 
 
     <div class="actions">
-      <a-button @click="create(1)">存为草稿</a-button>
-      <a-button type="primary" @click="create(2)">{{ props.articleId ? '更新' : '发布文章'}}</a-button>
+      <a-button @click="create(1)">{{ t('action.saveDraft') }}</a-button>
+      <a-button type="primary" @click="create(2)">{{ props.articleId ? t('action.update') : t('article.publish') }}</a-button>
     </div>
   </a-form>
 </template>

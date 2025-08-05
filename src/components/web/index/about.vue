@@ -1,24 +1,26 @@
 <script setup lang="ts">
 import F_card from "@/components/web/f_card.vue";
 import {userStorei} from "@/stores/user_store";
+import { useI18n } from 'vue-i18n'
 
 const store = userStorei()
+const { t } = useI18n()
 
 const version = import.meta.env.VITE_VERSION
 </script>
 
 <template>
-  <f_card title="关于本站" class="about_com">
+  <f_card :title="t('about.title')" class="about_com">
     <div class="item" v-if="store.siteInfo.about.siteDate">
-      <span>建站日期</span>
+      <span>{{ t('about.siteDate') }}</span>
       <span>{{ store.siteInfo.about.siteDate }}</span>
     </div>
     <div class="item">
-      <span>网站版本</span>
+      <span>{{ t('about.siteVersion') }}</span>
       <span>{{ version }}</span>
     </div>
     <div class="item">
-      <span>联系作者</span>
+      <span>{{ t('about.contactAuthor') }}</span>
     </div>
     <div class="item icons">
 

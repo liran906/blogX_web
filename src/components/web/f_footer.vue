@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import {beian} from "@/conf/global";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="f_footer">
     <div class="f_beian" v-if="beian">
       <img src="@/assets/img/beian.png" alt="">
-      <a href="https://beian.miit.gov.cn/" target="_blank">备案号：{{ beian }}</a>
+      <a href="https://beian.miit.gov.cn/" target="_blank">{{ t('footer.recordNumber') }}: {{ beian }}</a>
     </div>
   </div>
 </template>

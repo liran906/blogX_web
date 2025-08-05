@@ -6,6 +6,9 @@ import {Message} from "@arco-design/web-vue";
 import {dateCurrentFormat} from "../../../utils/date";
 import {goArticle, goUser} from "@/utils/go_router";
 import F_avatar from "@/components/web/f_avatar.vue";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const data = reactive<listResponse<articleSearchType>>({
   list: [],
@@ -43,25 +46,25 @@ console.log(data)
   <div class="article_search_list_com">
     <div class="head">
       <div class="left">
-        <span :class="{active: params.type === 0}" @click="setType(0)">猜你喜欢</span>
-        <span :class="{active: params.type === 1}" @click="setType(1)">最新发布</span>
-        <span :class="{active: params.type === 2 }" @click="setType(2)">最多回复</span>
-        <span :class="{active: params.type === 3}" @click="setType(3)">最多点赞</span>
-        <span :class="{active: params.type === 4}" @click="setType(4)">最多收藏</span>
+        <span :class="{active: params.type === 0}" @click="setType(0)">{{ t('home.guessYouLike') }}</span>
+        <span :class="{active: params.type === 1}" @click="setType(1)">{{ t('home.latestPublished') }}</span>
+        <span :class="{active: params.type === 2 }" @click="setType(2)">{{ t('home.mostReplies') }}</span>
+        <span :class="{active: params.type === 3}" @click="setType(3)">{{ t('home.mostLikes') }}</span>
+        <span :class="{active: params.type === 4}" @click="setType(4)">{{ t('home.mostCollects') }}</span>
       </div>
       <a-input-search @search="getData" @keydown.enter="getData" v-model="params.key"
-                      placeholder="搜索你感兴趣的文章"></a-input-search>
+                      :placeholder="t('home.searchInterestingArticles')"></a-input-search>
     </div>
     <div class="list">
       <div class="item" v-for="item in data.list">
         <div class="admin_top" v-if="item.pinnedByAdmin">
           <i class="iconfont icon-zhiding"></i>
-          管理员置顶
+          {{ t('home.adminPinned') }}
         </div>
         <div class="top_info">
           <f_avatar @click="goUser(item.userID)" :size="30" :avatar-url="item.userAvatarURL" :nickname="item.userNickname"/>
           <span @click="goUser(item.userID)" class="nick" style="color: var(--color-text-1)">{{ item.userNickname }}</span>
-          <span class="date">最后更新于{{ dateCurrentFormat(item.updatedAt) }}</span>
+          <span class="date">{{ t('home.lastUpdated', {date: dateCurrentFormat(item.updatedAt)}) }}</span>
         </div>
         <div class="article_info">
           <div class="cover" v-if="item.coverURL">
@@ -112,7 +115,7 @@ console.log(data)
                     @change="getData"></a-pagination>
     </div>
     <div class="empty" v-else>
-      <a-empty/>
+      <a-empty :description="t('common.noData')"/>
     </div>
   </div>
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import F_nav from "@/components/web/f_nav.vue";
+import {useI18n} from 'vue-i18n';
 import F_main from "@/components/web/f_main.vue";
 import {MdPreview, MdCatalog} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
@@ -23,6 +24,7 @@ import {userStorei} from "@/stores/user_store";
 import {showLogin} from "@/components/web/f_login";
 
 const store = userStorei()
+const {t} = useI18n()
 const route = useRoute()
 const data = reactive<articleDetailType>({
   id: 0,
@@ -138,7 +140,7 @@ async function collectArticle(id: number) {
     return
   }
   Message.success(res.msg)
-  if (res.msg === "收藏成功") {
+  if (res.msg === t('action.collectSuccess')) {
     data.isCollected = true
     data.collectCount++
   } else {
@@ -177,7 +179,7 @@ function goComment() {
           <div class="head">
             <div class="title">
               <span>{{ data.title }}</span>
-              <IconEdit style="margin-left: 10px; cursor: pointer" title="去编辑" @click="goArticleEdit(data.id)"
+              <IconEdit style="margin-left: 10px; cursor: pointer" :title="t('action.goEdit')" @click="goArticleEdit(data.id)"
                         v-if="data.userID === store.userInfo.userID || store.userInfo.role === 1"></IconEdit>
             </div>
             <div class="date">{{ dateTimeFormat(data.createdAt) }}</div>
@@ -221,7 +223,7 @@ function goComment() {
         </div>
         <div class="catalog_action" :class="{isFixed: isFixed}">
           <div class="catalog">
-            <div class="head">文章目录</div>
+            <div class="head">{{ t('article.catalog') }}</div>
             <div class="body scrollbar">
               <MdCatalog :offsetTop="61" :scrollElementOffsetTop="60" :editorId="`md_${data.id}`"
                          :scrollElement="scrollElement"
@@ -229,10 +231,10 @@ function goComment() {
             </div>
           </div>
           <div class="article_action">
-            <i title="点赞" @click="digg" class="iconfont icon-dianzan_kuai" :class="{active: data.isLiked}"></i>
-            <i title="收藏" @click="collect" class="iconfont icon-shoucang1" :class="{active: data.isCollected}"></i>
-            <i title="回到顶部" @click="goTop" class="iconfont icon-zhiding"></i>
-            <i title="去评论" @click="goComment" class="iconfont icon-pinglun1"></i>
+            <i :title="t('article.like')" @click="digg" class="iconfont icon-dianzan_kuai" :class="{active: data.isLiked}"></i>
+            <i :title="t('article.collect')" @click="collect" class="iconfont icon-shoucang1" :class="{active: data.isCollected}"></i>
+            <i :title="t('action.backToTop')" @click="goTop" class="iconfont icon-zhiding"></i>
+            <i :title="t('action.goComment')" @click="goComment" class="iconfont icon-pinglun1"></i>
           </div>
         </div>
 

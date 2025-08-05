@@ -8,8 +8,10 @@ import F_a from "@/components/common/f_a.vue";
 import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
 import {useRoute} from "vue-router";
+import {useI18n} from "vue-i18n";
 
 const route = useRoute()
+const {t} = useI18n()
 const data = reactive<listResponse<commentListType>>({
   list: [],
   count: 0
@@ -85,8 +87,8 @@ defineExpose({
 <template>
   <div class="comment_list_com">
     <div class="actions">
-      <a-checkbox v-model="isCheckAll" @change="checkAll">全选</a-checkbox>
-      <a-button @click="removeComment" type="primary" status="danger" v-if="checkIdList.length" size="mini">删除
+      <a-checkbox v-model="isCheckAll" @change="checkAll">{{ t('action.selectAll') }}</a-checkbox>
+      <a-button @click="removeComment" type="primary" status="danger" v-if="checkIdList.length" size="mini">{{ t('common.delete') }}
       </a-button>
     </div>
     <div class="comment_list">

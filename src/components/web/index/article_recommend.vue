@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import F_card from "@/components/web/f_card.vue";
 import {reactive} from "vue";
-import type {listResponse} from "@/api";
+import {useI18n} from 'vue-i18n';
+import type{listResponse} from "@/api";
 import {
   articleRecommendListApi,
   type articleRecommendListType,
 } from "@/api/article_api";
 import type {articleSearchType} from "@/api/search_api";
+
+const {t} = useI18n();
 
 const data = reactive<listResponse<articleSearchType>>({
   list: [],
@@ -23,7 +26,7 @@ getData()
 </script>
 
 <template>
-  <f_card title="文章推荐" class="article_recommend_com">
+  <f_card :title="t('home.articleRecommend')" class="article_recommend_com">
     <div class="item" v-for="item in data.list">
       <router-link :to="{name: 'articleDetail', params: {id: item.id}}">
         <a-typography-text :ellipsis="{rows: 1}">{{ item.title }}</a-typography-text>

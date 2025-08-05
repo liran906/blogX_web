@@ -9,8 +9,10 @@ import F_label from "@/components/common/f_label.vue";
 import {relationOptions} from "@/options/options";
 import {goUser} from "@/utils/go_router";
 import F_avatar from "@/components/web/f_avatar.vue";
+import {useI18n} from "vue-i18n";
 
 const store = userStorei()
+const {t} = useI18n()
 
 interface Props {
   list: commentTreeType[]
@@ -33,7 +35,7 @@ function apply(item: commentTreeType) {
 
 async function applyComment(item: commentTreeType) {
   if (item.replyContent?.trim() === "") {
-    Message.warning("请输入回复内容")
+    Message.warning(t('comment.replyPlaceholder'))
     return
   }
 
@@ -87,15 +89,15 @@ async function remove(item: commentTreeType) {
              :datetime="dateCurrentFormat(item.createdAt)">
     <template #actions>
       <span class="action" @click="digg(item)" :class="{active: item.isLiked}">
-          <i class="iconfont icon-dianzan_kuai"></i> 点赞（{{ item.likeCount }}）
+          <i class="iconfont icon-dianzan_kuai"></i> {{ t('comment.like') }}（{{ item.likeCount }}）
       </span>
       <span class="action" v-if="props.line != store.siteInfo.article.commentLine" @click="apply(item)">
-        <i class="iconfont icon-pinglun1"/> 回复（{{ item.replyCount }}）
+        <i class="iconfont icon-pinglun1"/> {{ t('comment.reply') }}（{{ item.replyCount }}）
       </span>
-      <a-popconfirm content="确定要删除此评论吗？" @ok="remove(item)">
+      <a-popconfirm :content="t('comment.deleteConfirm')" @ok="remove(item)">
           <span class="action" v-if="item.userID === store.userInfo.userID">
         <i><IconDelete></IconDelete></i>
-        删除
+        {{ t('common.delete') }}
       </span>
       </a-popconfirm>
     </template>
@@ -109,8 +111,8 @@ async function remove(item: commentTreeType) {
     </template>
     <div class="apply_comment" v-if="item.isApply">
       <a-input v-model="item.replyContent" :class="`apply_comment_ipt_${item.id}`"
-               :placeholder="`回复${item.userNickname}`"></a-input>
-      <a-button type="primary" @click="applyComment(item)">回复</a-button>
+               :placeholder="t('comment.replyTo', {name: item.userNickname})"></a-input>
+      <a-button type="primary" @click="applyComment(item)">{{ t('comment.reply') }}</a-button>
     </div>
     <comment_tree :line="props.line + 1" @ok="ok" :list="item.childComments"
                   v-if="item.childComments?.length"></comment_tree>

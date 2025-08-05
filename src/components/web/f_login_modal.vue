@@ -10,8 +10,10 @@ import Email_login from "@/components/web/login/email_login.vue";
 import router from "@/router";
 import {siteQQLoginUrlApi} from "@/api/site_api";
 import Qq_login from "@/components/web/login/qq_login.vue";
+import { useI18n } from 'vue-i18n'
 
 const store = userStorei()
+const { t } = useI18n()
 
 interface Props {
   visible: boolean
@@ -34,7 +36,7 @@ const type = ref(1) // 1 pwd 2 邮箱
 
 
 async function handler(data: string) {
-  Message.success("登录成功")
+  Message.success(t('user.loginSuccess'))
   store.saveUserInfo(data)
   emits("update:visible", false)
   if (props.to) {
@@ -65,11 +67,11 @@ async function handler(data: string) {
 
     <div class="form">
       <div class="register" v-if="store.siteInfo.login.emailRegister">
-        <span v-if="type===1">还没有账号？ <a href="javascript:void 0" @click="type=2">去注册</a></span>
-        <span v-if="type===2">已有账号 <a href="javascript:void 0" @click="type=1">去登录</a></span>
+        <span v-if="type===1">{{ t('user.noAccount') }} <a href="javascript:void 0" @click="type=2">{{ t('user.goRegister') }}</a></span>
+        <span v-if="type===2">{{ t('user.hasAccount') }} <a href="javascript:void 0" @click="type=1">{{ t('user.goLogin') }}</a></span>
       </div>
       <template v-if="store.siteInfo.login.qqLogin">
-        <div class="other">第三方登录</div>
+        <div class="other">{{ t('user.thirdPartyLogin') }}</div>
         <div class="other_login">
           <qq_login @ok="handler"></qq_login>
         </div>

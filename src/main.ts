@@ -13,6 +13,7 @@ import "@/assets/iconfont.css"
 import "@/assets/iconfont_1.css"
 import "@/assets/theme.css"
 import {apiMock} from "@/mock";
+import i18n from '@/locales'
 
 const app = createApp(App)
 
@@ -21,5 +22,6 @@ app.use(createPinia())
 app.use(router)
 app.use(ArcoVue)
 app.use(ArcoVueIcon)
+app.use(i18n)
 
 app.mount('#app')
